@@ -1,6 +1,7 @@
-val kotlin_version: String by project
-val ktor_version: String by project
-val logback_version: String by project
+val kotlinVersion: String by project
+val ktorVersion: String by project
+val logbackVersion: String by project
+
 
 plugins {
     `kotlin-dsl`
@@ -11,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}")
-    implementation("io.ktor.plugin:plugin:${ktor_version}")
-    implementation("ch.qos.logback:logback-classic:${logback_version}")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+    implementation("io.ktor.plugin:plugin:${ktorVersion}")
+    implementation("ch.qos.logback:logback-classic:${logbackVersion}")
 }
