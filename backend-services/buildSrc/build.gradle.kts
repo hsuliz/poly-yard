@@ -1,18 +1,14 @@
-val kotlinVersion: String by project
-val ktorVersion: String by project
+val kotlin_version: String by project
+val spring_version: String by project
 val logbackVersion: String by project
 
+plugins { `kotlin-dsl` }
 
-plugins {
-    `kotlin-dsl`
-}
-
-repositories {
-    gradlePluginPortal()
-}
+repositories { gradlePluginPortal() }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
-    implementation("io.ktor.plugin:plugin:${ktorVersion}")
-    implementation("ch.qos.logback:logback-classic:${logbackVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}")
+    implementation("org.jetbrains.kotlin:kotlin-allopen:${kotlin_version}")
+    implementation("org.springframework.boot:spring-boot-gradle-plugin:${spring_version}")
+    implementation("io.spring.gradle:dependency-management-plugin:1.1.4")
 }
