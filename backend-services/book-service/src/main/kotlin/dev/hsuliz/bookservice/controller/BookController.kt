@@ -1,17 +1,25 @@
 package dev.hsuliz.bookservice.controller
 
 import dev.hsuliz.bookservice.dao.BookRequest
+import dev.hsuliz.bookservice.dao.BookResponse
 import dev.hsuliz.bookservice.service.BookService
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/book")
 class BookController(private val bookService: BookService) {
-    @PutMapping
-    suspend fun test(@RequestBody bookRequest: BookRequest) {
+    @PostMapping
+    suspend fun createBook(@RequestBody bookRequest: BookRequest): ResponseEntity<Unit> {
         bookService.saveBook(bookRequest.toModel())
+        return ResponseEntity(HttpStatus.CREATED)
+    }
+
+    @GetMapping
+    fun findAllBooks(): Flow<BookResponse> {
+        return bookService.findAllBooks().map { it.toResponse() }
     }
 }

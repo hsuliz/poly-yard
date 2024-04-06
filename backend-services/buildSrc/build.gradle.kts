@@ -1,6 +1,5 @@
 val kotlin_version: String by project
 val spring_version: String by project
-val logbackVersion: String by project
 
 plugins { `kotlin-dsl` }
 
