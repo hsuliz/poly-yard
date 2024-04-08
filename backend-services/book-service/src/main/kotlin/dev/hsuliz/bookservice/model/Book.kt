@@ -6,12 +6,9 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 
 @Document
-data class Book(
-    @Id val id: ObjectId = ObjectId(),
-    val title: String,
-    val author: Author,
-    val review: Review
-) {
+data class Book(val title: String, val author: Author, val review: Review) {
+    @Id var id: ObjectId = ObjectId()
+
     fun toResponse(): BookResponse = BookResponse(title, author, review)
 }
 

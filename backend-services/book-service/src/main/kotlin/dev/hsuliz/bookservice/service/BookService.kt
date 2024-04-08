@@ -11,5 +11,5 @@ class BookService(private val bookRepository: BookRepository) {
         bookRepository.save(book)
     }
 
-    fun findAllBooks(): Flow<Book> = bookRepository.findAll()
+    fun getAllBooks(): Flow<Book> = bookRepository.findAll()
 }
