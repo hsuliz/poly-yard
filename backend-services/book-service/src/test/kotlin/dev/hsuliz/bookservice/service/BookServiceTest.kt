@@ -10,6 +10,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.test.runTest
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -30,5 +31,20 @@ class BookServiceTest {
 
         // then
         coVerify { bookRepository.save(any()) }
+    }
+
+    @Test
+    fun `Given book title should be found`() = runTest {
+        // given
+        val givenExistingTitle = "Wolf"
+        val expected = Book("Wolf", Author("Hesse", "Herman"), Review(5, "Good"))
+        coEvery { bookRepository.findBookByTitle(any()) } returns expected
+
+        // when
+        val actual = bookService.findBookByTitle(givenExistingTitle)
+
+        // then
+        coVerify { bookRepository.findBookByTitle(any()) }
+        assertThat(actual).isSameAs(expected)
     }
 }

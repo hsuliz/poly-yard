@@ -14,4 +14,8 @@ data class Book(val title: String, val author: Author, val review: Review) {
 
 data class Review(val rating: Int, val comment: String)
 
-data class Author(val firstName: String, val secondName: String)
+data class Author(
+    val firstName: String? = null,
+    val secondName: String? = null,
+    val singleName: String? = null
+)

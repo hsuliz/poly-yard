@@ -12,4 +12,6 @@ class BookService(private val bookRepository: BookRepository) {
     }
 
     fun getAllBooks(): Flow<Book> = bookRepository.findAll()
+
+    suspend fun findBookByTitle(title: String): Book? = bookRepository.findBookByTitle(title)
 }
