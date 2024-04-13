@@ -1,9 +1,8 @@
 package dev.hsuliz.bookservice
 
-import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
+import io.kotest.matchers.shouldBe
 
-@SpringBootTest
-class ApplicationTests {
-    @Test fun contextLoads() {}
-}
+class ApplicationTest :
+    IntegrationSpec({
+        test("Test container should be running") { mongoDBContainer.isRunning shouldBe true }
+    })

@@ -1,7 +1,6 @@
 package dev.hsuliz.bookservice
 
-import dev.hsuliz.bookservice.repository.BookRepository
-import org.springframework.beans.factory.annotation.Autowired
+import io.kotest.core.spec.style.FunSpec
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.testcontainers.containers.MongoDBContainer
@@ -11,11 +10,16 @@ import org.testcontainers.utility.DockerImageName
 
 @SpringBootTest
 @Testcontainers
-class IntegrationTest(@Autowired val bookRepository: BookRepository) {
+abstract class IntegrationSpec(body: FunSpec.() -> Unit = {}) : FunSpec(body) {
 
     companion object {
         @Container
         @ServiceConnection
-        var mongoDBContainer = MongoDBContainer(DockerImageName.parse("mongo:4.0.10"))
+        @JvmField
+        var mongoDBContainer = MongoDBContainer(DockerImageName.parse("mongo:7.0"))
+
+        init {
+            mongoDBContainer.start()
+        }
     }
 }
