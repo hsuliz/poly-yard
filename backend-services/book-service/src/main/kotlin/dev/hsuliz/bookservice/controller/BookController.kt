@@ -18,7 +18,7 @@ class BookController(private val bookService: BookService) {
     }
 
     @GetMapping
-    fun findAllBooks(): Flow<BookResponse> {
+    fun getAllBooks(): Flow<BookResponse> {
         return bookService.getAllBooks().map { it.toResponse() }
     }
 }

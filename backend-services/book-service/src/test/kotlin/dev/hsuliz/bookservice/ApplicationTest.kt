@@ -1,8 +1,10 @@
 package dev.hsuliz.bookservice
 
 import io.kotest.matchers.shouldBe
+import org.springframework.boot.test.context.SpringBootTest
 
+@SpringBootTest
 class ApplicationTest :
-    IntegrationSpec({
+    IntegrationFunSpec({
         test("Test container should be running") { mongoDBContainer.isRunning shouldBe true }
     })

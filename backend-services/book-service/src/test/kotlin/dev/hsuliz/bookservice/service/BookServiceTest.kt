@@ -5,10 +5,10 @@ import dev.hsuliz.bookservice.model.Book
 import dev.hsuliz.bookservice.model.Review
 import dev.hsuliz.bookservice.repository.BookRepository
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
 
 class BookServiceTest :
     FunSpec({
@@ -43,6 +43,8 @@ class BookServiceTest :
 
             // then
             coVerify { bookRepository.findBookByTitle(any()) }
-            assertThat(actual).isSameAs(expected)
+            actual shouldBe expected
         }
+
+        test("Given book shouldn't be found and throw") {}
     })

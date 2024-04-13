@@ -1,0 +1,10 @@
+package dev.hsuliz.bookservice
+
+import dev.hsuliz.bookservice.model.Author
+import dev.hsuliz.bookservice.model.Book
+import dev.hsuliz.bookservice.model.Review
+
+object TestConstants {
+    // Book
+    val NORMAL_BOOK = Book("Wolf", Author("Hesse", "Herman"), Review(5, "Good"))
+}
