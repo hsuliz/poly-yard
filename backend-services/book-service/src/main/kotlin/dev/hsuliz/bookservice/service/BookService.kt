@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service
 @Service
 class BookService(private val bookRepository: BookRepository) {
     suspend fun saveBook(book: Book) {
+        if (bookRepository.existsByTitle(book.title)) {
+            throw BookException("Book with title ${book.title} already exists")
+        }
         bookRepository.save(book)
     }
 
