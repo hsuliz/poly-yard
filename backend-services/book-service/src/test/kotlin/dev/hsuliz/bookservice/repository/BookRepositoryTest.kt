@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 
 @DataMongoTest
-class BookRepositoryTest(@Autowired bookRepository: BookRepository) :
+class BookRepositoryTest(@Autowired private val bookRepository: BookRepository) :
     IntegrationFunSpec({
         test("Given book should be founded") {
             // given
