@@ -1,8 +1,11 @@
 package dev.hsuliz.bookservice.repository
 
 import dev.hsuliz.bookservice.IntegrationFunSpec
+import dev.hsuliz.bookservice.TestConstants.NON_EXISTING_BOOK
 import dev.hsuliz.bookservice.TestConstants.NORMAL_BOOK
+import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.flow.toList
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 
@@ -11,15 +14,21 @@ class BookRepositoryTest(@Autowired private val bookRepository: BookRepository) 
     IntegrationFunSpec({
         test("Given book should be founded") {
             // given
-            val givenBook = NORMAL_BOOK
-            bookRepository.save(givenBook)
+            val givenExistingBook = NORMAL_BOOK
+            val givenNonExistingBook = NON_EXISTING_BOOK
+            bookRepository.save(givenExistingBook)
 
             // when&then
-            val actualCorrectBook = bookRepository.findBookByTitle(NORMAL_BOOK.title)
-            actualCorrectBook shouldBe givenBook
+            val actualCorrectBook =
+                bookRepository.findBooksByTitle(givenExistingBook.title).toList()
+            actualCorrectBook.asClue {
+                it.size shouldBe 1
+                it[0] shouldBe givenExistingBook
+            }
 
             // when&then
-            val actualWrongBook = bookRepository.findBookByTitle("Shrek")
-            actualWrongBook shouldBe null
+            val actualWrongBook =
+                bookRepository.findBooksByTitle(givenNonExistingBook.title).toList()
+            actualWrongBook shouldBe emptyList()
         }
     })

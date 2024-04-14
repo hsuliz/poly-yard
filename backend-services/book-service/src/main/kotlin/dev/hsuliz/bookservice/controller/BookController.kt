@@ -13,12 +13,9 @@ import org.springframework.web.bind.annotation.*
 class BookController(private val bookService: BookService) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    suspend fun createBook(@RequestBody bookRequest: BookRequest) {
+    suspend fun createBook(@RequestBody bookRequest: BookRequest) =
         bookService.saveBook(bookRequest.toModel())
-    }
 
     @GetMapping
-    fun getAllBooks(): Flow<BookResponse> {
-        return bookService.getAllBooks().map { it.toResponse() }
-    }
+    fun getAllBooks(): Flow<BookResponse> = bookService.getAllBooks().map { it.toResponse() }
 }

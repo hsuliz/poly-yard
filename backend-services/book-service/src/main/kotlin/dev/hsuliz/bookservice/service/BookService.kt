@@ -17,8 +17,7 @@ class BookService(private val bookRepository: BookRepository) {
 
     fun getAllBooks(): Flow<Book> = bookRepository.findAll()
 
-    suspend fun findBookByTitle(title: String): Book? {
-        val book = bookRepository.findBookByTitle(title)
-        return book ?: throw BookException("Book with title $title not found")
+    fun findBooksByTitle(title: String): Flow<Book> {
+        return bookRepository.findBooksByTitle(title)
     }
 }

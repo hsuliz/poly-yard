@@ -3,9 +3,6 @@ package dev.hsuliz.bookservice.service
 import dev.hsuliz.bookservice.TestConstants.NON_EXISTING_BOOK
 import dev.hsuliz.bookservice.TestConstants.NORMAL_BOOK
 import dev.hsuliz.bookservice.exception.BookException
-import dev.hsuliz.bookservice.model.Author
-import dev.hsuliz.bookservice.model.Book
-import dev.hsuliz.bookservice.model.Review
 import dev.hsuliz.bookservice.repository.BookRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
@@ -13,8 +10,10 @@ import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.toList
 
-class BookServiceTest :
+internal class BookServiceTest :
     FunSpec({
         lateinit var bookRepository: BookRepository
         lateinit var bookService: BookService
@@ -52,14 +51,14 @@ class BookServiceTest :
         test("Given book should be found by title") {
             // given
             val givenExistingTitle = "Wolf"
-            val expected = Book("Wolf", Author("Hesse", "Herman"), Review(5, "Good"))
-            coEvery { bookRepository.findBookByTitle(any()) } returns expected
+            val expected = listOf(NORMAL_BOOK)
+            coEvery { bookRepository.findBooksByTitle(any()) } returns expected.asFlow()
 
             // when
-            val actual = bookService.findBookByTitle(givenExistingTitle)
+            val actual = bookService.findBooksByTitle(givenExistingTitle).toList()
 
             // then
-            coVerify { bookRepository.findBookByTitle(any()) }
+            coVerify { bookRepository.findBooksByTitle(any()) }
             actual shouldBe expected
         }
 
@@ -67,15 +66,15 @@ class BookServiceTest :
             // given
             val givenBook = NORMAL_BOOK
             val nonExistingBook = NON_EXISTING_BOOK
-            coEvery { bookRepository.findBookByTitle(any()) } throws
+            coEvery { bookRepository.findBooksByTitle(any()) } throws
                 BookException("Book with title ${givenBook.title} not found")
 
             // when
             val actual =
-                shouldThrow<BookException> { bookService.findBookByTitle(nonExistingBook.title) }
+                shouldThrow<BookException> { bookService.findBooksByTitle(nonExistingBook.title) }
 
             // then
-            coVerify { bookRepository.findBookByTitle(any()) }
+            coVerify { bookRepository.findBooksByTitle(any()) }
             actual.message shouldBe "Book with title ${givenBook.title} not found"
         }
     })
