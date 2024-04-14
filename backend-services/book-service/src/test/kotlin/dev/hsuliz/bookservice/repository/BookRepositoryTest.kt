@@ -13,11 +13,10 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 @DataMongoTest
 class BookRepositoryTest(@Autowired private val bookRepository: BookRepository) :
     IntegrationFunSpec({
-        test("Given book should be founded") {
+        test("Books should be found by title") {
             // given
-            val givenExistingBook = NORMAL_BOOK
+            val givenExistingBook = bookRepository.save(NORMAL_BOOK)
             val givenNonExistingBook = NON_EXISTING_BOOK
-            bookRepository.save(givenExistingBook)
 
             // when&then
             val actualCorrectBook =
@@ -30,5 +29,18 @@ class BookRepositoryTest(@Autowired private val bookRepository: BookRepository) 
             val actualWrongBook =
                 bookRepository.findBooksByTitle(givenNonExistingBook.title).toList()
             actualWrongBook.shouldBeEmpty()
+        }
+
+        test("Book should be found by title and author") {
+            // given
+            val givenExistingBook = bookRepository.save(NORMAL_BOOK)
+
+            // when&then
+            val actualCorrectBook =
+                bookRepository.findBookByTitleAndAuthor(
+                    givenExistingBook.title,
+                    givenExistingBook.author
+                )
+            actualCorrectBook shouldBe givenExistingBook
         }
     })
