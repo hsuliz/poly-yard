@@ -26,7 +26,8 @@ class BookServiceTest :
 
         test("Given book should be saved") {
             // given
-            val givenBook = Book("Wolf", Author("Hesse", "Herman"), Review(5, "Good"))
+            val givenBook = NORMAL_BOOK
+            coEvery { bookRepository.existsByTitle(any()) } returns false
             coEvery { bookRepository.save(any()) } returns givenBook
 
             // when
