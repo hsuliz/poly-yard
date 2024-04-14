@@ -24,7 +24,7 @@ internal class BookServiceTest :
             bookService = BookService(bookRepository)
         }
 
-        test("Given book should be saved") {
+        test("Book should be saved") {
             // given
             val givenBook = NORMAL_BOOK
             coEvery { bookRepository.existsByTitle(any()) } returns false
@@ -37,7 +37,7 @@ internal class BookServiceTest :
             coVerify { bookRepository.save(any()) }
         }
 
-        test("Given book shouldn't be saved by duplication") {
+        test("Book shouldn't be saved by duplication then throw") {
             // given
             val givenBook = NORMAL_BOOK
             coEvery { bookRepository.existsByTitle(any()) } returns true
@@ -47,7 +47,7 @@ internal class BookServiceTest :
             actual.message shouldBe "Book with title ${givenBook.title} already exists"
         }
 
-        test("Given book should be found by title") {
+        test("Book should be found by title") {
             // given
             val givenExistingTitle = NORMAL_BOOK.title
             val expected = listOf(NORMAL_BOOK)
@@ -62,7 +62,7 @@ internal class BookServiceTest :
             actual shouldBe expected
         }
 
-        test("Given book shouldn't be found by title and throw") {
+        test("Book shouldn't be found by title then throw") {
             // given
             val givenBook = NORMAL_BOOK
             val nonExistingBook = NON_EXISTING_BOOK
@@ -76,5 +76,15 @@ internal class BookServiceTest :
             // then
             coVerify { bookRepository.findBooksByTitle(any()) }
             actual.message shouldBe "Book with title ${givenBook.title} not found"
+        }
+
+        test("Book should be found by title and author") {
+            // given
+            val givenBook = NORMAL_BOOK
+            coEvery { bookRepository.findBookByTitleAndAuthor(any(), any()) } returns givenBook
+
+            // when&then
+            val actual = bookService.findBookByTitleAndAuthor(givenBook.title, givenBook.author)
+            actual shouldBe givenBook
         }
     })
