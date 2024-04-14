@@ -12,7 +12,7 @@ data class Book(val title: String, val author: Author, val review: Review) {
     fun toResponse() = BookResponse(title, author, review)
 }
 
-data class Review(val rating: Int, val comment: String) {
+data class Review(val rating: Int, val comment: String? = null) {
     init {
         require(rating in 0..5) { "Rating must be between 0 and 5" }
     }
