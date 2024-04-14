@@ -6,6 +6,7 @@ import dev.hsuliz.bookservice.exception.BookException
 import dev.hsuliz.bookservice.repository.BookRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -41,16 +42,14 @@ internal class BookServiceTest :
             val givenBook = NORMAL_BOOK
             coEvery { bookRepository.existsByTitle(any()) } returns true
 
-            // when
+            // when&then
             val actual = shouldThrow<BookException> { bookService.saveBook(givenBook) }
-
-            // then
             actual.message shouldBe "Book with title ${givenBook.title} already exists"
         }
 
         test("Given book should be found by title") {
             // given
-            val givenExistingTitle = "Wolf"
+            val givenExistingTitle = NORMAL_BOOK.title
             val expected = listOf(NORMAL_BOOK)
             coEvery { bookRepository.findBooksByTitle(any()) } returns expected.asFlow()
 
@@ -59,6 +58,7 @@ internal class BookServiceTest :
 
             // then
             coVerify { bookRepository.findBooksByTitle(any()) }
+            actual.shouldNotBeEmpty()
             actual shouldBe expected
         }
 

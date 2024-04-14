@@ -3,7 +3,8 @@ package dev.hsuliz.bookservice.repository
 import dev.hsuliz.bookservice.IntegrationFunSpec
 import dev.hsuliz.bookservice.TestConstants.NON_EXISTING_BOOK
 import dev.hsuliz.bookservice.TestConstants.NORMAL_BOOK
-import io.kotest.assertions.asClue
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.toList
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,14 +22,13 @@ class BookRepositoryTest(@Autowired private val bookRepository: BookRepository) 
             // when&then
             val actualCorrectBook =
                 bookRepository.findBooksByTitle(givenExistingBook.title).toList()
-            actualCorrectBook.asClue {
-                it.size shouldBe 1
-                it[0] shouldBe givenExistingBook
-            }
+
+            actualCorrectBook.shouldHaveSize(1)
+            actualCorrectBook.first() shouldBe givenExistingBook
 
             // when&then
             val actualWrongBook =
                 bookRepository.findBooksByTitle(givenNonExistingBook.title).toList()
-            actualWrongBook shouldBe emptyList()
+            actualWrongBook.shouldBeEmpty()
         }
     })
