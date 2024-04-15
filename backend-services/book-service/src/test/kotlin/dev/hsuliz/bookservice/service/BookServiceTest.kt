@@ -47,6 +47,27 @@ internal class BookServiceTest :
             actual.message shouldBe "Book with title ${givenBook.title} already exists"
         }
 
+        test("Book should be get by id") {
+            // given
+            val givenBook = NORMAL_BOOK
+            coEvery { bookRepository.findById(any()) } returns givenBook
+
+            // when&then
+            val actual = bookService.getBookById(givenBook.id.toHexString())
+            actual shouldBe givenBook
+        }
+
+        test("Book shouldn't be get by id") {
+            // given
+            val givenBook = NORMAL_BOOK
+            coEvery { bookRepository.findById(any()) } returns null
+
+            // when&then
+            val actual =
+                shouldThrow<BookException> { bookService.getBookById(givenBook.id.toHexString()) }
+            actual.message shouldBe "Book with id: ${givenBook.id} does not exists."
+        }
+
         test("Book should be found by title") {
             // given
             val givenExistingTitle = NORMAL_BOOK.title

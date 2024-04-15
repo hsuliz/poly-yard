@@ -10,10 +10,9 @@ import org.springframework.stereotype.Service
 @Service
 class BookService(private val bookRepository: BookRepository) {
 
-    suspend fun getBookById(id: String): Book {
-        ObjectId.isValid(id)
-        return bookRepository.getById(ObjectId(id))
-    }
+    suspend fun getBookById(id: String): Book =
+        bookRepository.findById(id).takeIf { ObjectId.isValid(id) }
+            ?: throw BookException("Book with id: $id does not exists.")
 
     fun findAllBooks(): Flow<Book> = bookRepository.findAll()
 

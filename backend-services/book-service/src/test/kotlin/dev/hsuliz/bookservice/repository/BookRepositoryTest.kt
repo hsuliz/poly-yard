@@ -22,12 +22,11 @@ class BookRepositoryTest(@Autowired private val bookRepository: BookRepository) 
             val givenNonExistingBook = NON_EXISTING_BOOK
 
             // when&then
-            val actualCorrectBook = bookRepository.getById(givenExistingBook.id)
-
+            val actualCorrectBook = bookRepository.findById(givenExistingBook.id.toHexString())
             actualCorrectBook shouldBe givenExistingBook
 
             // when&then
-            val actualWrongBook = bookRepository.getById(givenNonExistingBook.id)
+            val actualWrongBook = bookRepository.findById(givenNonExistingBook.id.toHexString())
             actualWrongBook.asClue { it shouldBe null }
         }
 
@@ -39,7 +38,6 @@ class BookRepositoryTest(@Autowired private val bookRepository: BookRepository) 
             // when&then
             val actualExistingBook =
                 bookRepository.findBooksByTitle(givenExistingBook.title).toList()
-
             actualExistingBook.shouldHaveSize(1)
             actualExistingBook.first() shouldBe givenExistingBook
 
