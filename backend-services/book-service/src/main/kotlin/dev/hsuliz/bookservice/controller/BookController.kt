@@ -2,7 +2,6 @@ package dev.hsuliz.bookservice.controller
 
 import dev.hsuliz.bookservice.dao.BookRequest
 import dev.hsuliz.bookservice.dao.BookResponse
-import dev.hsuliz.bookservice.model.Book
 import dev.hsuliz.bookservice.service.BookService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -13,11 +12,11 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/book")
 class BookController(private val bookService: BookService) {
     @GetMapping
-    fun getAllBooks(): Flow<BookResponse> = bookService.getAllBooks().map { it.toResponse() }
+    fun findAllBooks(): Flow<BookResponse> = bookService.findAllBooks().map { it.toResponse() }
 
-    @GetMapping
-    suspend fun findBookByTitleAndAuthor(@RequestBody bookRequest: BookRequest): Book? =
-        bookService.findBookByTitleAndAuthor(bookRequest.title, bookRequest.author)
+    @GetMapping("/{id}")
+    suspend fun getBookById(@PathVariable id: String): BookResponse =
+        bookService.getBookById(id).toResponse()
 
     @GetMapping("/title/{title}")
     fun findBooksByTitle(@PathVariable title: String): Flow<BookResponse> =

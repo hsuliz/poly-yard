@@ -77,14 +77,4 @@ internal class BookServiceTest :
             coVerify { bookRepository.findBooksByTitle(any()) }
             actual.message shouldBe "Book with title ${givenBook.title} not found"
         }
-
-        test("Book should be found by title and author") {
-            // given
-            val givenBook = NORMAL_BOOK
-            coEvery { bookRepository.findBookByTitleAndAuthor(any(), any()) } returns givenBook
-
-            // when&then
-            val actual = bookService.findBookByTitleAndAuthor(givenBook.title, givenBook.author)
-            actual shouldBe givenBook
-        }
     })

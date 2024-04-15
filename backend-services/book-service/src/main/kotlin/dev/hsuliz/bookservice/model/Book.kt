@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class Book(val title: String, val author: Author, val review: Review) {
     @Id var id = ObjectId()
 
-    fun toResponse() = BookResponse(title, author, review)
+    fun toResponse() = BookResponse(id.toHexString(), title, author, review)
 }
 
 data class Review(val rating: Int, val comment: String? = null) {
