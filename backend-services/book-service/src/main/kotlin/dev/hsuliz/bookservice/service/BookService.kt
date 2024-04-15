@@ -16,14 +16,20 @@ class BookService(private val bookRepository: BookRepository) {
 
     fun findAllBooks(): Flow<Book> = bookRepository.findAll()
 
-    fun findBooksByTitle(title: String): Flow<Book> {
-        return bookRepository.findBooksByTitle(title)
-    }
+    fun findBooksByTitle(title: String): Flow<Book> = bookRepository.findBooksByTitle(title)
 
-    suspend fun saveBook(book: Book) {
-        if (bookRepository.existsByTitle(book.title)) {
-            throw BookException("Book with title ${book.title} already exists")
+    suspend fun saveBook(book: Book): Book =
+        with(bookRepository) {
+            if (existsByTitle(book.title)) {
+                throw BookException("Book with title ${book.title} already exists")
+            }
+            save(book)
         }
-        bookRepository.save(book)
+
+    suspend fun deleteBookById(id: String) {
+        with(bookRepository) {
+            if (existsById(id)) deleteById(id)
+            else throw BookException("Book with title $id already exists")
+        }
     }
 }

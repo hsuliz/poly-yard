@@ -24,6 +24,9 @@ class BookController(private val bookService: BookService) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    suspend fun createBook(@RequestBody bookRequest: BookRequest) =
-        bookService.saveBook(bookRequest.toModel())
+    suspend fun createBook(@RequestBody bookRequest: BookRequest): BookResponse =
+        bookService.saveBook(bookRequest.toModel()).toResponse()
+
+    @DeleteMapping("/{id}")
+    suspend fun deleteBookById(@PathVariable id: String) = bookService.deleteBookById(id)
 }
