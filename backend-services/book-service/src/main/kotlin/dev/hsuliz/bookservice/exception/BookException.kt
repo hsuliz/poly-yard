@@ -1,3 +1,5 @@
 package dev.hsuliz.bookservice.exception
 
-class BookException(message: String) : RuntimeException(message)
+open class BookException(message: String) : RuntimeException(message)
+
+class BookNotFoundException(id: String) : BookException("$id not found.")
