@@ -9,3 +9,6 @@ spring:
       password: example
       authentication-database: admin
       auto-index-creation: true
+server:
+  error:
+    include-message: always
