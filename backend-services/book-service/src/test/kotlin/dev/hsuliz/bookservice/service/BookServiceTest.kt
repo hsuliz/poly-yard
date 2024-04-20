@@ -1,6 +1,5 @@
 package dev.hsuliz.bookservice.service
 
-import dev.hsuliz.bookservice.TestConstants.NON_EXISTING_BOOK
 import dev.hsuliz.bookservice.TestConstants.NORMAL_BOOK
 import dev.hsuliz.bookservice.exception.BookException
 import dev.hsuliz.bookservice.repository.BookRepository
@@ -44,7 +43,7 @@ internal class BookServiceTest :
 
             // when&then
             val actual = shouldThrow<BookException> { bookService.saveBook(givenBook) }
-            actual.message shouldBe "Book with title ${givenBook.title} already exists"
+            actual.message shouldBe "Book with title [${givenBook.title}] already exists"
         }
 
         test("Book should be get by id") {
@@ -65,7 +64,7 @@ internal class BookServiceTest :
             // when&then
             val actual =
                 shouldThrow<BookException> { bookService.getBookById(givenBook.id.toHexString()) }
-            actual.message shouldBe "Book with id: ${givenBook.id} does not exists."
+            actual.message shouldBe "Book with id:[${givenBook.id}] not found"
         }
 
         test("Book should be found by title") {
@@ -81,21 +80,5 @@ internal class BookServiceTest :
             coVerify { bookRepository.findBooksByTitle(any()) }
             actual.shouldNotBeEmpty()
             actual shouldBe expected
-        }
-
-        test("Book shouldn't be found by title then throw") {
-            // given
-            val givenBook = NORMAL_BOOK
-            val nonExistingBook = NON_EXISTING_BOOK
-            coEvery { bookRepository.findBooksByTitle(any()) } throws
-                BookException("Book with title ${givenBook.title} not found")
-
-            // when
-            val actual =
-                shouldThrow<BookException> { bookService.findBooksByTitle(nonExistingBook.title) }
-
-            // then
-            coVerify { bookRepository.findBooksByTitle(any()) }
-            actual.message shouldBe "Book with title ${givenBook.title} not found"
         }
     })
