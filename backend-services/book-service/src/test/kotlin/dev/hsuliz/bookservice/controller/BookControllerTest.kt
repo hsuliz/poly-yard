@@ -22,14 +22,18 @@ class BookControllerTest(
 ) :
     FunSpec({
         context("Create book") {
-            test("Should save") {
-                val givenBook = NORMAL_BOOK
-                coEvery { bookService.saveBook(any()) } returns givenBook
+            val request =
                 webClient
                     .post()
                     .uri(BOOK_URI)
                     .bodyValue(NORMAL_BOOK_REQUEST)
                     .accept(MediaType.APPLICATION_JSON)
+
+            test("Should save") {
+                val givenBook = NORMAL_BOOK
+                coEvery { bookService.saveBook(any()) } returns givenBook
+
+                request
                     .exchange()
                     .expectStatus()
                     .isCreated
@@ -43,11 +47,8 @@ class BookControllerTest(
                     BookAlreadyExistsException(
                         "Book with title [${givenBook.title}] already exists"
                     )
-                webClient
-                    .post()
-                    .uri(BOOK_URI)
-                    .bodyValue(NORMAL_BOOK_REQUEST)
-                    .accept(MediaType.APPLICATION_JSON)
+
+                request
                     .exchange()
                     .expectStatus()
                     .isEqualTo(HttpStatus.CONFLICT)
