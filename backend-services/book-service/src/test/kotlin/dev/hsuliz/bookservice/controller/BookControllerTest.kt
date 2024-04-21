@@ -83,6 +83,18 @@ class BookControllerTest(
                     .isEqualTo(NOT_FOUND)
                     .expectBody<ProblemDetail>()
             }
+
+            test("Should not accept wrong id") {
+                val givenBookId = ObjectId.get().toHexString()
+                coEvery { bookService.getBookById(any()) } throws
+                    IllegalArgumentException("Id [$givenBookId] is not valid")
+
+                request(givenBookId)
+                    .exchange()
+                    .expectStatus()
+                    .isEqualTo(UNPROCESSABLE_ENTITY)
+                    .expectBody<ProblemDetail>()
+            }
         }
     })
 
