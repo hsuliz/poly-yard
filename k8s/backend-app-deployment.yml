@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      containers:
+        - name: book-service
+          image: hsuliz/book-service:2.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGO_HOST
+              value: mongo
+          imagePullPolicy: Always

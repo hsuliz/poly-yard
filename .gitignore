@@ -1,3 +1,5 @@
 .idea
 poly-yard.iml
 
+.terraform*
+terraform.*
