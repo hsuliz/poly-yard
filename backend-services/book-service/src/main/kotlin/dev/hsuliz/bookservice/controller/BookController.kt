@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/book")
 class BookController(private val bookService: BookService) {
