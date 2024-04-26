@@ -3,7 +3,7 @@ import React from "react"
 function App() {
   return (
     <div>
-      <p>Hello!</p>
+      <h1>Poly-yard</h1>
     </div>
   )
 }
