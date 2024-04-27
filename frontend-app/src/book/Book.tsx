@@ -16,33 +16,41 @@ const Book = () => {
       })
   }, [])
 
+  const getDateFromId = (id: string): Date => {
+    const timestamp = parseInt(id.substring(0, 8), 16) * 1000
+    return new Date(timestamp)
+  }
+
   return (
-    <div>
+    <div className="bg-gray-300 border-green-600 border-b p-4 m-4 rounded">
       <p>Books</p>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Rating</th>
-            <th>Comment</th>
-          </tr>
-        </thead>
-        <tbody>
-          {books.map((book, index) => (
-            <tr key={book.id}>
-              <td>{index + 1}</td>
-              <td>{book.title}</td>
-              <td>
-                {book.author.firstName} {book.author.firstName}
-              </td>
-              <td>{book.review.rating}</td>
-              <td>{book.review.comment}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div role="list" className="divide-y divide-gray-100">
+        {books.map((book) => (
+          <li key={book.id} className="flex justify-between gap-x-6 py-5">
+            <div className="flex min-w-0 gap-x-4">
+              <div className="min-w-0 flex-auto">
+                <p className="text-sm font-semibold leading-6 text-gray-900">
+                  {book.title}
+                </p>
+                <p className="mt-1 truncate text-xs leading-5 text-gray-500">
+                  {book.author.firstName} {book.author.secondName}{" "}
+                </p>
+              </div>
+              <div className="min-w-0 flex-auto rounded">
+                <p className="mt-1 truncate text-xs leading-5">
+                  {getDateFromId(book.id).toLocaleDateString()}
+                </p>
+                <p className="text-sm leading-6">Stars: {book.review.rating}</p>
+              </div>
+            </div>
+            <div className="shrink-0 sm:flex sm:flex-col sm:items-end">
+              <p className="text-sm leading-6 text-gray-900">
+                Comment: {book.review.comment}
+              </p>
+            </div>
+          </li>
+        ))}
+      </div>
     </div>
   )
 }
