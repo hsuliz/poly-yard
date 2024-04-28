@@ -1,5 +1,7 @@
 import axios from "axios"
 
-const findAllBooks = async () => axios.get("http://localhost:8080/api/book")
+const BOOK_API_URL: string = `${process.env.REACT_APP_BOOK_API}`
+
+const findAllBooks = async () => axios.get(BOOK_API_URL)
 
 export default findAllBooks()
