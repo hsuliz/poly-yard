@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-app
+  name: book-microservice
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend-app
+      app: book-microservice
   template:
     metadata:
       labels:
-        app: backend-app
+        app: book-microservice
     spec:
       containers:
-        - name: book-service
-          image: hsuliz/book-service:2.0.0
+        - name: book-microservice
+          image: hsuliz/book-microservice:1.0.0
           ports:
             - containerPort: 8080
           env:
