@@ -1,57 +1,71 @@
 import { useEffect, useState } from "react"
+import { TailSpin } from "react-loader-spinner"
 import findAllBooks from "../api/BookApi"
 import { BookResponse } from "./BookResponse"
+import { Link } from "react-router-dom"
 
 const Book = () => {
   const [books, setBooks] = useState<Array<BookResponse>>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     findAllBooks
-      .then((res) => res.data)
-      .then((data) => {
-        setBooks(data)
+      .then((res) => {
+        setBooks(res.data)
+        setLoading(false)
       })
       .catch((err) => {
-        console.log(err.message)
+        setError(err.message)
+        setLoading(false)
       })
   }, [])
 
-  const getDateFromId = (id: string): Date => {
+  const getDateFromId = (id: string) => {
     const timestamp = parseInt(id.substring(0, 8), 16) * 1000
-    return new Date(timestamp)
+    return new Date(timestamp).toLocaleDateString()
   }
 
-  return (
-    <div className="bg-gray-300 border-green-600 border-b p-4 m-4 rounded">
-      <p>Books</p>
-      <div role="list" className="divide-y divide-gray-100">
-        {books.map((book) => (
-          <li key={book.id} className="flex justify-between gap-x-6 py-5">
-            <div className="flex min-w-0 gap-x-4">
-              <div className="min-w-0 flex-auto">
-                <p className="text-sm font-semibold leading-6 text-gray-900">
-                  {book.title}
-                </p>
-                <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-                  {book.author.firstName} {book.author.secondName}{" "}
-                </p>
-              </div>
-              <div className="min-w-0 flex-auto rounded">
-                <p className="mt-1 truncate text-xs leading-5">
-                  {getDateFromId(book.id).toLocaleDateString()}
-                </p>
-                <p className="text-sm leading-6">Stars: {book.review.rating}</p>
-              </div>
-            </div>
-            <div className="shrink-0 sm:flex sm:flex-col sm:items-end">
-              <p className="text-sm leading-6 text-gray-900">
-                Comment: {book.review.comment}
-              </p>
-            </div>
-          </li>
-        ))}
+  if (loading)
+    return (
+      <div className="flex justify-center">
+        <TailSpin color="#00BFFF" height={50} width={50} />
       </div>
-    </div>
+    )
+  if (error) return <div>Error: {error}</div>
+
+  return (
+    <ul className="grid grid-cols-1 gap-4 w-96">
+      {books.map((book) => (
+        <li key={book.id} className="bg-sky-950 rounded-lg p-4">
+          <Link
+            to={`/book/${book.id}`}
+            state={book}
+            className="font-semibold text-white hover:text-blue-600 transition duration-300 ease-in-out"
+          >
+            {book.title}
+          </Link>
+          <p className="text-xs leading-5 text-gray-500">
+            by {book.author.firstName} {book.author.secondName}
+          </p>
+          <div className="mt-2">
+            <p className="text-xs leading-5">
+              <span className="text-lg text-yellow-600">
+                {book.review.rating} ⭐
+              </span>{" "}
+              <span className="text-xs text-gray-500">
+                {getDateFromId(book.id)}
+              </span>
+            </p>
+          </div>
+          <div className="mt-2">
+            <p className="text-sm leading-6 text-gray-400">
+              {book.review.comment}
+            </p>
+          </div>
+        </li>
+      ))}
+    </ul>
   )
 }
 

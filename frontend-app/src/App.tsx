@@ -1,9 +1,12 @@
 import React from "react"
+import NavBar from "./NavBar"
+import Home from "./home/Home"
 
 function App() {
   return (
-    <div>
-      <h1>Poly-yard</h1>
+    <div className="bg-gray-900 h-screen w-screen">
+      <NavBar />
+      <Home />
     </div>
   )
 }
