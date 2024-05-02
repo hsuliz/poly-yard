@@ -35,37 +35,39 @@ const Book = () => {
   if (error) return <div>Error: {error}</div>
 
   return (
-    <ul className="grid grid-cols-1 gap-4 w-96">
+    <ol className="mx-auto max-w-fit space-y-6 list-item">
       {books.map((book) => (
-        <li key={book.id} className="bg-sky-950 rounded-lg p-4">
-          <Link
-            to={`/book/${book.id}`}
-            state={book}
-            className="font-semibold text-white hover:text-blue-600 transition duration-300 ease-in-out"
-          >
-            {book.title}
-          </Link>
-          <p className="text-xs leading-5 text-gray-500">
-            by {book.author.firstName} {book.author.secondName}
-          </p>
-          <div className="mt-2">
-            <p className="text-xs leading-5">
-              <span className="text-lg text-yellow-600">
-                {book.review.rating} ⭐
-              </span>{" "}
-              <span className="text-xs text-gray-500">
-                {getDateFromId(book.id)}
-              </span>
+        <li key={book.id} className="bg-sky-950 rounded-lg p-6">
+          <div className="">
+            <Link
+              to={`/book/${book.id}`}
+              state={book}
+              className="font-semibold text-white hover:text-blue-600 transition duration-300 ease-in-out"
+            >
+              {book.title}
+            </Link>
+            <p className="text-xs leading-5 text-gray-500">
+              by {book.author.firstName} {book.author.secondName}
             </p>
-          </div>
-          <div className="mt-2">
-            <p className="text-sm leading-6 text-gray-400">
-              {book.review.comment}
-            </p>
+            <div className="mt-2">
+              <p className="text-xs leading-5">
+                <span className="text-lg text-yellow-600">
+                  {book.review.rating} ⭐
+                </span>{" "}
+                <span className="text-xs text-gray-500">
+                  {getDateFromId(book.id)}
+                </span>
+              </p>
+            </div>
+            <div className="mt-2">
+              <p className="text-sm leading-6 text-gray-400">
+                {book.review.comment}
+              </p>
+            </div>
           </div>
         </li>
       ))}
-    </ul>
+    </ol>
   )
 }
 
