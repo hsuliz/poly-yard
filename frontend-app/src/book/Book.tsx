@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { TailSpin } from "react-loader-spinner"
-import findAllBooks from "../api/BookApi"
+
 import { BookResponse } from "./BookResponse"
-import { Link } from "react-router-dom"
+import { findAllBooks } from "../api/BookApi"
 
 const Book = () => {
   const [books, setBooks] = useState<Array<BookResponse>>([])
@@ -10,7 +10,7 @@ const Book = () => {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    findAllBooks
+    findAllBooks()
       .then((res) => {
         setBooks(res.data)
         setLoading(false)
@@ -32,38 +32,34 @@ const Book = () => {
         <TailSpin color="#00BFFF" height={50} width={50} />
       </div>
     )
+
   if (error) return <div>Error: {error}</div>
 
   return (
     <ol className="mx-auto max-w-fit space-y-6 list-item">
       {books.map((book) => (
-        <li key={book.id} className="bg-sky-950 rounded-lg p-6">
-          <div className="">
-            <Link
-              to={`/book/${book.id}`}
-              state={book}
-              className="font-semibold text-white hover:text-blue-600 transition duration-300 ease-in-out"
-            >
-              {book.title}
-            </Link>
-            <p className="text-xs leading-5 text-gray-500">
-              by {book.author.firstName} {book.author.secondName}
+        <li key={book.id} className="bg-sky-950 rounded-lg p-6 w-full max-w-sm">
+          <div className="flex items-center justify-between">
+            <p className="font-semibold text-white">{book.title}</p>
+            {/*#TODO CREATE HERE BUTTON FOR DELETE*/}
+          </div>
+          <p className="text-xs leading-5 text-gray-500">
+            by {book.author.firstName} {book.author.secondName}
+          </p>
+          <div className="mt-2">
+            <p className="text-xs leading-5">
+              <span className="text-lg text-yellow-600">
+                {book.review.rating} ⭐
+              </span>{" "}
+              <span className="text-xs text-gray-500">
+                {getDateFromId(book.id)}
+              </span>
             </p>
-            <div className="mt-2">
-              <p className="text-xs leading-5">
-                <span className="text-lg text-yellow-600">
-                  {book.review.rating} ⭐
-                </span>{" "}
-                <span className="text-xs text-gray-500">
-                  {getDateFromId(book.id)}
-                </span>
-              </p>
-            </div>
-            <div className="mt-2">
-              <p className="text-sm leading-6 text-gray-400">
-                {book.review.comment}
-              </p>
-            </div>
+          </div>
+          <div className="mt-2">
+            <p className="text-sm leading-6 text-gray-400">
+              {book.review.comment}
+            </p>
           </div>
         </li>
       ))}
