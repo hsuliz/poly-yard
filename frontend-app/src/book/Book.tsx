@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { TailSpin } from "react-loader-spinner"
 
+import threeDots from "./../img/3-dots-icon-29.jpg.png"
+
 import { BookResponse } from "./BookResponse"
 import { findAllBooks } from "../api/BookApi"
 
@@ -8,6 +10,7 @@ const Book = () => {
   const [books, setBooks] = useState<Array<BookResponse>>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [isHovered, setIsHovered] = useState(false)
 
   useEffect(() => {
     findAllBooks()
@@ -41,7 +44,20 @@ const Book = () => {
         <li key={book.id} className="bg-sky-950 rounded-lg p-6 w-full max-w-sm">
           <div className="flex items-center justify-between">
             <p className="font-semibold text-white">{book.title}</p>
-            {/*#TODO CREATE HERE BUTTON FOR DELETE*/}
+            <div
+              className="flex justify-around h-10"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              {isHovered ? (
+                <div className="grid grid-rows-3 grid-flow-col gap-6">
+                  <button>Update</button>
+                  <button>Delete</button>
+                </div>
+              ) : (
+                <img src={threeDots} alt="threeDots" className="size-8" />
+              )}
+            </div>
           </div>
           <p className="text-xs leading-5 text-gray-500">
             by {book.author.firstName} {book.author.secondName}
