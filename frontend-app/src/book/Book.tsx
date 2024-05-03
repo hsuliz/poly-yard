@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { TailSpin } from "react-loader-spinner"
 
-import threeDots from "./../img/3-dots-icon-29.jpg.png"
+import threeDots from "../img/3-dots-icon-29.png"
 
 import { BookResponse } from "./BookResponse"
 import { findAllBooks } from "../api/BookApi"
