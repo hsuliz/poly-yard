@@ -4,7 +4,8 @@ import { TailSpin } from "react-loader-spinner"
 import threeDots from "../img/3-dots-icon-29.png"
 
 import { BookResponse } from "./BookResponse"
-import { findAllBooks } from "../api/BookApi"
+import { deleteBookById, findAllBooks } from "../api/BookApi"
+import { Link } from "react-router-dom"
 
 const Book = () => {
   const [books, setBooks] = useState<Array<BookResponse>>([])
@@ -43,7 +44,13 @@ const Book = () => {
       {books.map((book) => (
         <li key={book.id} className="bg-sky-950 rounded-lg p-6 w-full max-w-sm">
           <div className="flex items-center justify-between">
-            <p className="font-semibold text-white">{book.title}</p>
+            <Link
+              to={`/book/${book.id}`}
+              state={book}
+              className="font-semibold text-white hover:text-blue-600 transition duration-300 ease-in-out"
+            >
+              {book.title}
+            </Link>
             <div
               className="flex justify-around h-10"
               onMouseEnter={() => setIsHovered(true)}
@@ -51,8 +58,18 @@ const Book = () => {
             >
               {isHovered ? (
                 <div className="grid grid-rows-3 grid-flow-col gap-6">
-                  <button>Update</button>
-                  <button>Delete</button>
+                  <button
+                    className="font-semibold text-green-900 hover:text-green-500"
+                    onClick={() => deleteBookById(book.id)}
+                  >
+                    Update
+                  </button>
+                  <button
+                    className="font-semibold text-red-900 hover:text-red-500"
+                    onClick={() => deleteBookById(book.id)}
+                  >
+                    Delete
+                  </button>
                 </div>
               ) : (
                 <img src={threeDots} alt="threeDots" className="size-8" />
