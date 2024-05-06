@@ -56,13 +56,20 @@ const BookCard: React.FC<BookDetailsProps> = ({ initialBook }) => {
             <div className="grid grid-rows-3 grid-flow-col gap-6">
               <button
                 className="font-semibold text-green-900 hover:text-green-500"
-                onClick={() => deleteBookById(book.id)}
+                onClick={() => {
+                  /*#TODO MOCKED NEED TO IMPLEMENT*/
+                  window.location.reload()
+                }}
               >
                 Update
               </button>
               <button
                 className="font-semibold text-red-900 hover:text-red-500"
-                onClick={() => deleteBookById(book.id)}
+                onClick={() => {
+                  deleteBookById(book.id).then(() => {
+                    window.location.reload()
+                  })
+                }}
               >
                 Delete
               </button>
