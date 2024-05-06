@@ -1,5 +1,9 @@
 .idea
-poly-yard.iml
+*.iml
 
+
+# Terraform
 .terraform*
 terraform.*
+/terraform/local.tfvars
+/terraform/poly-yard-app-kubeconfig.yaml
