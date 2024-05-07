@@ -3,6 +3,7 @@ plugins { `kotlin-dsl` }
 repositories { gradlePluginPortal() }
 
 dependencies {
+    // ProjectExt.kt
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
     implementation(libs.plugin.kotlin.gradle)
     implementation(libs.plugin.kotlin.spring)
