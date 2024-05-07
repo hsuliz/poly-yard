@@ -3,8 +3,9 @@ plugins { `kotlin-dsl` }
 repositories { gradlePluginPortal() }
 
 dependencies {
-    implementation(libs.kotlin.gradle.plugin)
-    implementation(libs.kotlin.spring.plugin)
-    implementation(libs.spring.boot.gradle.plugin)
-    implementation(libs.spring.dependency.management.plugin)
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
+    implementation(libs.plugin.kotlin.gradle)
+    implementation(libs.plugin.kotlin.spring)
+    implementation(libs.plugin.spring.boot.gradle)
+    implementation(libs.plugin.spring.dependency.management)
 }

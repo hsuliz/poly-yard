@@ -2,12 +2,63 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 [versions]
 kotlin = "1.9.20"
+kotest = "5.8.0"
 spring = "3.2.3"
 spring-dependency-management = "1.1.4"
+mockk = "1.13.10"
+springmockk = "3.0.1"
+kotest-spring = "1.1.3"
 
 [libraries]
-kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-kotlin-spring-plugin = { module = "org.jetbrains.kotlin:kotlin-allopen", version.ref = "kotlin" }
+# kotlin-core
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core" }
+kotlinx-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor" }
+jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 
-spring-boot-gradle-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "spring" }
-spring-dependency-management-plugin = { module = "io.spring.gradle:dependency-management-plugin", version.ref = "spring-dependency-management" }
+# kotlin-core-test
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
+kotest-runner-junit = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotest-framework-datatest = { module = "io.kotest:kotest-framework-datatest", version.ref = "kotest" }
+kotest-extensions-spring = { module = "io.kotest.extensions:kotest-extensions-spring", version.ref = "kotest-spring" }
+
+# spring-web
+spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
+spring-boot-starter-mongodb-reactive = { module = "org.springframework.boot:spring-boot-starter-data-mongodb-reactive" }
+
+# spring-web-test
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
+reactor-test = { module = "io.projectreactor:reactor-test" }
+junit-jupiter = { module = "org.testcontainers:junit-jupiter" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+springmockk = { module = "com.ninja-squad:springmockk", version.ref = "springmockk" }
+
+# plugins
+plugin-kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+plugin-kotlin-spring = { module = "org.jetbrains.kotlin:kotlin-allopen", version.ref = "kotlin" }
+plugin-spring-boot-gradle = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "spring" }
+plugin-spring-dependency-management = { module = "io.spring.gradle:dependency-management-plugin", version.ref = "spring-dependency-management" }
+
+[bundles]
+kotlin-core = [
+    "kotlin-reflect",
+    "kotlinx-coroutines-core",
+    "kotlinx-coroutines-reactor",
+    "jackson-module-kotlin"
+]
+kotlin-core-test = [
+    "spring-boot-starter-test",
+    "kotest-runner-junit",
+    "kotest-framework-datatest",
+    "kotest-extensions-spring"
+]
+spring-web = ["spring-boot-starter-webflux", "spring-boot-starter-mongodb-reactive"]
+spring-web-test = [
+    "spring-boot-starter-test",
+    "spring-boot-testcontainers",
+    "reactor-test",
+    "junit-jupiter",
+    "mockk",
+    "springmockk"
+]

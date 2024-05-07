@@ -1,1 +1,1 @@
-plugins { id("reactive-web-app.conventions") }
+plugins { id("web-app.conventions") }
