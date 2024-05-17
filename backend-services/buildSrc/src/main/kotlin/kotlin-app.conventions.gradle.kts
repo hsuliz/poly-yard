@@ -6,8 +6,10 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.bundles.kotlin.core)
-    implementation(libs.bundles.kotlin.core.test)
+    implementation(libs.bundles.kotlin.core) {
+        exclude(group = "ch.qos.logback")
+    }
+    testImplementation(libs.bundles.kotlin.core.test)
 }
 
 java { sourceCompatibility = JavaVersion.VERSION_21 }
