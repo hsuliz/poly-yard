@@ -25,8 +25,8 @@ class BookController(private val bookService: BookService) : Klogging {
         @PathVariable username: String,
         @RequestBody bookRequest: BookRequest
     ): BookResponse {
-        return try {
-            bookService.saveBook(bookRequest.toModel()).toResponse()
+        try {
+            return bookService.saveBook(bookRequest.toModel()).toResponse()
         } catch (exception: BookAlreadyExistsException) {
             throw ResponseStatusException(HttpStatus.CONFLICT, exception.message)
         }
@@ -37,9 +37,9 @@ class BookController(private val bookService: BookService) : Klogging {
         @PathVariable username: String,
         @PathVariable id: String
     ): BookResponse {
-        logger.info("For user $username getting book $id")
-        return try {
-            bookService.getBookById(id).toResponse()
+        logger.debug("For user $username getting book by id $id")
+        try {
+            return bookService.getBookById(id).toResponse()
         } catch (exception: BookNotFoundException) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, exception.message)
         } catch (exception: IllegalArgumentException) {
@@ -49,7 +49,7 @@ class BookController(private val bookService: BookService) : Klogging {
 
     @GetMapping
     suspend fun findAllBooks(@PathVariable username: String): Flow<BookResponse> {
-        logger.info("Find all books for user $username")
+        logger.debug("Find all books for user $username")
         return bookService.findAllBooks().map { it.toResponse() }
     }
 
@@ -64,9 +64,9 @@ class BookController(private val bookService: BookService) : Klogging {
     @PreAuthorize("authentication.principal.claims['preferred_username'] == #username")
     @DeleteMapping("/{id}")
     suspend fun deleteBookById(@PathVariable username: String, @PathVariable id: String) {
-        logger.info("For user $username deleting book $id")
+        logger.debug("For user $username deleting book by id $id")
         try {
-            bookService.deleteBookById(id)
+            return bookService.deleteBookById(id)
         } catch (exception: BookNotFoundException) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, exception.message)
         }
