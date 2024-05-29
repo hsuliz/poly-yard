@@ -9,6 +9,7 @@ import io.klogging.Klogging
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.springframework.http.HttpStatus
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
@@ -17,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/api/{username}/book")
 class BookController(private val bookService: BookService) : Klogging {
 
+    @PreAuthorize("authentication.principal.claims['preferred_username'] == #username")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     suspend fun createBook(
@@ -35,6 +37,7 @@ class BookController(private val bookService: BookService) : Klogging {
         @PathVariable username: String,
         @PathVariable id: String
     ): BookResponse {
+        logger.info("For user $username getting book $id")
         return try {
             bookService.getBookById(id).toResponse()
         } catch (exception: BookNotFoundException) {
@@ -46,6 +49,7 @@ class BookController(private val bookService: BookService) : Klogging {
 
     @GetMapping
     suspend fun findAllBooks(@PathVariable username: String): Flow<BookResponse> {
+        logger.info("Find all books for user $username")
         return bookService.findAllBooks().map { it.toResponse() }
     }
 
@@ -57,8 +61,10 @@ class BookController(private val bookService: BookService) : Klogging {
         return bookService.findBooksByTitle(title).map { it.toResponse() }
     }
 
+    @PreAuthorize("authentication.principal.claims['preferred_username'] == #username")
     @DeleteMapping("/{id}")
     suspend fun deleteBookById(@PathVariable username: String, @PathVariable id: String) {
+        logger.info("For user $username deleting book $id")
         try {
             bookService.deleteBookById(id)
         } catch (exception: BookNotFoundException) {

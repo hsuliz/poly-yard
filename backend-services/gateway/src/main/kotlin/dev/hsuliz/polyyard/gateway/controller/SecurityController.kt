@@ -11,8 +11,5 @@ class SecurityController {
     @GetMapping("/token")
     suspend fun getToken(
         @RegisteredOAuth2AuthorizedClient authorizedClient: OAuth2AuthorizedClient
-    ): String {
-        println(authorizedClient)
-        return authorizedClient.accessToken.tokenValue
-    }
+    ): String = authorizedClient.accessToken.tokenValue
 }
