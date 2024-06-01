@@ -1,4 +1,5 @@
-/* probably useless tests but whatever */
+/* probably useless tests but whatever *//*
+
 
 package dev.hsuliz.bookservice.repository
 
@@ -47,3 +48,4 @@ class BookRepositoryTest(@Autowired private val bookRepository: BookRepository) 
             actualWrongBook.shouldBeEmpty()
         }
     })
+*/

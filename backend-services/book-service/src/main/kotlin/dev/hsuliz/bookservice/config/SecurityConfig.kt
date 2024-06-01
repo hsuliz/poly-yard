@@ -19,9 +19,9 @@ class SecurityConfig {
     fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         return http {
             authorizeExchange {
-                authorize(pathMatchers(GET, "/api/{username}/book/**"), permitAll)
-                authorize(pathMatchers(POST, "/api/{username}/book/**"), authenticated)
-                authorize(pathMatchers(DELETE, "/api/{username}/book/**"), authenticated)
+                authorize(pathMatchers(GET, "/api/v1/me/books/**"), permitAll)
+                authorize(pathMatchers(POST, "/api/v1/me/books/**"), authenticated)
+                authorize(pathMatchers(DELETE, "/api/v1/me/books/**"), authenticated)
             }
             oauth2ResourceServer { jwt {} }
         }

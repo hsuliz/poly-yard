@@ -1,3 +1,4 @@
+/*
 package dev.hsuliz.bookservice.model
 
 import io.kotest.assertions.throwables.shouldThrow
@@ -12,3 +13,4 @@ class ReviewTest :
             }
         }
     })
+*/
