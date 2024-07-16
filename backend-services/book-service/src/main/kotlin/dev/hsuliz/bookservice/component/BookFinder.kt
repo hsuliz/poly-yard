@@ -30,7 +30,6 @@ class BookFinder(private val bookInfoClient: WebClient) {
         when {
             isbnToValidate.matches(Regex("\\b(?:\\d{9}(\\d|X)|\\d{13})\\b")) ->
                 return isbnToValidate
-
             else -> throw Exception("Wrong isbn") // todo create exception
         }
     }
