@@ -1,6 +1,8 @@
+server.port: 8002
 spring:
   application:
     name: book-service
+  security.oauth2.resourceserver.jwt.jwk-set-uri: http://localhost:8080/realms/polyyard/protocol/openid-connect/certs
   data:
     mongodb:
       host: localhost

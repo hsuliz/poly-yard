@@ -22,7 +22,9 @@ class MeService(
         dateFinished: Date,
         opinion: Opinion? = null
     ) {
-        val book: Book = bookRepository.findBookByIsbn(isbn) ?: bookFinder.findBookByIsbn(isbn)
+        val book: Book =
+            bookRepository.findBookByIsbn(isbn)
+                ?: bookFinder.findBookByIsbn(isbn).also { bookRepository.save(it) }
         reviewRepository.save(Review(username, book, opinion))
     }
 
