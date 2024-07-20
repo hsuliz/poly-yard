@@ -1,4 +1,4 @@
-package dev.hsuliz.polyyard.gateway.controller
+package dev.hsuliz.polyyard.gateway.security
 
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient
