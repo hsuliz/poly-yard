@@ -2,15 +2,11 @@ server.port: 8002
 spring:
   application:
     name: book-service
+  r2dbc:
+    url: r2dbc:postgresql://localhost/books_service
+    username: postgres
+    password: book
   security.oauth2.resourceserver.jwt.jwk-set-uri: http://localhost:8080/realms/polyyard/protocol/openid-connect/certs
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      username: root
-      password: example
-      authentication-database: admin
-      auto-index-creation: true
 server:
   error:
     include-message: always
