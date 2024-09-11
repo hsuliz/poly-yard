@@ -1,4 +1,4 @@
-package dev.hsuliz.bookservice.books
+package dev.hsuliz.bookservice.book
 
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 

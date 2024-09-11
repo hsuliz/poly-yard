@@ -1,6 +1,6 @@
 package dev.hsuliz.bookservice.users
 
-import dev.hsuliz.bookservice.books.Book
+import dev.hsuliz.bookservice.book.Book
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.Transient
 import org.springframework.data.relational.core.mapping.Table

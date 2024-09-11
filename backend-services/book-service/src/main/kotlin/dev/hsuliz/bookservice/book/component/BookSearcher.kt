@@ -1,5 +1,4 @@
-/*
-package dev.hsuliz.bookservice.me
+package dev.hsuliz.bookservice.book.component
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
@@ -7,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import dev.hsuliz.bookservice.books.Book
+import dev.hsuliz.bookservice.book.Book
 import kotlinx.datetime.LocalDate
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
@@ -53,8 +52,7 @@ private data class BookMapper(@JsonProperty("book") val bookInfo: BookInfo) {
         }
 
         fun toBookModel(): Book {
-            return Book(isbn13, title, author, publishedDate, numberOfPages, image)
+            return Book(null, isbn13, title, author[0], publishedDate, numberOfPages, image)
         }
     }
 }
-*/
