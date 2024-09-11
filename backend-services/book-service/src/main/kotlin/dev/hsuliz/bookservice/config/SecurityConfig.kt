@@ -20,6 +20,8 @@ class SecurityConfig {
         return http {
             authorizeExchange {
                 authorize(pathMatchers(GET, "/users/**"), permitAll)
+                authorize(pathMatchers(GET, "/reviews/**"), permitAll)
+                authorize(pathMatchers(GET, "/books/**"), permitAll)
 
                 authorize(pathMatchers(GET, "/api/v1/me/books/**"), permitAll)
                 authorize(pathMatchers(POST, "/api/v1/me/books/**"), authenticated)
