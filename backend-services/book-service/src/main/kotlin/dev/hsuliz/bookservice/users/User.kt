@@ -1,20 +1,13 @@
 package dev.hsuliz.bookservice.users
 
+import dev.hsuliz.bookservice.books.Book
 import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Column
+import org.springframework.data.annotation.Transient
 import org.springframework.data.relational.core.mapping.Table
-import java.util.*
 
-@Table("Users")
-data class User(@Id var id: UUID? = null, @Column("username") val username: String)
-
-// @Table("Books")
-// data class Book(
-//    val isbn: String,
-//    val title: String,
-//    val author: String,
-//    val publishedDate: String,
-//    val numberOfPages: String,
-//    val image: String,
-//    @Id var id: Long? = null,
-// ) {}
+@Table("users")
+data class User(
+    @Id var id: Long? = null,
+    val username: String,
+    @Transient val books: List<Book> = mutableListOf(),
+)

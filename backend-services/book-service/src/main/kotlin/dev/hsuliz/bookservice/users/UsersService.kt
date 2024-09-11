@@ -10,7 +10,7 @@ class UsersService(private val repository: UsersRepository) {
         return repository.findAll()
     }
 
-    suspend fun findUserByUsername(username: String): User? {
+    suspend fun findUserBooks(username: String): User? {
         return repository.findUserByUsername(username)
     }
 }

@@ -18,9 +18,9 @@ class UsersController(private val usersService: UsersService) {
         return response
     }
 
-    @GetMapping("/{username}")
-    suspend fun findUserByUsername(@PathVariable username: String): UserResponse? {
-        val response = usersService.findUserByUsername(username)?.let { UserResponse(it.username) }
+    @GetMapping("/{username}/books")
+    suspend fun getUserBooks(@PathVariable username: String): UserResponse? {
+        val response = usersService.findUserBooks(username)?.let { UserResponse(it.username) }
         return response
     }
 }
