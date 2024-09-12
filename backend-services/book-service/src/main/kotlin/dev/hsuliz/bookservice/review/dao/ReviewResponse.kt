@@ -1,4 +1,4 @@
-package dev.hsuliz.bookservice.review
+package dev.hsuliz.bookservice.review.dao
 
 data class ReviewResponse(
     val reviewText: String,

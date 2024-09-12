@@ -5,8 +5,6 @@ import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface MeRepository : CoroutineCrudRepository<Book, Long> {
-    override suspend fun findById(id: Long): Book?
+interface MeRepository : CoroutineCrudRepository<Book, String> {
 
-    suspend fun findByIsbn(isbn: String): Book?
 }

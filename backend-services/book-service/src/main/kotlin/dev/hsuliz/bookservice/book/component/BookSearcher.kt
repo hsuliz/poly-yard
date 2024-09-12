@@ -28,8 +28,7 @@ class BookSearcher(private val bookInfoClient: WebClient) {
 
     private suspend fun getValidIsbn(isbnToValidate: String): String {
         when {
-            isbnToValidate.matches(Regex("\\b(?:\\d{9}(\\d|X)|\\d{13})\\b")) ->
-                return isbnToValidate
+            isbnToValidate.matches(Regex("\\b(?:\\d{9}(\\d|X)|\\d{13})\\b")) -> return isbnToValidate
             else -> throw Exception("Wrong isbn") // todo create exception
         }
     }
@@ -52,7 +51,7 @@ private data class BookMapper(@JsonProperty("book") val bookInfo: BookInfo) {
         }
 
         fun toBookModel(): Book {
-            return Book(null, isbn13, title, author[0], publishedDate, numberOfPages, image)
+            return Book(isbn13, title, author[0], publishedDate.year, numberOfPages, image)
         }
     }
 }

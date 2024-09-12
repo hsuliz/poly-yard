@@ -1,5 +1,6 @@
 package dev.hsuliz.bookservice.review
 
+import dev.hsuliz.bookservice.review.dao.ReviewResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.springframework.http.HttpStatus
@@ -11,11 +12,19 @@ import org.springframework.web.server.ResponseStatusException
 @RestController
 class ReviewController(private val service: ReviewService) {
 
+    //@PostMapping("/reviews")
+    //suspend fun addReview(@RequestBody reviewRequest: ReviewRequest): ReviewResponse? {
+//
+//
+    //}
+
   @GetMapping("/reviews/{review_id}")
   suspend fun getReview(@PathVariable("review_id") reviewId: Long): ReviewResponse? {
-    val res = service.findReview(reviewId) ?: throw ResponseStatusException(
-      HttpStatus.NOT_FOUND, "Review not found for id: $reviewId"
-    )
+      val res =
+          service.findReview(reviewId)
+              ?: throw ResponseStatusException(
+                  HttpStatus.NOT_FOUND, "Review not found for id: $reviewId"
+              )
     return ReviewResponse(res.reviewText, res.userId, res.bookId)
   }
 

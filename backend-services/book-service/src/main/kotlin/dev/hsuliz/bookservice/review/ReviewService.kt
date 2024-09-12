@@ -4,13 +4,19 @@ import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 
 @Service
-class ReviewService(private val repository: ReviewRepository) {
+class ReviewService(
+  private val reviewRepository: ReviewRepository
+) {
+
+  //suspend fun saveReview(bookIsbn: String, rating: Int, comment: String?): Review? {
+  //
+  //}
 
   suspend fun findReview(reviewId: Long): Review? {
-    return repository.findById(reviewId)
+    return reviewRepository.findById(reviewId)
   }
 
   fun findUserReviews(userId: Long): Flow<Review> {
-    return repository.findReviewsByUserId(userId)
+    return reviewRepository.findReviewsByUserId(userId)
   }
 }
