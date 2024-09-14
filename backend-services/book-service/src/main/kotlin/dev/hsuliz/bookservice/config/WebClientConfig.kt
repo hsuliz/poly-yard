@@ -9,5 +9,5 @@ class WebClientConfig {
 
     @Bean
     fun bookInfoClient(): WebClient =
-        WebClient.builder().baseUrl("https://api.bookscouter.com/v4/prices/sell").build()
+        WebClient.builder().baseUrl("https://www.googleapis.com/books/v1/volumes").build()
 }

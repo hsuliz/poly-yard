@@ -7,7 +7,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import dev.hsuliz.bookservice.book.Book
-import kotlinx.datetime.LocalDate
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
@@ -20,7 +19,8 @@ class BookSearcher(private val bookInfoClient: WebClient) {
     return jacksonObjectMapper()
         .apply { registerModule(JavaTimeModule()) }
         .readValue<BookMapper>(
-            bookInfoClient.get().uri("/$validIsbn").retrieve().awaitBody<String>())
+            bookInfoClient.get().uri("/?q=isbn:$validIsbn").retrieve().awaitBody<String>())
+        .bookItems[0]
         .bookInfo
         .toBookModel()
   }
@@ -34,23 +34,26 @@ class BookSearcher(private val bookInfoClient: WebClient) {
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-private data class BookMapper(@JsonProperty("book") val bookInfo: BookInfo) {
+private data class BookMapper(@JsonProperty("items") val bookItems: List<BookItem>) {
   @JsonIgnoreProperties(ignoreUnknown = true)
-  data class BookInfo(
-      val isbn13: String,
-      val title: String,
-      val author: List<String>,
-      @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-      val publishedDate: LocalDate,
-      val numberOfPages: Int,
-      var image: String
-  ) {
-    init {
-      image = image.replace(Regex("._SL[0-9]+_"), "")
-    }
+  data class BookItem(@JsonProperty("volumeInfo") val bookInfo: BookInfo) {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    data class BookInfo(
+        @JsonProperty("industryIdentifiers") val isbn: List<IndustryIdentifiers>,
+        val title: String,
+        val authors: List<String>,
+        val publishedDate: String,
+        @JsonProperty("pageCount") val pages: Int,
+        var imageLinks: ImageLinks
+    ) {
+      data class IndustryIdentifiers(val identifier: String, val type: String)
 
-    fun toBookModel(): Book {
-      return Book(isbn13, title, author[0], publishedDate.year, numberOfPages, image)
+      data class ImageLinks(val smallThumbnail: String, val thumbnail: String)
+
+      fun toBookModel(): Book {
+        return Book(
+            isbn[1].identifier, title, authors[0], publishedDate.take(4).toInt(), pages, imageLinks.smallThumbnail)
+      }
     }
   }
 }
