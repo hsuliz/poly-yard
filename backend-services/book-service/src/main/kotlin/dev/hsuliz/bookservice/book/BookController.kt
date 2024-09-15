@@ -13,7 +13,7 @@ class BookController(private val service: BookService) {
     @PostMapping("/me/books/{book_isbn}")
     suspend fun addBook(@PathVariable("book_isbn") bookIsbn: String): BookResponse? {
         val book =
-            service.addBookByIsbn(bookIsbn)
+            service.createBook(bookIsbn)
                 ?: throw ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Book not found for isbn: $bookIsbn"
                 )

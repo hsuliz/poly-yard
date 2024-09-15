@@ -23,6 +23,7 @@ class SecurityConfig {
         authorize(pathMatchers(GET, "/reviews/**"), permitAll)
         authorize(pathMatchers(GET, "/books/**"), permitAll)
         authorize("/me/books/**", permitAll)
+        authorize("/me/reviews/**", permitAll)
 
         // authorize(pathMatchers(POST, "/me/books/**"), permitAll)
         // authorize(pathMatchers(GET, "/api/v1/me/books/**"), permitAll)

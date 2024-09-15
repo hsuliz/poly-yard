@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service
 
 @Service
 class BookService(
-  private val repository: BookRepository,
-  private val bookSearcher: BookSearcher,
+    private val repository: BookRepository,
+    private val bookSearcher: BookSearcher,
 ) {
 
-  suspend fun addBookByIsbn(bookIsbn: String): Book? {
+  suspend fun createBook(bookIsbn: String): Book? {
     if (repository.existsByIsbn(bookIsbn)) {
       return null
     }
