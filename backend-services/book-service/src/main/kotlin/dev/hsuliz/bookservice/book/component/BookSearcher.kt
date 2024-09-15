@@ -2,7 +2,6 @@ package dev.hsuliz.bookservice.book.component
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import dev.hsuliz.bookservice.book.Book
@@ -16,7 +15,6 @@ class BookSearcher(private val bookInfoClient: WebClient) {
   suspend fun findBookByIsbn(isbn: String): Book {
     val validIsbn = getValidIsbn(isbn)
     return jacksonObjectMapper()
-        .apply { registerModule(JavaTimeModule()) }
         .readValue<BookMapper>(
             bookInfoClient.get().uri("/?q=isbn:$validIsbn").retrieve().awaitBody<String>())
         .bookItems[0]
@@ -43,11 +41,11 @@ private data class BookMapper(@JsonProperty("items") val bookItems: List<BookIte
         val authors: List<String>,
         val publishedDate: String,
         @JsonProperty("pageCount") val pages: Int,
-        var imageLinks: ImageLinks,
+        @JsonProperty("imageLinks") var image: ImageLink,
     ) {
       data class IndustryIdentifiers(val identifier: String, val type: String)
 
-      @JsonIgnoreProperties(ignoreUnknown = true) data class ImageLinks(val thumbnail: String)
+      @JsonIgnoreProperties(ignoreUnknown = true) data class ImageLink(val thumbnail: String)
 
       fun toBookModel(): Book {
         return Book(
@@ -56,7 +54,7 @@ private data class BookMapper(@JsonProperty("items") val bookItems: List<BookIte
             authors[0],
             publishedDate.take(4).toInt(),
             pages,
-            imageLinks.thumbnail,
+            image.thumbnail,
         )
       }
     }

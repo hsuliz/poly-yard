@@ -9,7 +9,7 @@ data class Book(
     val title: String,
     val author: String,
     val publishedDate: Int,
-    val numberOfPages: Int,
+    val pages: Int,
     val image: String,
     @Id val id: Long? = null,
 )
