@@ -1,6 +1,5 @@
 package dev.hsuliz.bookservice.book.component
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -39,20 +38,26 @@ private data class BookMapper(@JsonProperty("items") val bookItems: List<BookIte
   data class BookItem(@JsonProperty("volumeInfo") val bookInfo: BookInfo) {
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class BookInfo(
-        @JsonProperty("industryIdentifiers") val isbn: List<IndustryIdentifiers>,
+        val industryIdentifiers: List<IndustryIdentifiers>,
         val title: String,
         val authors: List<String>,
         val publishedDate: String,
         @JsonProperty("pageCount") val pages: Int,
-        var imageLinks: ImageLinks
+        var imageLinks: ImageLinks,
     ) {
       data class IndustryIdentifiers(val identifier: String, val type: String)
 
-      data class ImageLinks(val smallThumbnail: String, val thumbnail: String)
+      @JsonIgnoreProperties(ignoreUnknown = true) data class ImageLinks(val thumbnail: String)
 
       fun toBookModel(): Book {
         return Book(
-            isbn[1].identifier, title, authors[0], publishedDate.take(4).toInt(), pages, imageLinks.smallThumbnail)
+            industryIdentifiers.find { it.type == "ISBN_13" }!!.identifier,
+            title,
+            authors[0],
+            publishedDate.take(4).toInt(),
+            pages,
+            imageLinks.thumbnail,
+        )
       }
     }
   }
