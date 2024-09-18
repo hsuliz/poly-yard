@@ -14,20 +14,21 @@ class ReviewService(
 ) {
 
   @Transactional
-  suspend fun addReview(
+  suspend fun createReview(
       username: String,
       bookIsbn: String,
       rating: Int,
       comment: String? = null,
-  ) {
+  ): Review {
     val user = userService.findUser(username) ?: userService.createUser(username)
-    val book = bookService.createBook(bookIsbn)
+    val book = bookService.findExistingBook(bookIsbn) ?: bookService.createBook(bookIsbn)
 
-    reviewRepository.save(
+    return reviewRepository.save(
         Review(
             user.id!!,
-            book!!.id!!,
+            book.id!!,
             rating,
+            comment,
         ))
   }
 

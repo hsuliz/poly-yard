@@ -9,25 +9,28 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-class ReviewController(private val service: ReviewService) {
+class ReviewController(
+    private val service: ReviewService,
+) {
 
   @PostMapping("/me/reviews")
-  suspend fun addReview(@RequestBody reviewRequest: ReviewRequest) {
-    with(reviewRequest) { service.addReview("sasha", bookIsbn, rating, comment) }
+  suspend fun addReview(@RequestBody reviewRequest: ReviewRequest): ReviewResponse {
+    val review = with(reviewRequest) { service.createReview("sasha", bookIsbn, rating, comment) }
+    return ReviewResponse(review)
   }
 
   @GetMapping("/reviews/{review_id}")
   suspend fun getReview(@PathVariable("review_id") reviewId: Long): ReviewResponse? {
-    val res =
+    val review =
         service.findReview(reviewId)
             ?: throw ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Review not found for id: $reviewId")
-    return ReviewResponse("2", res.userId, res.bookId)
+    return ReviewResponse(review)
   }
 
   @GetMapping("/users/{user_id}/reviews")
   fun getUserReviews(@PathVariable("user_id") userId: Long): Flow<ReviewResponse> {
-    val res = service.findUserReviews(userId)
-    return res.map { ReviewResponse("df", it.userId, it.bookId) }
+    val reviews = service.findUserReviews(userId)
+    return reviews.map { ReviewResponse(it) }
   }
 }
