@@ -25,10 +25,6 @@ class SecurityConfig {
         authorize("/me/books/**", permitAll)
         authorize("/me/reviews/**", permitAll)
 
-        // authorize(pathMatchers(POST, "/me/books/**"), permitAll)
-        // authorize(pathMatchers(GET, "/api/v1/me/books/**"), permitAll)
-        // authorize(pathMatchers(POST, "/api/v1/me/books/**"), authenticated)
-        // authorize(pathMatchers(DELETE, "/api/v1/me/books/**"), authenticated)
       }
       csrf { disable() }
       oauth2ResourceServer { jwt {} }
