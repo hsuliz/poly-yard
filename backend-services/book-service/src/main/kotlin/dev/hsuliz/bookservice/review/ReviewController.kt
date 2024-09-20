@@ -5,6 +5,9 @@ import dev.hsuliz.bookservice.review.dao.ReviewResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.springframework.http.HttpStatus
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
@@ -13,10 +16,13 @@ class ReviewController(
     private val service: ReviewService,
 ) {
 
-
   @PostMapping("/me/reviews")
-  suspend fun addReview(@RequestBody reviewRequest: ReviewRequest): ReviewResponse {
-    val review = with(reviewRequest) { service.createReview("sasha", bookIsbn, rating, comment) }
+  suspend fun addReview(
+      @RequestBody reviewRequest: ReviewRequest,
+      @AuthenticationPrincipal jwt: Jwt,
+  ): ReviewResponse {
+    val username = jwt.getClaimAsString("preferred_username")
+    val review = with(reviewRequest) { service.createReview(username, bookIsbn, rating, comment) }
     return ReviewResponse(review)
   }
 

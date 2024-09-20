@@ -3,6 +3,7 @@ package dev.hsuliz.bookservice.config
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod.GET
+import org.springframework.http.HttpMethod.POST
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
@@ -19,12 +20,8 @@ class SecurityConfig {
   fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
     return http {
       authorizeExchange {
-        authorize(pathMatchers(GET, "/users/**"), permitAll)
-        authorize(pathMatchers(GET, "/reviews/**"), permitAll)
-        authorize(pathMatchers(GET, "/books/**"), permitAll)
-        authorize("/me/books/**", permitAll)
-        authorize("/me/reviews/**", permitAll)
-
+        authorize(pathMatchers(GET, "/**"), permitAll)
+        authorize(pathMatchers(POST, "/me/**"), hasAuthority("SCOPE_USER"))
       }
       csrf { disable() }
       oauth2ResourceServer { jwt {} }

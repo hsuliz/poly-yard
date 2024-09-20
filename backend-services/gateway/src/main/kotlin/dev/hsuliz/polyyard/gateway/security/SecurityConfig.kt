@@ -19,9 +19,12 @@ class SecurityConfig {
             authorizeExchange {
                 authorize(pathMatchers(GET, "/token"), authenticated)
 
-                authorize(pathMatchers(GET, "/api/v1/me/books/**"), permitAll)
-                authorize(pathMatchers(POST, "/api/v1/me/books/**"), authenticated)
-                authorize(pathMatchers(DELETE, "/api/v1/me/books/**"), authenticated)
+                authorize(pathMatchers(GET, "/users/**"), permitAll)
+                authorize(pathMatchers(GET, "/reviews/**"), permitAll)
+                authorize(pathMatchers(GET, "/books/**"), permitAll)
+
+                authorize("/me/books/**", permitAll)
+                authorize("/me/reviews/**", permitAll)
             }
             oauth2Login {}
             oauth2ResourceServer { jwt {} }
