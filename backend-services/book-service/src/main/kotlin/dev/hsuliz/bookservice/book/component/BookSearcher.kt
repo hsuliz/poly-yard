@@ -14,12 +14,16 @@ class BookSearcher(private val bookInfoClient: WebClient) {
 
   suspend fun findBookByIsbn(isbn: String): Book {
     val validIsbn = getValidIsbn(isbn)
-    return jacksonObjectMapper()
-        .readValue<BookMapper>(
-            bookInfoClient.get().uri("/?q=isbn:$validIsbn").retrieve().awaitBody<String>())
-        .bookItems[0]
-        .bookInfo
-        .toBookModel()
+    return try {
+      jacksonObjectMapper()
+          .readValue<BookMapper>(
+              bookInfoClient.get().uri("/?q=isbn:$validIsbn").retrieve().awaitBody<String>())
+          .bookItems[0]
+          .bookInfo
+          .toBookModel()
+    } catch (e: Exception) {
+      error("Failed to map the response to BookMapper")
+    }
   }
 
   private suspend fun getValidIsbn(isbnToValidate: String): String {
