@@ -5,11 +5,12 @@ import dev.hsuliz.bookservice.review.dao.ReviewResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.springframework.http.HttpStatus
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+
+const val PREFERRED_USERNAME = "preferred_username"
 
 @RestController
 class ReviewController(
@@ -21,10 +22,19 @@ class ReviewController(
       @RequestBody reviewRequest: ReviewRequest,
       @AuthenticationPrincipal jwt: Jwt,
   ): ReviewResponse {
-    val username = jwt.getClaimAsString("preferred_username")
+    val username = jwt.getClaimAsString(PREFERRED_USERNAME)
     val review = with(reviewRequest) { service.createReview(username, bookIsbn, rating, comment) }
     return ReviewResponse(review)
   }
+
+    @DeleteMapping("/me/reviews/{review_id}")
+    suspend fun deleteReview(
+        @PathVariable("review_id") reviewId: Long,
+        @AuthenticationPrincipal jwt: Jwt,
+    ) {
+        val username = jwt.getClaimAsString(PREFERRED_USERNAME)
+        service.deleteReview(username, reviewId)
+    }
 
   @GetMapping("/reviews/{review_id}")
   suspend fun getReview(@PathVariable("review_id") reviewId: Long): ReviewResponse? {

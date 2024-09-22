@@ -11,6 +11,8 @@ import org.springframework.security.config.web.server.invoke
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers.pathMatchers
 
+const val SCOPE_USER = "SCOPE_USER"
+
 @Configuration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
@@ -21,7 +23,7 @@ class SecurityConfig {
     return http {
       authorizeExchange {
         authorize(pathMatchers(GET, "/**"), permitAll)
-        authorize(pathMatchers(POST, "/me/**"), hasAuthority("SCOPE_USER"))
+        authorize(pathMatchers( "/me/**"), hasAuthority(SCOPE_USER))
       }
       csrf { disable() }
       oauth2ResourceServer { jwt {} }

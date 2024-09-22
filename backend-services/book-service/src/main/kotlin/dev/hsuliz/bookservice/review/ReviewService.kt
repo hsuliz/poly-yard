@@ -32,6 +32,15 @@ class ReviewService(
         ))
   }
 
+  suspend fun deleteReview(username: String, reviewId: Long) {
+    val user = userService.findUser(username) ?: error("User doesnt have reviews")
+    val review = findReview(reviewId) ?: error("Review no found")
+    when (review.userId) {
+      user.id -> reviewRepository.delete(review)
+      else -> error("No access")
+    }
+  }
+
   suspend fun findReview(reviewId: Long): Review? {
     return reviewRepository.findById(reviewId)
   }

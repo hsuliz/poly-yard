@@ -9,25 +9,22 @@ import org.springframework.security.config.web.server.invoke
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers.pathMatchers
 
+const val SCOPE_USER = "SCOPE_USER"
+
 @Configuration
 @EnableWebFluxSecurity
 class SecurityConfig {
 
-    @Bean
-    fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
-        return http {
-            authorizeExchange {
-                authorize(pathMatchers(GET, "/token"), authenticated)
-
-                authorize(pathMatchers(GET, "/users/**"), permitAll)
-                authorize(pathMatchers(GET, "/reviews/**"), permitAll)
-                authorize(pathMatchers(GET, "/books/**"), permitAll)
-
-                authorize("/me/books/**", permitAll)
-                authorize("/me/reviews/**", permitAll)
-            }
-            oauth2Login {}
-            oauth2ResourceServer { jwt {} }
-        }
+  @Bean
+  fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
+    return http {
+      authorizeExchange {
+        authorize(pathMatchers(GET, "/token"), authenticated)
+        authorize(pathMatchers("/**"), permitAll)
+        authorize(pathMatchers("/me/**"), hasAuthority(SCOPE_USER))
+      }
+      oauth2Login {}
+      oauth2ResourceServer { jwt {} }
     }
+  }
 }
