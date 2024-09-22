@@ -1,4 +1,4 @@
-package dev.hsuliz.bookservice.user.dto
+package dev.hsuliz.bookservice.user.model
 
 data class UserResponse(
     val username: String

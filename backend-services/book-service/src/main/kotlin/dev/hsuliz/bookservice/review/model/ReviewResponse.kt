@@ -1,6 +1,5 @@
-package dev.hsuliz.bookservice.review.dao
+package dev.hsuliz.bookservice.review.model
 
-import dev.hsuliz.bookservice.review.Review
 import java.time.LocalDateTime
 
 data class ReviewResponse(

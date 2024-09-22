@@ -1,6 +1,6 @@
 package dev.hsuliz.bookservice.user
 
-import dev.hsuliz.bookservice.user.dto.UserResponse
+import dev.hsuliz.bookservice.user.model.UserResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.springframework.web.bind.annotation.GetMapping

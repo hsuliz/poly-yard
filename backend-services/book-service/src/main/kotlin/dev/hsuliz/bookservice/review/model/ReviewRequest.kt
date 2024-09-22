@@ -1,4 +1,4 @@
-package dev.hsuliz.bookservice.review.dao
+package dev.hsuliz.bookservice.review.model
 
 data class ReviewRequest(
     val bookIsbn: String,

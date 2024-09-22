@@ -1,7 +1,7 @@
 package dev.hsuliz.bookservice.review
 
-import dev.hsuliz.bookservice.review.dao.ReviewRequest
-import dev.hsuliz.bookservice.review.dao.ReviewResponse
+import dev.hsuliz.bookservice.review.model.ReviewRequest
+import dev.hsuliz.bookservice.review.model.ReviewResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.springframework.http.HttpStatus

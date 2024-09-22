@@ -1,5 +1,6 @@
 package dev.hsuliz.bookservice.user
 
+import dev.hsuliz.bookservice.user.model.User
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 

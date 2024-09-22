@@ -1,4 +1,4 @@
-package dev.hsuliz.bookservice.review
+package dev.hsuliz.bookservice.review.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.data.annotation.Id

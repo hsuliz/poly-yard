@@ -1,6 +1,7 @@
 package dev.hsuliz.bookservice.book
 
 import dev.hsuliz.bookservice.book.component.BookSearcher
+import dev.hsuliz.bookservice.book.model.Book
 import org.springframework.stereotype.Service
 
 @Service

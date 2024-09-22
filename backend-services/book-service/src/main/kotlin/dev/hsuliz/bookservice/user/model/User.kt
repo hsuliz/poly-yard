@@ -1,4 +1,4 @@
-package dev.hsuliz.bookservice.user
+package dev.hsuliz.bookservice.user.model
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table

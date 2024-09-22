@@ -1,6 +1,7 @@
 package dev.hsuliz.bookservice.review
 
 import dev.hsuliz.bookservice.book.BookService
+import dev.hsuliz.bookservice.review.model.Review
 import dev.hsuliz.bookservice.user.UserService
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
@@ -29,7 +30,8 @@ class ReviewService(
             book.id!!,
             rating,
             comment,
-        ))
+        )
+    )
   }
 
   suspend fun deleteReview(username: String, reviewId: Long) {
