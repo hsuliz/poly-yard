@@ -1,0 +1,30 @@
+server.port: 8000
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      default-filters:
+        - TokenRelay=
+      routes:
+        - id: book-service
+          uri: http://localhost:8002
+          predicates:
+            - Path=/**, /me/**,
+
+  security.oauth2:
+    resourceserver:
+      jwt:
+        jwk-set-uri: http://localhost:8080/realms/polyyard/protocol/openid-connect/certs
+    client:
+      provider:
+        keycloak:
+          issuer-uri: http://localhost:8080/realms/polyyard
+      registration:
+        auth-client:
+          provider: keycloak
+          client-id: auth-client
+          client-secret: mVglpixtrZBqAJqpWuj0dCrNvLH3HaYF
+          authorization-grant-type: authorization_code
+          scope: openid
