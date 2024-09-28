@@ -25,6 +25,11 @@ kotest-extensions-spring = { module = "io.kotest.extensions:kotest-extensions-sp
 
 # spring-web
 spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
+spring-boot-starter-data-r2dbc = { module = "org.springframework.boot:spring-boot-starter-data-r2dbc" }
+r2dbc-postgresql = { module = "org.postgresql:r2dbc-postgresql" }
+spring-security-oauth2-resource-server = { module = "org.springframework.security:spring-security-oauth2-resource-server" }
+
 
 # spring-web-test
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
@@ -54,7 +59,13 @@ kotlin-core-test = [
     "kotest-framework-datatest",
     "kotest-extensions-spring"
 ]
-spring-web = ["spring-boot-starter-webflux"]
+spring-web = [
+    "spring-boot-starter-webflux",
+    "spring-boot-starter-security",
+    "spring-boot-starter-data-r2dbc",
+    "r2dbc-postgresql",
+    "spring-security-oauth2-resource-server"
+]
 spring-web-test = [
     "spring-boot-starter-test",
     "spring-boot-testcontainers",

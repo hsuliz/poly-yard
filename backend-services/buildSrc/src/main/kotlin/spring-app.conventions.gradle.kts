@@ -6,6 +6,6 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.bundles.spring.web) { exclude(group = "ch.qos.logback") }
+    implementation(libs.bundles.spring.web)
     testImplementation(libs.bundles.spring.web.test)
 }
