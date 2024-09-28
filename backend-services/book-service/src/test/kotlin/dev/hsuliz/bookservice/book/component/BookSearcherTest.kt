@@ -10,9 +10,8 @@ import java.lang.IllegalStateException
 class BookSearcherTest :
     FunSpec({
       lateinit var bookSearcher: BookSearcher
-      val bookInfoClient = WebClientConfig().bookInfoClient()
 
-      beforeTest { bookSearcher = BookSearcher(bookInfoClient) }
+      beforeTest { bookSearcher = BookSearcher(WebClientConfig().bookInfoClient()) }
 
       test("Given ISBN finds book") {
         // given
