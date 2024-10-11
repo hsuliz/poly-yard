@@ -1,9 +1,9 @@
 package dev.hsuliz.bookservice.review
 
+import dev.hsuliz.bookservice.review.model.Review
 import dev.hsuliz.bookservice.review.model.ReviewRequest
 import dev.hsuliz.bookservice.review.model.ReviewResponse
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.jwt.Jwt
@@ -27,14 +27,14 @@ class ReviewController(
     return ReviewResponse(review)
   }
 
-    @DeleteMapping("/me/reviews/{review_id}")
-    suspend fun deleteReview(
-        @PathVariable("review_id") reviewId: Long,
-        @AuthenticationPrincipal jwt: Jwt,
-    ) {
-        val username = jwt.getClaimAsString(PREFERRED_USERNAME)
-        service.deleteReview(username, reviewId)
-    }
+  @DeleteMapping("/me/reviews/{review_id}")
+  suspend fun deleteReview(
+      @PathVariable("review_id") reviewId: Long,
+      @AuthenticationPrincipal jwt: Jwt,
+  ) {
+    val username = jwt.getClaimAsString(PREFERRED_USERNAME)
+    service.deleteReview(username, reviewId)
+  }
 
   @GetMapping("/reviews/{review_id}")
   suspend fun getReview(@PathVariable("review_id") reviewId: Long): ReviewResponse? {
@@ -49,5 +49,10 @@ class ReviewController(
   fun getUserReviews(@PathVariable("user_id") userId: Long): Flow<ReviewResponse> {
     val reviews = service.findUserReviews(userId)
     return reviews.map { ReviewResponse(it) }
+  }
+
+  @GetMapping("/reviews")
+  fun getAllReviews(): Flow<Review>  {
+    return service.findAllReviews()
   }
 }
