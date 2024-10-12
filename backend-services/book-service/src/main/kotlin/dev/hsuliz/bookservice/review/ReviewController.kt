@@ -3,7 +3,8 @@ package dev.hsuliz.bookservice.review
 import dev.hsuliz.bookservice.review.model.Review
 import dev.hsuliz.bookservice.review.model.ReviewRequest
 import dev.hsuliz.bookservice.review.model.ReviewResponse
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.jwt.Jwt
@@ -52,7 +53,8 @@ class ReviewController(
   }
 
   @GetMapping("/reviews")
-  fun getAllReviews(): Flow<Review>  {
-    return service.findAllReviews()
+  fun getAllReviews(): Flow<ReviewResponse>  {
+      val reviews = service.findAllReviews()
+      return reviews.map { ReviewResponse(it) }
   }
 }
