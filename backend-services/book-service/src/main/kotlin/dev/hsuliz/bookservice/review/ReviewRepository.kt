@@ -30,8 +30,11 @@ interface ReviewRepository : CoroutineCrudRepository<Review, Long> {
           book.isbn AS book_isbn,
           book.published_date AS book_published_date
         FROM reviews AS review 
-        NATURAL JOIN users AS user_
-        NATURAL JOIN books AS book
+        JOIN users AS user_ ON review.user_id=user_.id 
+        JOIN books AS book ON review.book_id=book.id
     """)
+
+  //JOIN users AS user_ ON reviews.user_id=users.id
+  // JOIN books ON reviews.book_id=books.id;
   fun findAllReviewsWithBookAndUser(): Flow<ReviewWithBookAndUserDto>
 }

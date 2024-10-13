@@ -22,7 +22,7 @@ class BookSearcher(private val bookInfoClient: WebClient) {
           .bookInfo
           .toBookModel()
     } catch (e: Exception) {
-      error("Failed to map the response to BookMapper")
+      error("Failed to map the response to BookMapper for isbn: $isbn")
     }
   }
 
@@ -40,26 +40,28 @@ private data class BookMapper(@JsonProperty("items") val bookItems: List<BookIte
   data class BookItem(@JsonProperty("volumeInfo") val bookInfo: BookInfo) {
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class BookInfo(
-        val industryIdentifiers: List<IndustryIdentifiers>,
-        val title: String,
-        val authors: List<String>,
-        val publishedDate: String,
-        @JsonProperty("pageCount") val pages: Int,
-        @JsonProperty("imageLinks") var image: ImageLink,
+        val industryIdentifiers: List<IndustryIdentifiers>? = null, // Nullable with default value
+        val title: String? = null, // Nullable
+        val authors: List<String>? = null, // Nullable
+        val publishedDate: String? = null, // Nullable
+        @JsonProperty("pageCount") val pages: Int? = null, // Nullable
+        @JsonProperty("imageLinks") var image: ImageLink? = null, // Nullable
     ) {
-      data class IndustryIdentifiers(val identifier: String, val type: String)
+      data class IndustryIdentifiers(val identifier: String? = null, val type: String? = null)
 
-      @JsonIgnoreProperties(ignoreUnknown = true) data class ImageLink(val thumbnail: String)
+      @JsonIgnoreProperties(ignoreUnknown = true)
+      data class ImageLink(val thumbnail: String? = null) // Nullable
 
       fun toBookModel(): Book {
         return Book(
-            industryIdentifiers.find { it.type == "ISBN_13" }!!.identifier,
-            title,
-            authors[0],
-            publishedDate.take(4).toInt(),
-            pages,
-            image.thumbnail,
-        )
+            industryIdentifiers?.find { it.type == "ISBN_13" }?.identifier
+                ?: "Unknown ISBN", // Fallback for null
+            title ?: "Unknown Title", // Fallback for null
+            authors?.getOrNull(0) ?: "Unknown Author", // Fallback for null and empty list
+            publishedDate?.take(4)?.toIntOrNull() ?: 0, // Fallback for null or invalid date
+            pages ?: 0, // Fallback for null
+            image?.thumbnail ?: "No Image Available" // Fallback for null
+            )
       }
     }
   }

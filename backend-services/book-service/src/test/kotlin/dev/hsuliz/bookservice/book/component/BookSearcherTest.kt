@@ -5,7 +5,6 @@ import dev.hsuliz.bookservice.config.WebClientConfig
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import java.lang.IllegalStateException
 
 class BookSearcherTest :
     FunSpec({
