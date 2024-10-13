@@ -30,9 +30,8 @@ export default defineComponent({
 
 <template>
   <div>
-    <div class="grid grid-cols-1 gap-6 p-6">
+    <div class="grid grid-cols-1 gap-6 p-2">
       <div
-
         v-for="review in reviews"
         :key="review.book.isbn"
         class="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 text-white"

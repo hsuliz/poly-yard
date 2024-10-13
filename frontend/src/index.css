@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html {
-    font-size: 100%;
+    font-size: 140%;
     font-family: Inter, 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
 
     font-synthesis: none;
