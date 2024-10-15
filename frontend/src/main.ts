@@ -15,7 +15,7 @@ app.use(vueKeycloak, {
   config: {
     url: `http://localhost:8080`,
     realm: 'polyyard',
-    clientId: 'front',
+    clientId: 'front'
   },
   initOptions: {
     onLoad: 'check-sso',
