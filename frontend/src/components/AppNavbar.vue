@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useKeycloak } from '@josempgon/vue-keycloak'
+import { computed } from 'vue'
 
 const { isAuthenticated, username, keycloak } = useKeycloak()
 
@@ -8,6 +9,12 @@ const login = () => {
     keycloak.value.login()
   }
 }
+const truncatedUsername = computed(() => {
+  return username.value && username.value.length > 8
+    ? username.value.substring(0, 8) + '...'
+    : username.value;
+});
+
 </script>
 
 <template>
@@ -22,8 +29,10 @@ const login = () => {
         </li>
       </ul>
       <div>
-        <span v-if="isAuthenticated" class="text-gray-300 hover:text-white">{{ username }}</span>
-        <span v-else @click="login" class="text-gray-300 hover:text-white">Log In</span>
+        <RouterLink v-if="isAuthenticated" to="/profile" class="text-gray-300 hover:text-white truncate"
+          >{{ truncatedUsername }}
+        </RouterLink>
+        <span v-else @click="login" class="text-gray-300 hover:text-green-800">Log In</span>
       </div>
     </div>
   </nav>
