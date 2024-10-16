@@ -1,5 +1,5 @@
-import type Book from '@/types/Book'
-import type User from '@/types/User'
+import type Book from "@/types/Book"
+import type User from "@/types/User"
 
 export default interface Review {
   rating: number

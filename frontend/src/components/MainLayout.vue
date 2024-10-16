@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import Navbar from './AppNavbar.vue'
+import Navbar from "./AppNavbar.vue"
 </script>
 
 <template>
   <div>
-    <Navbar/>
+    <Navbar />
     <main class="container mx-auto p-4">
-      <RouterView/>
+      <RouterView />
     </main>
   </div>
 </template>

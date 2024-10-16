@@ -1,7 +1,7 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
-import axios from 'axios'
-import type Review from '@/types/Review'
+import { defineComponent, onMounted, ref } from "vue"
+import axios from "axios"
+import type Review from "@/types/Review"
 
 export default defineComponent({
   setup() {
@@ -9,11 +9,11 @@ export default defineComponent({
 
     const fetchReviews = async () => {
       try {
-        const response = await axios.get('http://localhost:8002/reviews')
+        const response = await axios.get("http://localhost:8002/reviews")
         reviews.value = response.data
         console.info(response)
       } catch (error) {
-        console.error('Error fetching reviews:', error)
+        console.error("Error fetching reviews:", error)
       }
     }
 

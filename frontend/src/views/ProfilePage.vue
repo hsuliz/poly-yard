@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import { useKeycloak } from '@josempgon/vue-keycloak'
+import { useKeycloak } from "@josempgon/vue-keycloak"
 
 const { username } = useKeycloak()
-
 </script>
 
 <template>
