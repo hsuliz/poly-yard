@@ -17,6 +17,11 @@ body {
   margin: 0;
   padding: 0;
   @apply bg-slate-900;
+  @apply text-white
+}
+
+input, textarea, select, option {
+  @apply text-black
 }
 
 #app {

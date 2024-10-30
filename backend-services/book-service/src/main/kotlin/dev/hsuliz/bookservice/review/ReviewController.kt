@@ -24,6 +24,7 @@ class ReviewController(
       @AuthenticationPrincipal jwt: Jwt,
   ): ReviewResponse {
     val username = jwt.getClaimAsString(PREFERRED_USERNAME)
+      println("$username is addung $reviewRequest")
     val review = with(reviewRequest) { service.createReview(username, bookIsbn, rating, comment) }
     return ReviewResponse(review)
   }

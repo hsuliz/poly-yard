@@ -1,28 +1,22 @@
-<script lang="ts">
+<script setup lang="ts">
+import { ref, onMounted } from "vue"
 import axios from "axios"
-import { defineComponent } from "vue"
 import type Review from "@/types/Review"
 
-export default defineComponent({
-  data() {
-    return {
-      reviews: [] as Review[]
-    }
-  },
-  methods: {
-    async fetchReviews() {
-      try {
-        const response = await axios.get("http://localhost:8002/reviews")
-        this.reviews = response.data
-        console.info(response)
-      } catch (error) {
-        console.error("Error fetching reviews:", error)
-      }
-    }
-  },
-  mounted() {
-    this.fetchReviews()
+const reviews = ref<Review[]>([])
+
+const fetchReviews = async () => {
+  try {
+    const response = await axios.get("http://localhost:8002/reviews")
+    reviews.value = response.data
+    console.info(response)
+  } catch (error) {
+    console.error("Error fetching reviews:", error)
   }
+}
+
+onMounted(() => {
+  fetchReviews()
 })
 </script>
 
@@ -32,7 +26,7 @@ export default defineComponent({
       <div
         v-for="review in reviews"
         :key="review.book.isbn"
-        class="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 text-white"
+        class="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
       >
         <div class="p-4">
           <div class="flex items-center">

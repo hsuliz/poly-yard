@@ -21,19 +21,19 @@ const truncatedUsername = computed(() => {
     <div class="container mx-auto flex justify-between items-center">
       <ul class="flex space-x-4">
         <li>
-          <RouterLink to="/" class="text-white font-bold text-balance">Poly-Yard</RouterLink>
+          <router-link to="/" class="text-white font-bold text-balance">Poly-Yard</router-link>
         </li>
         <li>
-          <RouterLink to="/books" class="text-gray-300 hover:text-white">Books</RouterLink>
+          <router-link to="/books" class="text-gray-300 hover:text-white">Books</router-link>
         </li>
       </ul>
       <div>
-        <RouterLink
+        <router-link
           v-if="isAuthenticated"
           to="/profile"
           class="text-gray-300 hover:text-white truncate"
           >{{ truncatedUsername }}
-        </RouterLink>
+        </router-link>
         <span v-else @click="login" class="text-gray-300 hover:text-green-800">Log In</span>
       </div>
     </div>

@@ -6,7 +6,7 @@ import Navbar from "./AppNavbar.vue"
   <div>
     <Navbar />
     <main class="container mx-auto p-4">
-      <RouterView />
+      <router-view />
     </main>
   </div>
 </template>
