@@ -1,6 +1,5 @@
 package dev.hsuliz.bookservice.review
 
-import dev.hsuliz.bookservice.review.model.Review
 import dev.hsuliz.bookservice.review.model.ReviewRequest
 import dev.hsuliz.bookservice.review.model.ReviewResponse
 import kotlinx.coroutines.flow.Flow
@@ -14,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException
 const val PREFERRED_USERNAME = "preferred_username"
 
 @RestController
+@RequestMapping("/api")
 class ReviewController(
     private val service: ReviewService,
 ) {
@@ -24,7 +24,7 @@ class ReviewController(
       @AuthenticationPrincipal jwt: Jwt,
   ): ReviewResponse {
     val username = jwt.getClaimAsString(PREFERRED_USERNAME)
-      println("$username is addung $reviewRequest")
+    println("$username is addung $reviewRequest")
     val review = with(reviewRequest) { service.createReview(username, bookIsbn, rating, comment) }
     return ReviewResponse(review)
   }
@@ -54,8 +54,8 @@ class ReviewController(
   }
 
   @GetMapping("/reviews")
-  fun getAllReviews(): Flow<ReviewResponse>  {
-      val reviews = service.findAllReviews()
-      return reviews.map { ReviewResponse(it) }
+  fun getAllReviews(): Flow<ReviewResponse> {
+    val reviews = service.findAllReviews()
+    return reviews.map { ReviewResponse(it) }
   }
 }

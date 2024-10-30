@@ -26,24 +26,9 @@ class SecurityConfig : WebFluxConfigurer {
     return http {
       authorizeExchange {
         authorize(pathMatchers(GET, "/**"), permitAll)
-        authorize(pathMatchers("/me/**"), hasAuthority(SCOPE_USER))
+        authorize(pathMatchers("/api/me/**"), hasAuthority(SCOPE_USER))
       }
       oauth2ResourceServer { jwt {} }
     }
-  }
-
-  @Bean
-  fun corsFilter(): CorsWebFilter {
-    val config = CorsConfiguration().apply {
-      allowedOrigins = listOf("http://localhost:5173")
-      allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
-      allowedHeaders = listOf("Authorization", "Content-Type")
-      allowCredentials = true
-    }
-
-    val source = UrlBasedCorsConfigurationSource()
-    source.registerCorsConfiguration("/**", config)
-
-    return CorsWebFilter(source)
   }
 }

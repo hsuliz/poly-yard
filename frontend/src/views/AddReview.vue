@@ -26,7 +26,7 @@ onMounted(() => {
 // Check if book exists
 const checkBook = async () => {
   try {
-    const response = await axios.get(`http://localhost:8002/books/${isbn.value}`)
+    const response = await axios.get(`/api/books/${isbn.value}`)
     console.log("Book found:", response.data)
     book.value = response.data.book
     console.info(token.value)
@@ -43,7 +43,7 @@ const checkBook = async () => {
 const submitReview = async () => {
   try {
     await axios.post(
-      "/me/reviews",
+      "/api/me/reviews",
       {
         bookIsbn: isbn.value,
         rating: rating.value,

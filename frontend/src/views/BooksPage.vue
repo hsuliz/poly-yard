@@ -7,7 +7,7 @@ const reviews = ref<Review[]>([])
 
 const fetchReviews = async () => {
   try {
-    const response = await axios.get("http://localhost:8002/reviews")
+    const response = await axios.get("/api/reviews")
     reviews.value = response.data
     console.info(response)
   } catch (error) {
