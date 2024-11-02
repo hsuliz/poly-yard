@@ -1,4 +1,4 @@
 rootProject.name = "backend-services"
-include("auth")
 include("gateway")
+include("review-service")
 include("book-service")

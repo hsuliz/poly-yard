@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 import axios from "axios"
 import BookCard from "@/components/cards/BookCard.vue"
 import type Book from "@/types/Book"
@@ -11,13 +11,14 @@ const comment = ref<string>("")
 const book = ref<Book | null>(null)
 const errorMessage = ref<string>("")
 const { token } = useKeycloak()
-const options = ref([
+
+const options = computed(() => [
   { text: 1, value: 1 },
   { text: 2, value: 2 },
   { text: 3, value: 3 },
   { text: 4, value: 4 },
-  { text: 5, value: 5 }
-])
+  { text: 5, value: 5 },
+]);
 
 onMounted(() => {
   console.info()
@@ -99,7 +100,7 @@ const submitReview = async () => {
           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option disabled value="">Please select one</option>
-          <option v-for="option in options" :value="option.value">
+          <option v-for="option in options" :key="option.value" :value="option.value">
             {{ option.text }}
           </option>
         </select>

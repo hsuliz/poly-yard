@@ -1,7 +1,7 @@
-package dev.hsuliz.bookservice.review.model
+package dev.hsuliz.polyyard.service.review.dto
 
 data class ReviewRequest(
-    val bookIsbn: String,
+    val type: String,
     val rating: Int,
     val comment: String?,
 )

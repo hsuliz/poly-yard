@@ -1,0 +1,24 @@
+server.port: 8081
+spring:
+  application:
+    name: review-service
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5433/review
+    username: postgres
+    password: review
+  security.oauth2.resourceserver.jwt.jwk-set-uri: http://localhost:8080/realms/polyyard/protocol/openid-connect/certs
+
+server:
+  error:
+    include-message: always
+
+logging.level:
+  org.springframework.cloud.gateway: DEBUG
+  org.springframework.security: DEBUG
+  org.springframework.web.reactive.function.client: TRACE
