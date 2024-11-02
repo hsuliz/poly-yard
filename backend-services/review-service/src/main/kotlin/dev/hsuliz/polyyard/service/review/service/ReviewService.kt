@@ -15,9 +15,13 @@ class ReviewService(
     private val typeRepository: TypeRepository
 ) {
 
-  fun findReviews(pageable: Pageable): Flow<Review> {
+  fun findReviewsBy(pageable: Pageable): Flow<Review> {
     val reviews = reviewRepository.findAllBy(pageable)
     return reviews
+  }
+
+  suspend fun countReviews(): Long {
+    return reviewRepository.count()
   }
 
   @Transactional
