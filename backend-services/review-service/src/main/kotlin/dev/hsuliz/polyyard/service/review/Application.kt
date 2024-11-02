@@ -1,6 +1,7 @@
 package dev.hsuliz.polyyard.service.review
 
 import dev.hsuliz.polyyard.service.review.model.ReviewType
+import dev.hsuliz.polyyard.service.review.service.ReviewService
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -18,9 +19,9 @@ class ReviewStartupRunner(private val service: ReviewService) : CommandLineRunne
   override fun run(vararg args: String?) {
     runBlocking {
       service.createReview("Sasha", ReviewType("book", 234), 3)
-      service.findReviews(0).collect { println(it) }
-      println("=====")
-      service.findReviews(1).collect { println(it) }
+      //service.findReviews(0).collect { println(it) }
+      //println("=====")
+      //service.findReviews(1).collect { println(it) }
     }
   }
 }

@@ -8,5 +8,5 @@ import org.springframework.data.repository.kotlin.CoroutineSortingRepository
 
 interface ReviewRepository :
     CoroutineCrudRepository<Review, Long>, CoroutineSortingRepository<Review, Long> {
-  fun findBy(pageable: Pageable): Flow<Review>
+  fun findAllBy(pageable: Pageable): Flow<Review>
 }
