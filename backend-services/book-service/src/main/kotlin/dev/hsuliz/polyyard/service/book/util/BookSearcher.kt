@@ -1,10 +1,10 @@
-package dev.hsuliz.bookservice.book.component
+package dev.hsuliz.polyyard.service.book.util
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import dev.hsuliz.bookservice.book.model.Book
+import dev.hsuliz.polyyard.service.book.Book
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
@@ -61,7 +61,7 @@ private data class BookMapper(@JsonProperty("items") val bookItems: List<BookIte
             publishedDate?.take(4)?.toIntOrNull() ?: 0, // Fallback for null or invalid date
             pages ?: 0, // Fallback for null
             image?.thumbnail ?: "No Image Available" // Fallback for null
-            )
+        )
       }
     }
   }

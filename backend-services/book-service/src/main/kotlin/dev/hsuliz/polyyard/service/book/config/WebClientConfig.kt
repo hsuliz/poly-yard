@@ -1,4 +1,4 @@
-package dev.hsuliz.bookservice.config
+package dev.hsuliz.polyyard.service.book.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

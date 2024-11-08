@@ -1,6 +1,6 @@
-package dev.hsuliz.bookservice.book
+package dev.hsuliz.polyyard.service.book
 
-import dev.hsuliz.bookservice.book.model.BookResponse
+import dev.hsuliz.polyyard.service.book.dto.BookResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

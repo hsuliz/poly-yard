@@ -1,4 +1,4 @@
-package dev.hsuliz.bookservice.book.model
+package dev.hsuliz.polyyard.service.book
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.data.annotation.Id

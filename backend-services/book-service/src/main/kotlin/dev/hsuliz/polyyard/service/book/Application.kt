@@ -1,4 +1,4 @@
-package dev.hsuliz.bookservice
+package dev.hsuliz.polyyard.service.book
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

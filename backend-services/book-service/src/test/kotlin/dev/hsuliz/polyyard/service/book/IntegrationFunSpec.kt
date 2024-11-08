@@ -1,4 +1,4 @@
-package dev.hsuliz.bookservice
+package dev.hsuliz.polyyard.service.book
 
 import io.kotest.core.spec.style.FunSpec
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
@@ -17,7 +17,7 @@ abstract class IntegrationFunSpec(body: FunSpec.() -> Unit = {}) : FunSpec(body)
     var postgresDBContainer = PostgreSQLContainer(DockerImageName.parse("postgres:16-alpine"))
 
     init {
-      postgresDBContainer.start()
+      dev.hsuliz.polyyard.service.book.IntegrationFunSpec.Companion.postgresDBContainer.start()
     }
   }
 }
