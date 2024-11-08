@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 class Consumer {
 
   @RabbitListener(queues = ["book"], ackMode = "MANUAL")
-  suspend fun receiveMessage(message: String) {
+  suspend fun receiveMessage(message: Pair<Long, Int>) {
     println(message)
   }
 }

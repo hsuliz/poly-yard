@@ -2,6 +2,14 @@ server.port: 8004
 spring:
   application:
     name: book-service
+  amqp:
+    deserialization.trust.all: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
   r2dbc:
     url: r2dbc:postgresql://localhost/books_service
     username: postgres

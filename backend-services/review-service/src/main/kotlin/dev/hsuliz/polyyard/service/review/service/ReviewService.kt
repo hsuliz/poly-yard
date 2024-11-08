@@ -5,7 +5,6 @@ import dev.hsuliz.polyyard.service.review.model.ReviewType
 import dev.hsuliz.polyyard.service.review.repository.ReviewRepository
 import dev.hsuliz.polyyard.service.review.repository.TypeRepository
 import kotlinx.coroutines.flow.Flow
-import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -37,7 +36,9 @@ class ReviewService(
     val savedType = typeRepository.save(reviewType)
     val reviewToSave = Review(username, savedType.id!!, rating, comment)
     val savedReview = reviewRepository.save(reviewToSave)
-    rabbitTemplate.convertAndSend("book", "test")
+    when (reviewType.name) {
+      "book" -> rabbitTemplate.convertAndSend("book", Pair(reviewType.externalId, rating))
+    }
     return savedReview
   }
 }
