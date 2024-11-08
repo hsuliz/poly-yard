@@ -2,7 +2,7 @@ package dev.hsuliz.polyyard.service.book.book.component
 
 import dev.hsuliz.polyyard.service.book.Book
 import dev.hsuliz.bookservice.config.WebClientConfig
-import dev.hsuliz.polyyard.service.book.util.BookSearcher
+import dev.hsuliz.polyyard.service.book.component.BookSearcher
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe

@@ -8,9 +8,9 @@ import org.springframework.web.reactive.result.method.HandlerMethodArgumentResol
 @Configuration
 class WebConfig {
 
-    @Bean
-    fun reactivePageableHandlerMethodArgumentResolver(): HandlerMethodArgumentResolver {
-        //  allows injecting Pageable instances into WebFlux controller methods
-        return ReactivePageableHandlerMethodArgumentResolver()
-    }
+  @Bean
+  fun reactivePageableHandlerMethodArgumentResolver(): HandlerMethodArgumentResolver {
+    //  allows injecting Pageable instances into WebFlux controller methods
+    return ReactivePageableHandlerMethodArgumentResolver()
+  }
 }

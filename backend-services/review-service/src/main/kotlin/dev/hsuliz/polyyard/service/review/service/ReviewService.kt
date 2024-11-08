@@ -1,11 +1,12 @@
 package dev.hsuliz.polyyard.service.review.service
 
+import dev.hsuliz.polyyard.service.review.component.dao.ReviewCreatedEvent
 import dev.hsuliz.polyyard.service.review.model.Review
 import dev.hsuliz.polyyard.service.review.model.ReviewType
 import dev.hsuliz.polyyard.service.review.repository.ReviewRepository
 import dev.hsuliz.polyyard.service.review.repository.TypeRepository
 import kotlinx.coroutines.flow.Flow
-import org.springframework.amqp.rabbit.core.RabbitTemplate
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 class ReviewService(
     private val reviewRepository: ReviewRepository,
     private val typeRepository: TypeRepository,
-    private val rabbitTemplate: RabbitTemplate
+    private val eventPublisher: ApplicationEventPublisher
 ) {
 
   fun findReviewsBy(pageable: Pageable): Flow<Review> {
@@ -36,9 +37,8 @@ class ReviewService(
     val savedType = typeRepository.save(reviewType)
     val reviewToSave = Review(username, savedType.id!!, rating, comment)
     val savedReview = reviewRepository.save(reviewToSave)
-    when (reviewType.name) {
-      "book" -> rabbitTemplate.convertAndSend("book", Pair(reviewType.externalId, rating))
-    }
+
+    eventPublisher.publishEvent(ReviewCreatedEvent(savedType, savedReview.rating))
     return savedReview
   }
 }

@@ -1,4 +1,4 @@
-package dev.hsuliz.polyyard.service.book.util
+package dev.hsuliz.polyyard.service.book.component
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -61,7 +61,7 @@ private data class BookMapper(@JsonProperty("items") val bookItems: List<BookIte
             publishedDate?.take(4)?.toIntOrNull() ?: 0, // Fallback for null or invalid date
             pages ?: 0, // Fallback for null
             image?.thumbnail ?: "No Image Available" // Fallback for null
-        )
+            )
       }
     }
   }

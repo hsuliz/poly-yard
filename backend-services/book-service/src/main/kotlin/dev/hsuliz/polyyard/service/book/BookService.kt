@@ -1,6 +1,6 @@
 package dev.hsuliz.polyyard.service.book
 
-import dev.hsuliz.polyyard.service.book.util.BookSearcher
+import dev.hsuliz.polyyard.service.book.component.BookSearcher
 import org.springframework.stereotype.Service
 
 @Service
