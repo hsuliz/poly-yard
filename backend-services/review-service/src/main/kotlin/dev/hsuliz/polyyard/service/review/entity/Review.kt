@@ -6,7 +6,8 @@ import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 
 @Table("reviews")
-data class ReviewEntity(
+data class Review(
+    val username: String,
     @Column("category") val category: Category,
     val resourceId: Long,
     val rating: Int,
@@ -21,8 +22,10 @@ data class ReviewEntity(
 }
 
 @Table("resources")
-data class ResourceEntity(val name: String, @Id val id: Long? = null) {
-  enum class Resource {
+data class Resource(val type: Type, val value: String, @Id val id: Long? = null) {
+  constructor(it: Pair<Type, String>) : this(it.first, it.second)
+
+  enum class Type {
     ISBN,
     ISRC,
     UPC

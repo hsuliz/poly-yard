@@ -1,6 +1,7 @@
 package dev.hsuliz.polyyard.service.review.config
 
-import dev.hsuliz.polyyard.service.review.entity.ReviewEntity
+import dev.hsuliz.polyyard.service.review.entity.Resource
+import dev.hsuliz.polyyard.service.review.entity.Review
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration
 import io.r2dbc.postgresql.PostgresqlConnectionFactory
 import io.r2dbc.postgresql.codec.EnumCodec
@@ -13,8 +14,6 @@ import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration
 @Configuration
 class PostgresqlConfig : AbstractR2dbcConfiguration() {
 
-
-
   @Bean
   @Primary
   override fun connectionFactory(): ConnectionFactory {
@@ -26,11 +25,14 @@ class PostgresqlConfig : AbstractR2dbcConfiguration() {
             .username("postgres")
             .password("review")
             .codecRegistrar(
-                EnumCodec.builder().withEnum("category", ReviewEntity.Category::class.java).build())
+                EnumCodec.builder()
+                    .withEnum("category", Review.Category::class.java)
+                    .withEnum("resource", Resource.Type::class.java)
+                    .build())
             .build())
   }
 
-    override fun getCustomConverters(): List<Any> {
-        return java.util.List.of<Any>(PostStatusWritingConverter(), PostStatusWritingConverter())
-    }
+  override fun getCustomConverters(): List<Any> {
+    return listOf(CategoryWritingConverter(), ResourceWritingConverter())
+  }
 }

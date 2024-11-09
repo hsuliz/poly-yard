@@ -1,5 +1,7 @@
 package dev.hsuliz.polyyard.service.review
 
+import dev.hsuliz.polyyard.service.review.entity.Resource
+import dev.hsuliz.polyyard.service.review.entity.Review
 import dev.hsuliz.polyyard.service.review.repository.ReviewRepository
 import dev.hsuliz.polyyard.service.review.service.ReviewService
 import kotlinx.coroutines.runBlocking
@@ -20,7 +22,12 @@ class ReviewStartupRunner(private val service: ReviewService,
   override fun run(vararg args: String?) {
     runBlocking {
 
-      service.createReview()
+      service.createReview(
+        "sasha",
+        Review.Category.BOOK,
+        Pair(Resource.Type.ISBN, "dsds"),
+        5
+      )
       //service.findReviews(0).collect { println(it) }
       //println("=====")
       //service.findReviews(1).collect { println(it) }
