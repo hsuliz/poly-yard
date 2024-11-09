@@ -15,7 +15,7 @@ class ReviewEventListener(private val rabbitTemplate: RabbitTemplate) {
     when (event.reviewType.name) {
       "book" -> {
         withContext(Dispatchers.IO) {
-          rabbitTemplate.convertAndSend("book", Pair(event.reviewType.externalId, event.rating))
+          rabbitTemplate.convertAndSend("book", Pair(event.reviewType.name, event.rating))
         }
       }
     }
