@@ -4,7 +4,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
 
 @Component
-class Consumer {
+class RabbitMqConsumer {
 
   @RabbitListener(queues = ["book"], ackMode = "MANUAL")
   suspend fun receiveMessage(message: Pair<Long, Int>) {

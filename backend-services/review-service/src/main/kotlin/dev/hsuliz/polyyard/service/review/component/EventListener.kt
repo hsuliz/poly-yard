@@ -1,6 +1,8 @@
 package dev.hsuliz.polyyard.service.review.component
 
 import dev.hsuliz.polyyard.service.review.component.dao.ReviewCreatedEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -9,9 +11,13 @@ import org.springframework.stereotype.Component
 class ReviewEventListener(private val rabbitTemplate: RabbitTemplate) {
 
   @EventListener
-  suspend fun handleCreateReviewEvent(event: ReviewCreatedEvent) {
-    if (event.reviewType.name == "book") {
-      rabbitTemplate.convertAndSend("book", Pair(event.reviewType.externalId, event.rating))
+  suspend fun reviewCreatedEvent(event: ReviewCreatedEvent) {
+    when (event.reviewType.name) {
+      "book" -> {
+        withContext(Dispatchers.IO) {
+          rabbitTemplate.convertAndSend("book", Pair(event.reviewType.externalId, event.rating))
+        }
+      }
     }
   }
 }

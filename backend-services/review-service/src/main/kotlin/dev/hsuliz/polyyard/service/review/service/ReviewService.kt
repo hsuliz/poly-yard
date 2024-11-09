@@ -5,6 +5,7 @@ import dev.hsuliz.polyyard.service.review.model.Review
 import dev.hsuliz.polyyard.service.review.model.ReviewType
 import dev.hsuliz.polyyard.service.review.repository.ReviewRepository
 import dev.hsuliz.polyyard.service.review.repository.TypeRepository
+import dev.hsuliz.polyyard.service.review.util.alsoPublishEvent
 import kotlinx.coroutines.flow.Flow
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Pageable
@@ -36,9 +37,10 @@ class ReviewService(
   ): Review {
     val savedType = typeRepository.save(reviewType)
     val reviewToSave = Review(username, savedType.id!!, rating, comment)
-    val savedReview = reviewRepository.save(reviewToSave)
-
-    eventPublisher.publishEvent(ReviewCreatedEvent(savedType, savedReview.rating))
+    val savedReview =
+        reviewRepository
+            .save(reviewToSave)
+            .alsoPublishEvent(eventPublisher, ReviewCreatedEvent(savedType, rating))
     return savedReview
   }
 }
