@@ -1,6 +1,6 @@
 package dev.hsuliz.polyyard.service.review.service
 
-import dev.hsuliz.polyyard.service.review.component.dao.ReviewCreatedEvent
+import dev.hsuliz.polyyard.service.review.component.dto.ReviewCreatedEvent
 import dev.hsuliz.polyyard.service.review.model.Review
 import dev.hsuliz.polyyard.service.review.model.ReviewType
 import dev.hsuliz.polyyard.service.review.repository.ReviewRepository

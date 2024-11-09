@@ -1,4 +1,4 @@
-package dev.hsuliz.polyyard.service.review.component.dao
+package dev.hsuliz.polyyard.service.review.component.dto
 
 import dev.hsuliz.polyyard.service.review.model.ReviewType
 

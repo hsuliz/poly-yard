@@ -1,6 +1,6 @@
 package dev.hsuliz.polyyard.service.review.component
 
-import dev.hsuliz.polyyard.service.review.component.dao.ReviewCreatedEvent
+import dev.hsuliz.polyyard.service.review.component.dto.ReviewCreatedEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.amqp.rabbit.core.RabbitTemplate
