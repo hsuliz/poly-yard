@@ -1,9 +1,5 @@
 package dev.hsuliz.polyyard.service.review
 
-import dev.hsuliz.polyyard.service.review.model.Resource
-import dev.hsuliz.polyyard.service.review.model.Review
-import dev.hsuliz.polyyard.service.review.repository.ReviewRepository
-import dev.hsuliz.polyyard.service.review.service.ReviewService
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -18,7 +14,8 @@ fun main(args: Array<String>) {
 
 @Component
 class ReviewStartupRunner(private val service: ReviewService,
-  private val repo: ReviewRepository) : CommandLineRunner {
+                          private val repo: ReviewRepository
+) : CommandLineRunner {
   override fun run(vararg args: String?) {
     runBlocking {
 

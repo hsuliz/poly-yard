@@ -1,7 +1,7 @@
 package dev.hsuliz.polyyard.service.review.config
 
-import dev.hsuliz.polyyard.service.review.model.Resource
-import dev.hsuliz.polyyard.service.review.model.Review
+import dev.hsuliz.polyyard.service.review.Resource
+import dev.hsuliz.polyyard.service.review.Review
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration
 import io.r2dbc.postgresql.PostgresqlConnectionFactory
 import io.r2dbc.postgresql.codec.EnumCodec

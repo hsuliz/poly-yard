@@ -1,9 +1,5 @@
-package dev.hsuliz.polyyard.service.review.service
+package dev.hsuliz.polyyard.service.review
 
-import dev.hsuliz.polyyard.service.review.model.Resource
-import dev.hsuliz.polyyard.service.review.model.Review
-import dev.hsuliz.polyyard.service.review.repository.ResourceRepository
-import dev.hsuliz.polyyard.service.review.repository.ReviewRepository
 import kotlinx.coroutines.flow.Flow
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Pageable
@@ -37,7 +33,8 @@ class ReviewService(
     val savedResource = resourceRepository.save(Resource(resource))
     val savedReview =
         reviewRepository.save(
-            Review(username, reviewCategory, savedResource.id!!, rating, comment))
+            Review(username, reviewCategory, savedResource.id!!, rating, comment)
+        )
     return savedReview
   }
 }

@@ -1,7 +1,5 @@
-package dev.hsuliz.polyyard.service.review.repository
+package dev.hsuliz.polyyard.service.review
 
-import dev.hsuliz.polyyard.service.review.model.Resource
-import dev.hsuliz.polyyard.service.review.model.Review
 import kotlinx.coroutines.flow.Flow
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository

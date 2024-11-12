@@ -1,4 +1,4 @@
-package dev.hsuliz.polyyard.service.review.controller.dto
+package dev.hsuliz.polyyard.service.review.dto
 
 data class ReviewRequest(
     val type: ContentType,

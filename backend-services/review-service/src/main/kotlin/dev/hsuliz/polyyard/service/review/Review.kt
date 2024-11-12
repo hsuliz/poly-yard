@@ -1,4 +1,4 @@
-package dev.hsuliz.polyyard.service.review.model
+package dev.hsuliz.polyyard.service.review
 
 import java.time.LocalDateTime
 import org.springframework.data.annotation.Id
