@@ -1,7 +1,7 @@
 package dev.hsuliz.polyyard.service.review.config
 
-import dev.hsuliz.polyyard.service.review.entity.Resource
-import dev.hsuliz.polyyard.service.review.entity.Review
+import dev.hsuliz.polyyard.service.review.model.Resource
+import dev.hsuliz.polyyard.service.review.model.Review
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration
 import io.r2dbc.postgresql.PostgresqlConnectionFactory
 import io.r2dbc.postgresql.codec.EnumCodec
@@ -26,8 +26,8 @@ class PostgresqlConfig : AbstractR2dbcConfiguration() {
             .password("review")
             .codecRegistrar(
                 EnumCodec.builder()
-                    .withEnum("category", Review.Category::class.java)
-                    .withEnum("resource", Resource.Type::class.java)
+                    .withEnum("review_type", Review.Type::class.java)
+                    .withEnum("resource_type", Resource.Type::class.java)
                     .build())
             .build())
   }

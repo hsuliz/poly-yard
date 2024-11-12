@@ -1,7 +1,7 @@
 package dev.hsuliz.polyyard.service.review.service
 
-import dev.hsuliz.polyyard.service.review.entity.Resource
-import dev.hsuliz.polyyard.service.review.entity.Review
+import dev.hsuliz.polyyard.service.review.model.Resource
+import dev.hsuliz.polyyard.service.review.model.Review
 import dev.hsuliz.polyyard.service.review.repository.ResourceRepository
 import dev.hsuliz.polyyard.service.review.repository.ReviewRepository
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +29,7 @@ class ReviewService(
   @Transactional
   suspend fun createReview(
       username: String,
-      reviewCategory: Review.Category,
+      reviewCategory: Review.Type,
       resource: Pair<Resource.Type, String>,
       rating: Int,
       comment: String? = null,

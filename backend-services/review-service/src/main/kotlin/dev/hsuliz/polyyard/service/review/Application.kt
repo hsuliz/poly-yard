@@ -1,7 +1,7 @@
 package dev.hsuliz.polyyard.service.review
 
-import dev.hsuliz.polyyard.service.review.entity.Resource
-import dev.hsuliz.polyyard.service.review.entity.Review
+import dev.hsuliz.polyyard.service.review.model.Resource
+import dev.hsuliz.polyyard.service.review.model.Review
 import dev.hsuliz.polyyard.service.review.repository.ReviewRepository
 import dev.hsuliz.polyyard.service.review.service.ReviewService
 import kotlinx.coroutines.runBlocking
@@ -24,7 +24,7 @@ class ReviewStartupRunner(private val service: ReviewService,
 
       service.createReview(
         "sasha",
-        Review.Category.BOOK,
+        Review.Type.BOOK,
         Pair(Resource.Type.ISBN, "dsds"),
         5
       )
