@@ -32,9 +32,7 @@ class ReviewService(
   ): Review {
     val savedResource = resourceRepository.save(Resource(resource))
     val savedReview =
-        reviewRepository.save(
-            Review(username, reviewCategory, savedResource.id!!, rating, comment)
-        )
+        reviewRepository.save(Review(username, reviewCategory, savedResource.id!!, rating, comment))
     return savedReview
   }
 }

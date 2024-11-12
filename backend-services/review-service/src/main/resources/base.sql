@@ -1,4 +1,7 @@
- CREATE TABLE reviews (
+CREATE TYPE review_type AS ENUM ('BOOK', 'ALBUM');
+CREATE TYPE resource_type AS ENUM ('ISBN', 'ISRC', 'UPC');
+
+CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     type review_type NOT NULL,

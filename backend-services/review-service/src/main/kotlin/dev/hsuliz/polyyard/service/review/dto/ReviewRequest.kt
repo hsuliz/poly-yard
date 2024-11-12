@@ -1,24 +1,12 @@
 package dev.hsuliz.polyyard.service.review.dto
 
+import dev.hsuliz.polyyard.service.review.Review
+
 data class ReviewRequest(
-    val type: ContentType,
+    val type: Review.Type,
     val resource: Resource,
     val rating: Int,
     val comment: String?
 )
 
-enum class ContentType {
-    Book,
-    Album
-}
-
-data class Resource(
-    val type: ResourceType,
-    val id: String
-)
-
-enum class ResourceType {
-    ISBN,
-    ISRC,
-    UPC
-}
+data class Resource(val id: String, val type: Review.Type)

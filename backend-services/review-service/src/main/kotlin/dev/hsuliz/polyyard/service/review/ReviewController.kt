@@ -1,7 +1,6 @@
 package dev.hsuliz.polyyard.service.review
 
 import dev.hsuliz.polyyard.service.review.dto.ReviewRequest
-
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.*
@@ -21,10 +20,9 @@ class ReviewController(
   ) {
     val username = jwt.getClaimAsString(PREFERRED_USERNAME)
     println("$username is addung $reviewRequest")
-   //val review =
-   //    with(reviewRequest) {
-   //      reviewService.createReview(
-   //          username, ReviewType(type.name, type.externalId), rating, comment)
-   //    }
+    val review =
+        with(reviewRequest) {
+          reviewService.createReview(username, )
+        }
   }
 }
