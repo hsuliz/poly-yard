@@ -1,8 +1,10 @@
 package dev.hsuliz.polyyard.service.review
 
-import org.springframework.data.annotation.CreatedBy
 import java.time.LocalDateTime
+import org.springframework.data.annotation.CreatedBy
+import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
+import org.springframework.data.annotation.Transient
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 
@@ -12,9 +14,9 @@ data class Review(
     val resourceId: Long,
     val rating: Int,
     val comment: String? = null,
-    val createdAt: LocalDateTime = LocalDateTime.now(),
-    @CreatedBy
-    val username: String? = null,
+    @Transient val resource: Resource? = null,
+    @CreatedBy val username: String? = null,
+    @CreatedDate val createdAt: LocalDateTime? = null,
     @Id val id: Long? = null
 ) {
   enum class Type {

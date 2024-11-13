@@ -1,7 +1,8 @@
 version: "3.8"
 
 services:
-  postgres:
+  book-db:
+    container_name: book-db
     image: postgres:16-alpine
     restart: always
     shm_size: 128mb

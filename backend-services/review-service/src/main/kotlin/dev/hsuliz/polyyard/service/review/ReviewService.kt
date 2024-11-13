@@ -29,10 +29,9 @@ class ReviewService(
       rating: Int,
       comment: String? = null,
   ): Review {
-
     val savedResource = resourceRepository.save(resource)
     val savedReview =
-        reviewRepository.save(Review(reviewCategory, savedResource.id!!, rating, comment))
+        reviewRepository.save(Review(reviewCategory, savedResource.id!!, rating, comment, savedResource))
     return savedReview
   }
 }
