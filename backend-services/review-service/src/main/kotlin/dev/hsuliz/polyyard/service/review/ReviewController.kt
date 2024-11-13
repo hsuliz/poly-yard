@@ -23,7 +23,6 @@ class ReviewController(
     val review =
         with(reviewRequest) {
           reviewService.createReview(
-              username,
               type,
               resource.toModel(),
               rating,
