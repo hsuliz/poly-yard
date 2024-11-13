@@ -22,7 +22,13 @@ class ReviewController(
     println("$username is addung $reviewRequest")
     val review =
         with(reviewRequest) {
-          reviewService.createReview(username, )
+          reviewService.createReview(
+              username,
+              type,
+              resource.toModel(),
+              rating,
+              comment
+          )
         }
   }
 }

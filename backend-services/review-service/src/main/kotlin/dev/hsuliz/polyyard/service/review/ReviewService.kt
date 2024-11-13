@@ -26,11 +26,12 @@ class ReviewService(
   suspend fun createReview(
       username: String,
       reviewCategory: Review.Type,
-      resource: Pair<Resource.Type, String>,
+      resource: Resource,
       rating: Int,
       comment: String? = null,
   ): Review {
-    val savedResource = resourceRepository.save(Resource(resource))
+
+    val savedResource = resourceRepository.save(resource)
     val savedReview =
         reviewRepository.save(Review(username, reviewCategory, savedResource.id!!, rating, comment))
     return savedReview

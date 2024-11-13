@@ -19,12 +19,13 @@ class ReviewStartupRunner(private val service: ReviewService,
   override fun run(vararg args: String?) {
     runBlocking {
 
-      service.createReview(
+      /*service.createReview(
         "sasha",
         Review.Type.BOOK,
-        Pair(Resource.Type.ISBN, "dsds"),
+        Resource.Type.ISBN,
+        "dsds",
         5
-      )
+      )*/
       //service.findReviews(0).collect { println(it) }
       //println("=====")
       //service.findReviews(1).collect { println(it) }

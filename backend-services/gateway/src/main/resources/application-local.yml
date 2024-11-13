@@ -24,7 +24,7 @@ spring:
       registration:
         auth-client:
           provider: keycloak
-          client-id: auth-client
-          client-secret: mVglpixtrZBqAJqpWuj0dCrNvLH3HaYF
+          client-id: back-end-client
+          client-secret: PLoFGw7SYqMprSYozrY0f1OcMJyUNmMs
           authorization-grant-type: authorization_code
           scope: openid

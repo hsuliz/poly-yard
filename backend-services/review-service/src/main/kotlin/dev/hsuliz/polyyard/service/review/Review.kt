@@ -23,8 +23,6 @@ data class Review(
 
 @Table("resources")
 data class Resource(val type: Type, val value: String, @Id val id: Long? = null) {
-  constructor(it: Pair<Type, String>) : this(it.first, it.second)
-
   enum class Type {
     ISBN,
     ISRC,
