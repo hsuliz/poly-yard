@@ -12,6 +12,12 @@ spring:
           uri: http://localhost:8002
           predicates:
             - Path=/**, /me/**,
+        #- id: review-aggregator
+        #  uri: http://localhost
+        #  predicates:
+        #      - Path=/api/reviews
+        #  filters:
+        #      - name: ReviewAggregatorFilter
 
   security.oauth2:
     resourceserver:

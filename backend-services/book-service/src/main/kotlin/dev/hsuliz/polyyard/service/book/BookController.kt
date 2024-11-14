@@ -12,6 +12,8 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/api")
 class BookController(private val service: BookService) {
 
+
+
   @GetMapping("/books/{book_isbn}")
   suspend fun getBook(@PathVariable("book_isbn") isbn: String): BookResponse {
     val book =

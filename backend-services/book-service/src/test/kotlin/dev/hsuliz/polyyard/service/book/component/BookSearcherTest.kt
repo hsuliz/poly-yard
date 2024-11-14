@@ -17,7 +17,7 @@ class BookSearcherTest :
         val givenISBN = "9780872203495"
 
         // when
-        val result = bookSearcher.findBookByIsbn(givenISBN)
+        val result = bookSearcher.findBookBy(givenISBN)
 
         // then
         result shouldBe
@@ -38,7 +38,7 @@ class BookSearcherTest :
 
         // when
         val exception =
-            shouldThrow<IllegalStateException> { bookSearcher.findBookByIsbn(givenISBN) }
+            shouldThrow<IllegalStateException> { bookSearcher.findBookBy(givenISBN) }
 
         // then
         exception.message shouldBe "Failed to map the response to BookMapper"

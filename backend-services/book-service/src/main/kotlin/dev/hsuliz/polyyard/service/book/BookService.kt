@@ -10,7 +10,7 @@ class BookService(
 ) {
   suspend fun findAvailableBookToCreate(isbn: String): Book {
     return try {
-      searcher.findBookByIsbn(isbn)
+      searcher.findBookBy(isbn)
     } catch (e: Exception) {
       throw IllegalArgumentException("Book with isbn: $isbn doesn't exists!")
     }

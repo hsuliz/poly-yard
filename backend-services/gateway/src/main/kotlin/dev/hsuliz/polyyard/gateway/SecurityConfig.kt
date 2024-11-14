@@ -1,4 +1,4 @@
-package dev.hsuliz.polyyard.gateway.security
+package dev.hsuliz.polyyard.gateway
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

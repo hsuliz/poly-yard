@@ -12,7 +12,7 @@ import org.springframework.web.reactive.function.client.awaitBody
 @Component
 class BookSearcher(private val bookInfoClient: WebClient) {
 
-  suspend fun findBookByIsbn(isbn: String): Book {
+  suspend fun findBookBy(isbn: String): Book {
     val validIsbn = getValidIsbn(isbn)
     return try {
       jacksonObjectMapper()
