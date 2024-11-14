@@ -12,7 +12,7 @@ class BookService(
     return try {
       searcher.findBookByIsbn(isbn)
     } catch (e: Exception) {
-      throw IllegalArgumentException("Book with isbn: $isbn doesnt exists!")
+      throw IllegalArgumentException("Book with isbn: $isbn doesn't exists!")
     }
   }
 

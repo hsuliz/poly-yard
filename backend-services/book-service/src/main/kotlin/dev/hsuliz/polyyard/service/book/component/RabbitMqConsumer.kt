@@ -24,7 +24,7 @@ private class RabbitMqConsumer(
       val newBook = bookService.findAvailableBookToCreate( message.value)
       bookRepository.save(newBook)
     } catch (e: Exception) {
-      println("Book error")
+      println(e.message)
     }
   }
 
