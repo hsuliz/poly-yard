@@ -1,6 +1,5 @@
 package dev.hsuliz.polyyard.service.book
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 
@@ -12,5 +11,5 @@ data class Book(
     val publishedDate: Int,
     val pages: Int,
     val image: String,
-    @JsonIgnore @Id val id: Long? = null,
+    @Id val id: Long? = null,
 )

@@ -8,14 +8,6 @@ class BookService(
     private val repository: BookRepository,
     private val searcher: BookSearcher,
 ) {
-
-  suspend fun createBook(isbn: String): Book {
-    if (repository.existsByIsbn(isbn))
-        throw IllegalArgumentException("Book with isbn: $isbn is already exists!")
-
-    return repository.save(findAvailableBookToCreate(isbn))
-  }
-
   suspend fun findAvailableBookToCreate(isbn: String): Book {
     return try {
       searcher.findBookByIsbn(isbn)
