@@ -7,7 +7,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
 
 @Component
-private class RabbitMqConsumer(
+class RabbitMqConsumer(
     private val bookRepository: BookRepository,
     private val bookService: BookService
 ) {
