@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
@@ -12,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/api")
 class BookController(private val service: BookService) {
 
-
+  @GetMapping("/books") suspend fun getBooks(@RequestParam ids: List<Long>) {}
 
   @GetMapping("/books/{book_isbn}")
   suspend fun getBook(@PathVariable("book_isbn") isbn: String): BookResponse {

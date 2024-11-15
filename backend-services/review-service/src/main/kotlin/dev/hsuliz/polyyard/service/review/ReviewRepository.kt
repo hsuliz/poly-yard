@@ -12,4 +12,4 @@ interface ReviewRepository :
   fun findAllBy(pageable: Pageable): Flow<Review>
 }
 
-interface ResourceRepository : CoroutineCrudRepository<Resource, Long>
+interface ResourceRepository : CoroutineCrudRepository<Review.Resource, Long>

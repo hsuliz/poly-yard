@@ -1,8 +1,9 @@
 package dev.hsuliz.polyyard.service.review.component
 
-import dev.hsuliz.polyyard.service.review.Resource
+
+import dev.hsuliz.polyyard.service.review.Review
 import java.io.Serializable
 
-data class ReviewCreatedMessage(val type: Resource.Type, val value: String) : Serializable {
-  constructor(resource: Resource) : this(resource.type, resource.value)
+data class ReviewCreatedMessage(val type: Review.Resource.Type, val value: String) : Serializable {
+  constructor(resource: Review.Resource) : this(resource.type, resource.value)
 }

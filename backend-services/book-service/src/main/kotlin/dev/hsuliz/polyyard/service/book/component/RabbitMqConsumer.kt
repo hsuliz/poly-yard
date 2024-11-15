@@ -14,6 +14,7 @@ private class RabbitMqConsumer(
 
   @RabbitListener(queues = ["book"], ackMode = "MANUAL")
   suspend fun receiveMessage(message: ReviewCreatedMessage) {
+    println("Got message: $message")
     if (message.type != ReviewCreatedMessage.Type.ISBN) return
     if (bookRepository.existsBy(message.value)) return
 
@@ -21,7 +22,7 @@ private class RabbitMqConsumer(
     // is thrown, possibly due to the message being redelivered by RabbitMQ since no acknowledgment
     // is sent.
     try {
-      val newBook = bookService.findAvailableBookToCreate( message.value)
+      val newBook = bookService.findAvailableBookToCreate(message.value)
       bookRepository.save(newBook)
     } catch (e: Exception) {
       println(e.message)

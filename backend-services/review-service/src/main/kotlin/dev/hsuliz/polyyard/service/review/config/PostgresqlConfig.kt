@@ -1,6 +1,5 @@
 package dev.hsuliz.polyyard.service.review.config
 
-import dev.hsuliz.polyyard.service.review.Resource
 import dev.hsuliz.polyyard.service.review.Review
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration
 import io.r2dbc.postgresql.PostgresqlConnectionFactory
@@ -33,7 +32,7 @@ class PostgresqlConfig : AbstractR2dbcConfiguration() {
             .codecRegistrar(
                 EnumCodec.builder()
                     .withEnum("review_type", Review.Type::class.java)
-                    .withEnum("resource_type", Resource.Type::class.java)
+                    .withEnum("resource_type", Review.Resource.Type::class.java)
                     .build())
             .build())
   }

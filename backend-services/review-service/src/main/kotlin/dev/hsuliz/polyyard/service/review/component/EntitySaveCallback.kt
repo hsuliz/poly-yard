@@ -17,7 +17,8 @@ class EntitySaveCallback(private val rabbitTemplate: RabbitTemplate) : AfterSave
       outboundRow: OutboundRow,
       table: SqlIdentifier
   ): Publisher<Review> {
-    rabbitTemplate.convertAndSend("book", ReviewCreatedMessage(entity.resource!!))
+      println(outboundRow)
+    rabbitTemplate.convertAndSend("book", ReviewCreatedMessage(entity.resource))
     println(entity)
     return Mono.just(entity)
   }

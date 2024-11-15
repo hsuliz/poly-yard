@@ -1,6 +1,8 @@
 package dev.hsuliz.polyyard.service.review
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.zip
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -15,7 +17,8 @@ class ReviewService(
 
   fun findReviewsBy(pageable: Pageable): Flow<Review> {
     val reviews = reviewRepository.findAllBy(pageable)
-    return reviews
+    val resources = resourceRepository.findAllById(reviews.map { it.resourceId })
+    return reviews.zip(resources) { review, resource -> review.apply { this.resource = resource } }
   }
 
   suspend fun countReviews(): Long {
@@ -25,13 +28,14 @@ class ReviewService(
   @Transactional
   suspend fun createReview(
       reviewCategory: Review.Type,
-      resource: Resource,
+      resource: Review.Resource,
       rating: Int,
       comment: String? = null,
   ): Review {
     val savedResource = resourceRepository.save(resource)
-    val savedReview =
-        reviewRepository.save(Review(reviewCategory, savedResource.id!!, rating, comment, savedResource))
+    val x = Review(reviewCategory, savedResource.id!!, rating, comment)
+    x.resource = savedResource
+    val savedReview = reviewRepository.save(x)
     return savedReview
   }
 }
