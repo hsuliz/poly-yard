@@ -30,10 +30,9 @@ class ReviewService(
       rating: Int,
       comment: String? = null,
   ): Review {
-      //#TODO FIX RABBITMQ
+
     val savedResource = resourceRepository.save(resource)
-    val x = Review(reviewCategory, savedResource.id!!, rating, comment)
-    x.resource = savedResource
+    val x = Review(reviewCategory, savedResource.id!!, rating, comment, savedResource)
     val savedReview = reviewRepository.save(x)
     return savedReview
   }
