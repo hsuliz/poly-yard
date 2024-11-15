@@ -3,7 +3,6 @@ package dev.hsuliz.polyyard.service.review
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.zip
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -11,8 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ReviewService(
     private val reviewRepository: ReviewRepository,
-    private val resourceRepository: ResourceRepository,
-    private val eventPublisher: ApplicationEventPublisher
+    private val resourceRepository: ResourceRepository
 ) {
 
   fun findReviewsBy(pageable: Pageable): Flow<Review> {
@@ -32,6 +30,7 @@ class ReviewService(
       rating: Int,
       comment: String? = null,
   ): Review {
+      //#TODO FIX RABBITMQ
     val savedResource = resourceRepository.save(resource)
     val x = Review(reviewCategory, savedResource.id!!, rating, comment)
     x.resource = savedResource
