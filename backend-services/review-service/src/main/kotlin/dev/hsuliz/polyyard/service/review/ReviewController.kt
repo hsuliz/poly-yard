@@ -20,7 +20,7 @@ class ReviewController(
 ) {
 
   @GetMapping("/reviews")
-  suspend fun findAllReviews(
+  suspend fun findReviews(
       @PageableDefault(page = 0, size = 10, sort = ["createdAt"], direction = Sort.Direction.DESC)
       pageable: Pageable
   ): Page<ReviewResponse> {
