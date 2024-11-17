@@ -7,17 +7,11 @@ spring:
     gateway:
       default-filters:
         - TokenRelay=
-      routes:
-        - id: book-service
-          uri: http://localhost:8002
-          predicates:
-            - Path=/**, /me/**,
-        #- id: review-aggregator
-        #  uri: http://localhost
-        #  predicates:
-        #      - Path=/api/reviews
-        #  filters:
-        #      - name: ReviewAggregatorFilter
+      #routes:
+      #  - id: book-service
+      #    uri: http://localhost:8002
+      #    predicates:
+      #      - Path=/**, /me/**,
 
   security.oauth2:
     resourceserver:
