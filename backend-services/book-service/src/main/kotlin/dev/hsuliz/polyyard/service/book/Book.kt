@@ -11,5 +11,5 @@ data class Book(
     val publishedDate: Int,
     val pages: Int,
     val image: String,
-    @Id val id: Long? = null,
+    @Id val id: Long? = null
 )
