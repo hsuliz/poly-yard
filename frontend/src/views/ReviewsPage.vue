@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue"
 import axios from "axios"
 import type Review from "@/types/Review"
+import BookCard from "@/components/cards/BookCard.vue"
 
 const reviews = ref<Review[]>([])
 
@@ -28,25 +29,7 @@ onMounted(() => {
         :key="review.id"
         class="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
       >
-        <div class="p-4">
-          <div class="flex items-center">
-            <img :src="review.resource.image" alt="Book Cover" class="w-16 h-24 rounded-md mr-4" />
-            <div class="flex-1">
-              <h3 class="text-lg font-semibold">
-                {{ review.resource.title }} by {{ review.resource.author }}
-              </h3>
-              <p class="text-sm mt-1">Reviewed by: {{ review.username }}</p>
-              <p class="text-sm mt-1">
-                Rating:
-                <span class="text-yellow-500 font-bold">{{ review.rating }}</span>
-              </p>
-              <p class="text-sm mt-2">{{ review.comment }}</p>
-              <p class="text-xs text-gray-400 mt-4">
-                Reviewed {{ new Date(review.createdAt).toLocaleDateString() }}
-              </p>
-            </div>
-          </div>
-        </div>
+        <BookCard :book="review.resource" :review="review" />
       </div>
     </div>
   </div>

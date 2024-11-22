@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type Book from "@/types/Book"
+import type Review from "@/types/Review"
 
 defineProps<{
   book: Book
+  review?: Review
 }>()
 </script>
 
@@ -12,6 +14,17 @@ defineProps<{
       <img :src="book.image" alt="Book Cover" class="w-16 h-24 rounded-md mr-4" />
       <div class="flex-1">
         <h3 class="text-lg font-semibold">{{ book.title }} by {{ book.author }}</h3>
+        <template v-if="review">
+          <p class="text-sm mt-1">Reviewed by: {{ review.username }}</p>
+          <p class="text-sm mt-1">
+            Rating:
+            <span class="text-yellow-500 font-bold">{{ review.rating }}</span>
+          </p>
+          <p class="text-sm mt-2">{{ review.comment }}</p>
+          <p class="text-xs text-gray-400 mt-4">
+            Reviewed {{ new Date(review.createdAt).toLocaleDateString() }}
+          </p>
+        </template>
       </div>
     </div>
   </div>
