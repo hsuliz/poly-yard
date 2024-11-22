@@ -16,7 +16,7 @@ class ReviewResponseRewriteFunction(private val bookWebClient: WebClient) :
   override fun apply(exchange: ServerWebExchange, body: ByteArray): Mono<ByteArray> {
     val objectMapper = jacksonObjectMapper()
 
-    val paginatedResponse: PaginatedResponse<Review> = objectMapper.readValue(body)
+    val paginatedResponse: PaginatedResponse<Review<Resource>> = objectMapper.readValue(body)
 
     val reviews = paginatedResponse.content
 
@@ -27,12 +27,34 @@ class ReviewResponseRewriteFunction(private val bookWebClient: WebClient) :
           reviews.map { review ->
             if (review.resource.type == "ISBN") {
               val book = books.find { it.isbn == review.resource.value }
-              if (book != null) review.copy(test = book) else review
+              if (book != null)
+                  Review(
+                      id = review.id,
+                      username = review.username,
+                      type = review.type,
+                      resource = book,
+                      rating = review.rating,
+                      comment = review.comment,
+                      createdAt = review.createdAt)
+              else review
             } else review
           }
 
-      val enrichedResponse = paginatedResponse.copy(content = enrichedReviews)
-      objectMapper.writeValueAsBytes(enrichedResponse)
+      // God, please forgive me for this monstrosity............
+      val newPaginatedResponse: PaginatedResponse<Review<out Any>> =
+          PaginatedResponse(
+              enrichedReviews,
+              paginatedResponse.pageable,
+              paginatedResponse.totalPages,
+              paginatedResponse.totalElements,
+              paginatedResponse.size,
+              paginatedResponse.number,
+              paginatedResponse.sort,
+              paginatedResponse.first,
+              paginatedResponse.last,
+              paginatedResponse.numberOfElements,
+              paginatedResponse.empty)
+      objectMapper.writeValueAsBytes(newPaginatedResponse)
     }
   }
 
@@ -80,18 +102,13 @@ data class Pageable(
     val sort: Sort
 )
 
-data class Sort(
-    val empty: Boolean,
-    val sorted: Boolean,
-    val unsorted: Boolean
-)
+data class Sort(val empty: Boolean, val sorted: Boolean, val unsorted: Boolean)
 
-data class Review(
+data class Review<T>(
     val id: Long,
     val username: String,
     val type: String,
-    val resource: Resource,
-    val test: Any?,
+    val resource: T,
     val rating: Int,
     val comment: String?,
     val createdAt: String
