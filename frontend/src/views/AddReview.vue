@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { computed, onMounted, ref } from "vue"
 import axios from "axios"
 import BookCard from "@/components/cards/BookCard.vue"
@@ -17,8 +17,8 @@ const options = computed(() => [
   { text: 2, value: 2 },
   { text: 3, value: 3 },
   { text: 4, value: 4 },
-  { text: 5, value: 5 },
-]);
+  { text: 5, value: 5 }
+])
 
 onMounted(() => {
   console.info()
@@ -77,13 +77,13 @@ const submitReview = async () => {
       <input
         id="isbn"
         v-model="isbn"
-        type="text"
         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder="Enter ISBN"
+        type="text"
       />
       <button
-        @click="checkBook"
         class="mt-2 w-full bg-blue-500 hover:bg-blue-600 py-2 rounded-md transition"
+        @click="checkBook"
       >
         Check Book
       </button>
@@ -93,7 +93,7 @@ const submitReview = async () => {
     <div v-else>
       <BookCard :book="book" />
       <div class="space-y-4 p-4">
-        <label for="rating" class="block font-semibold">Rating (1-5):</label>
+        <label class="block font-semibold" for="rating">Rating (1-5):</label>
 
         <select
           v-model.number="rating"
@@ -105,17 +105,17 @@ const submitReview = async () => {
           </option>
         </select>
 
-        <label for="comment" class="block font-semibold">Comment:</label>
+        <label class="block font-semibold" for="comment">Comment:</label>
         <textarea
           id="comment"
           v-model="comment"
-          rows="4"
           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="(Optional)"
+          rows="4"
         ></textarea>
         <button
-          @click="submitReview"
           class="mt-2 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-md transition"
+          @click="submitReview"
         >
           Submit Review
         </button>
