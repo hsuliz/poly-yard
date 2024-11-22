@@ -24,7 +24,7 @@ const truncatedUsername = computed(() => {
           <router-link to="/" class="text-white font-bold text-balance">Poly-Yard</router-link>
         </li>
         <li>
-          <router-link to="/books" class="text-gray-300 hover:text-white">Books</router-link>
+          <router-link to="/reviews" class="text-gray-300 hover:text-white">Reviews</router-link>
         </li>
       </ul>
       <div>

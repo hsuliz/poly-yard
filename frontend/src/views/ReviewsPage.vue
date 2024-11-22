@@ -8,7 +8,7 @@ const reviews = ref<Review[]>([])
 const fetchReviews = async () => {
   try {
     const response = await axios.get("/api/reviews")
-    reviews.value = response.data
+    reviews.value = response.data.content
     console.info(response)
   } catch (error) {
     console.error("Error fetching reviews:", error)
@@ -25,17 +25,17 @@ onMounted(() => {
     <div class="grid grid-cols-1 gap-6 p-2">
       <div
         v-for="review in reviews"
-        :key="review.book.isbn"
+        :key="review.id"
         class="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
       >
         <div class="p-4">
           <div class="flex items-center">
-            <img :src="review.book.image" alt="Book Cover" class="w-16 h-24 rounded-md mr-4" />
+            <img :src="review.resource.image" alt="Book Cover" class="w-16 h-24 rounded-md mr-4" />
             <div class="flex-1">
               <h3 class="text-lg font-semibold">
-                {{ review.book.title }} by {{ review.book.author }}
+                {{ review.resource.title }} by {{ review.resource.author }}
               </h3>
-              <p class="text-sm mt-1">Reviewed by: {{ review.user.name }}</p>
+              <p class="text-sm mt-1">Reviewed by: {{ review.username }}</p>
               <p class="text-sm mt-1">
                 Rating:
                 <span class="text-yellow-500 font-bold">{{ review.rating }}</span>
