@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class SecurityController {
 
-    @GetMapping("/token")
-    suspend fun getToken(
-        @RegisteredOAuth2AuthorizedClient authorizedClient: OAuth2AuthorizedClient
-    ): String = authorizedClient.accessToken.tokenValue
+  @GetMapping("/token")
+  fun getToken(@RegisteredOAuth2AuthorizedClient authorizedClient: OAuth2AuthorizedClient): String =
+      authorizedClient.accessToken.tokenValue
 }

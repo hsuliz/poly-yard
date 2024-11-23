@@ -29,7 +29,7 @@ const checkBook = async () => {
   try {
     const response = await axios.get(`/api/books/${isbn.value}`)
     console.log("Book found:", response.data)
-    book.value = response.data.book
+    book.value = response.data
     console.info(token.value)
   } catch (error: any) {
     if (error.response && error.response.status === 404) {
@@ -71,7 +71,6 @@ const submitReview = async () => {
   <div
     class="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
   >
-    <!-- Input form for ISBN and book check -->
     <div v-if="!book" class="space-y-4 p-4">
       <h2 class="text-2xl font-bold mb-4">Add a Review</h2>
       <input
@@ -89,7 +88,6 @@ const submitReview = async () => {
       </button>
       <p v-if="errorMessage" class="text-red-500 mt-2">{{ errorMessage }}</p>
     </div>
-    <!-- Book card, displayed only when book data is available -->
     <div v-else>
       <BookCard :book="book" />
       <div class="space-y-4 p-4">
