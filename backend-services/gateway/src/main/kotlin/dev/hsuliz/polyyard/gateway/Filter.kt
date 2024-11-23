@@ -22,6 +22,10 @@ class Filter {
               }
               .uri("http://localhost:8002")
         }
+        .route("check-resource-before-post") { r ->
+            //# TODO CHECK IF BOOK REALLY EXISTS
+          r.path("/api/me/reviews").uri("http://localhost:8002")
+        }
         .build()
   }
 }
