@@ -1,5 +1,7 @@
 package dev.hsuliz.polyyard.gateway
 
+import dev.hsuliz.polyyard.gateway.filter.ReviewRequestChecker
+import dev.hsuliz.polyyard.gateway.filter.ReviewResponseRewriteFunction
 import org.springframework.cloud.gateway.route.RouteLocator
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
 import org.springframework.cloud.gateway.route.builder.filters
@@ -13,7 +15,8 @@ class Filter {
   @Bean
   fun routes(
       routeLocatorBuilder: RouteLocatorBuilder,
-      rewriteFunction: ReviewResponseRewriteFunction
+      rewriteFunction: ReviewResponseRewriteFunction,
+      reviewRequestChecker: ReviewRequestChecker
   ): RouteLocator =
       routeLocatorBuilder.routes {
         route("reviews-aggregation") {
@@ -26,6 +29,7 @@ class Filter {
         route("check-resource-before-post") {
           path("/api/me/reviews")
           uri("http://localhost:8002")
+          filters { filter(reviewRequestChecker) }
         }
       }
 }
