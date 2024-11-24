@@ -46,7 +46,11 @@ const submitReview = async () => {
     await axios.post(
       "/api/me/reviews",
       {
-        bookIsbn: isbn.value,
+        type: "BOOK",
+        resource: {
+          type: "ISBN",
+          value: isbn.value
+        },
         rating: rating.value,
         comment: comment.value
       },
