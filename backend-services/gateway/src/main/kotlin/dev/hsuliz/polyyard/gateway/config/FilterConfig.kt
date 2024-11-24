@@ -1,4 +1,4 @@
-package dev.hsuliz.polyyard.gateway
+package dev.hsuliz.polyyard.gateway.config
 
 import dev.hsuliz.polyyard.gateway.filter.ReviewRequestChecker
 import dev.hsuliz.polyyard.gateway.filter.ReviewResponseRewriteFunction
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class Filter {
+class FilterConfig {
 
   @Bean
   fun routes(
