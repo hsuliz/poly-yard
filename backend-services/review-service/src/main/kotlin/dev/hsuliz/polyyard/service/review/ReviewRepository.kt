@@ -9,7 +9,10 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ReviewRepository :
     CoroutineCrudRepository<Review, Long>, CoroutineSortingRepository<Review, Long> {
+
   fun findAllBy(pageable: Pageable): Flow<Review>
+
+  fun findAllByUsername(username: String, pageable: Pageable): Flow<Review>
 }
 
 interface ResourceRepository : CoroutineCrudRepository<Review.Resource, Long>

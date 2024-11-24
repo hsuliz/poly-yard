@@ -20,7 +20,7 @@ class FilterConfig {
   ): RouteLocator =
       routeLocatorBuilder.routes {
         route("reviews-aggregation") {
-          path("/api/reviews")
+          path("/api/reviews/**")
           uri("http://localhost:8002")
           filters {
             modifyResponseBody(ByteArray::class.java, ByteArray::class.java, rewriteFunction)
