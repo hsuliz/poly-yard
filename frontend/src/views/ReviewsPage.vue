@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
+import { onMounted, ref } from "vue"
 import axios from "axios"
 import type Review from "@/types/Review"
-import BookCard from "@/components/cards/BookCard.vue"
+import ReviewList from "@/components/ReviewList.vue"
 
 const reviews = ref<Review[]>([])
 
@@ -22,15 +22,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <div class="grid grid-cols-1 gap-6 p-2">
-      <div
-        v-for="review in reviews"
-        :key="review.id"
-        class="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-      >
-        <BookCard :book="review.resource" :review="review" />
-      </div>
-    </div>
-  </div>
+  <ReviewList :reviews="reviews" />
 </template>
