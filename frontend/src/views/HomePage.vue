@@ -34,19 +34,26 @@ watch(
 <template>
   <h1 class="text-2xl font-bold">Welcome to the Home Page</h1>
 
-  <router-link to="/add-review" v-slot="{ navigate }">
-    <button
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      @click="navigate"
-      role="link"
-    >
-      Add Review
-    </button>
+  <div v-if="isAuthenticated">
+    <router-link to="/add-review" v-slot="{ navigate }">
+      <button
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        @click="navigate"
+        role="link"
+      >
+        Add Review
+      </button>
+    </router-link>
+
     <div>
-      Your reviews
+      <h2 class="text-xl font-semibold">Your reviews</h2>
       <div>
         <ReviewList :reviews="reviews" />
       </div>
     </div>
-  </router-link>
+  </div>
+
+  <div v-else>
+    <p class="text-red-500">User not logged in. Please log in to see your reviews.</p>
+  </div>
 </template>
