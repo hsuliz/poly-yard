@@ -21,6 +21,10 @@ class ReviewService(
     return findReviewsWithResources { reviewRepository.findAllByUsername(username, pageable) }
   }
 
+  suspend fun countReviewsByUsername(username: String): Long {
+    return reviewRepository.countByUsername(username)
+  }
+
   suspend fun countReviews(): Long {
     return reviewRepository.count()
   }

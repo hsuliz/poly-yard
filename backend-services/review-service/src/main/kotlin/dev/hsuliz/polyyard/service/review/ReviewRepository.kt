@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository
 interface ReviewRepository :
     CoroutineCrudRepository<Review, Long>, CoroutineSortingRepository<Review, Long> {
 
+  suspend fun countByUsername(username: String): Long
+
   fun findAllBy(pageable: Pageable): Flow<Review>
 
   fun findAllByUsername(username: String, pageable: Pageable): Flow<Review>
