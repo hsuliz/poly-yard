@@ -32,7 +32,7 @@ watch(
 </script>
 
 <template>
-  <h1 class="text-2xl font-bold">Welcome to the Home Page</h1>
+  <h1 class="text-2xl font-bold">Welcome to the Reviews Page</h1>
 
   <div v-if="isAuthenticated">
     <router-link to="/add-review" v-slot="{ navigate }">
