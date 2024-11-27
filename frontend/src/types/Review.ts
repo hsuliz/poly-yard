@@ -1,6 +1,6 @@
-import type Book from "@/types/Book"
+import type { Book } from "@/types/Book"
 
-export default interface Review {
+export interface Review {
   id: number
   username: string
   type: string

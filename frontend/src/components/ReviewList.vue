@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type Review from "@/types/Review"
+import type { Review } from "@/types/Review"
 import BookCard from "@/components/cards/BookCard.vue"
 
 defineProps<{

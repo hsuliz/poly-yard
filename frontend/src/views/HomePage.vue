@@ -2,7 +2,7 @@
 import { computed, ref, watch } from "vue"
 import { useKeycloak } from "@josempgon/vue-keycloak"
 import axios from "axios"
-import type Review from "@/types/Review"
+import type { Review } from "@/types/Review"
 import ReviewList from "@/components/ReviewList.vue"
 
 const { username, isAuthenticated } = useKeycloak()

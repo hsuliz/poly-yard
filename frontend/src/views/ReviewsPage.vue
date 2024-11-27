@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
 import axios from "axios"
-import type Review from "@/types/Review"
+import type { Review } from "@/types/Review"
 import ReviewList from "@/components/ReviewList.vue"
 
 const reviews = ref<Review[]>([])

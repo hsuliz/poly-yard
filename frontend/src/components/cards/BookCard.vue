@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type Book from "@/types/Book"
-import type Review from "@/types/Review"
+import type { Book } from "@/types/Book"
+import type { Review } from "@/types/Review"
 
 defineProps<{
   book: Book

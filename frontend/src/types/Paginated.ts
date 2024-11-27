@@ -1,6 +1,6 @@
-import type Review from "@/types/Review"
+import type { Review } from "@/types/Review"
 
-export default interface PaginatedResponse {
+export interface PaginatedResponse {
   content: Review[]
   pageable: Pageable
   totalPages: number
