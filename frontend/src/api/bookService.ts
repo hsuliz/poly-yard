@@ -1,7 +1,7 @@
 import { apiClient } from "./axiosConfig"
-import type Book from "@/types/Book"
+import type { Book } from "@/types/Book"
 
-const checkBook = async (isbn: string): Promise<Book | null> => {
+const getBookByIsbn = async (isbn: string): Promise<Book | null> => {
   try {
     const response = await apiClient.get(`/api/books/${isbn}`)
     console.log("Book found:", response.data)
@@ -16,4 +16,4 @@ const checkBook = async (isbn: string): Promise<Book | null> => {
   }
 }
 
-export { checkBook }
+export { getBookByIsbn }

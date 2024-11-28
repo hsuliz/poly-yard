@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue"
 import { submitReview } from "@/api/reviewService"
-import { checkBook } from "@/api/bookService"
+import { getBookByIsbn } from "@/api/bookService"
 import type { Book } from "@/types/Book"
 import BookCard from "@/components/cards/BookCard.vue"
 
@@ -14,7 +14,7 @@ const loading = ref(false)
 
 const options = computed(() => [1, 2, 3, 4, 5].map((value) => ({ text: value, value })))
 
-const handleCheckBook = async () => {
+const handleGetBook = async () => {
   if (!isbn.value.trim()) {
     errorMessage.value = "ISBN is required."
     return
@@ -22,7 +22,7 @@ const handleCheckBook = async () => {
 
   try {
     loading.value = true
-    book.value = await checkBook(isbn.value)
+    book.value = await getBookByIsbn(isbn.value)
     errorMessage.value = ""
   } catch (error: any) {
     if (error.response?.status === 404) {
@@ -76,7 +76,7 @@ const handleSubmitReview = async () => {
       <button
         :disabled="loading"
         class="mt-2 w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md"
-        @click="handleCheckBook"
+        @click="handleGetBook"
       >
         {{ loading ? "Checking..." : "Check Book" }}
       </button>
