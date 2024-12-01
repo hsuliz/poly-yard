@@ -9,9 +9,11 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   async (config) => {
-    const token = await getToken()
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`
+    if (config.url?.includes("/me")) {
+      const token = await getToken()
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`
+      }
     }
     return config
   },

@@ -2,7 +2,6 @@ package dev.hsuliz.polyyard.service.book
 
 import dev.hsuliz.polyyard.service.book.dto.BookResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/api")
 class BookController(private val service: BookService) {
 
+  // internal
   @GetMapping("/books")
   fun findBooksByIsbn(@RequestParam("isbn") isbns: List<String>): Flow<BookResponse> {
     val books = service.findBooksByIsbn(isbns)

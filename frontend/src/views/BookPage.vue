@@ -21,7 +21,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="grid grid-cols-1 gap-6 p-2">
+  <div>
     <div v-if="book">
       <BookCard :book="book" />
     </div>

@@ -8,15 +8,9 @@ defineProps<{
 </script>
 
 <template>
-  <div>
-    <div class="grid grid-cols-1 gap-6 p-2">
-      <div
-        v-for="review in reviews"
-        :key="review.id"
-        class="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-      >
-        <BookCard :book="review.resource" :review="review" />
-      </div>
+  <div class="grid grid-cols-1 gap-6 p-2">
+    <div v-for="review in reviews" :key="review.id">
+      <BookCard :book="review.resource" :review="review" />
     </div>
   </div>
 </template>
