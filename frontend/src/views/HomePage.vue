@@ -54,6 +54,6 @@ watch(
   </div>
 
   <div v-else>
-    <p class="text-red-500">User not logged in. Please log in to see your reviews.</p>
+    <p class="text-yellow-500">User not logged in. Please log in to see your reviews.</p>
   </div>
 </template>
