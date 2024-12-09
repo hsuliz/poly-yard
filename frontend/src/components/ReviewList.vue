@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="grid grid-cols-1 gap-6 p-2">
+  <div class="grid grid-cols-1">
     <div v-for="review in reviews" :key="review.id">
       <BookCard :book="review.resource" :review="review" />
     </div>
