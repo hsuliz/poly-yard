@@ -31,20 +31,6 @@ class ReviewController(private val reviewService: ReviewService) {
     return PageImpl(response, pageable, reviewService.countReviews())
   }
 
-  // @GetMapping("/reviews/test")
-  // suspend fun findReviewsByResource(
-  //    @RequestParam(value = "resource-type", required = false) resourceType:
-  // Review.Resource.Type?,
-  //    @RequestParam(value = "resource-value", required = false) resourceValue: String?,
-  //    @PageableDefault(page = 0, size = 10, sort = ["createdAt"], direction = Sort.Direction.DESC)
-  //    pageable: Pageable
-  // ): Page<ReviewResponse> {
-  //  val reviews =
-  //      reviewService.findReviewsTest(resourceType, resourceValue, pageable).toList()
-  //  val response = reviews.map { ReviewResponse(it) }
-  //  return PageImpl(response, pageable, 2)
-  // }
-
   @GetMapping("/reviews/{username}")
   suspend fun findReviewsByUsername(
       @PathVariable username: String,
