@@ -22,14 +22,6 @@ class ReviewService(
     return reviews
   }
 
-  fun findReviewsByUsername(username: String, pageable: Pageable): Flow<Review> {
-    return findReviewsWithResources { reviewCrudRepository.findAllByUsername(username, pageable) }
-  }
-
-  suspend fun countReviewsByUsername(username: String): Long {
-    return reviewCrudRepository.countByUsername(username)
-  }
-
   suspend fun countReviews(): Long {
     return reviewCrudRepository.count()
   }
@@ -48,9 +40,4 @@ class ReviewService(
     return savedReview
   }
 
-  private fun findReviewsWithResources(reviewsProvider: () -> Flow<Review>): Flow<Review> {
-    val reviews = reviewsProvider()
-    val resources = resourceRepository.findAllById(reviews.map { it.resourceId })
-    return reviews.zip(resources) { review, resource -> review.apply { this.resource = resource } }
-  }
 }

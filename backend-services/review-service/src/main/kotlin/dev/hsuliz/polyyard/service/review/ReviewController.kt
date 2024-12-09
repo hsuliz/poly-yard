@@ -31,17 +31,6 @@ class ReviewController(private val reviewService: ReviewService) {
     return PageImpl(response, pageable, reviewService.countReviews())
   }
 
-  @GetMapping("/reviews/{username}")
-  suspend fun findReviewsByUsername(
-      @PathVariable username: String,
-      @PageableDefault(page = 0, size = 10, sort = ["createdAt"], direction = Sort.Direction.DESC)
-      pageable: Pageable
-  ): Page<ReviewResponse> {
-    val reviews = reviewService.findReviewsByUsername(username, pageable).toList()
-    val response = reviews.map { ReviewResponse(it) }
-    return PageImpl(response, pageable, reviewService.countReviewsByUsername(username))
-  }
-
   @PostMapping("/me/reviews")
   suspend fun addReview(@RequestBody reviewRequest: ReviewRequest) {
     val review =
@@ -49,4 +38,10 @@ class ReviewController(private val reviewService: ReviewService) {
           reviewService.createReview(type, resource.toModel(), rating, comment)
         }
   }
+
+
+    @DeleteMapping("/me/reviews")
+    fun deleteReview() {
+
+    }
 }
