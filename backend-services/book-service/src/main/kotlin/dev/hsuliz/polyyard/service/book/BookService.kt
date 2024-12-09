@@ -10,6 +10,10 @@ class BookService(
     private val searcher: BookSearcher,
 ) {
 
+  suspend fun findBookById(bookId: Long): Book? {
+    return repository.findById(bookId)
+  }
+
   fun findBooksByIsbn(isbnFlow: List<String>): Flow<Book> {
     return repository.findAllByIsbnIn(isbnFlow)
   }
@@ -26,7 +30,7 @@ class BookService(
     }
   }
 
-  suspend fun findExistingBook(isbn: String): Book? {
+  suspend fun findExistingBookByIsbn(isbn: String): Book? {
     return repository.findByIsbn(isbn)
   }
 }

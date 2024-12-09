@@ -23,9 +23,9 @@ class BookController(private val service: BookService) {
   }
 
   @GetMapping("/books/{book_isbn}")
-  suspend fun getBook(@PathVariable("book_isbn") isbn: String): BookResponse {
+  suspend fun getBookByIsbn(@PathVariable("book_isbn") isbn: String): BookResponse {
     val book =
-        service.findExistingBook(isbn)
+        service.findExistingBookByIsbn(isbn)
             ?: try {
               val book = service.findAvailableBookToCreate(isbn)
               return BookResponse(book)
