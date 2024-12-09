@@ -14,7 +14,11 @@ const currentUsername = computed(() => username.value)
 const fetchReviews = async () => {
   try {
     if (!currentUsername.value) return
-    const response = await axios.get(`api/reviews/${currentUsername.value}`)
+    const response = await axios.get(`api/reviews`, {
+      params: {
+        username: currentUsername.value
+      }
+    })
     reviews.value = response.data.content
     console.info(response)
   } catch (error) {
