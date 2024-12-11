@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue"
-import { submitReview } from "@/api/reviewService"
+import { postReview } from "@/api/reviewService"
 import { getBookByIsbn } from "@/api/bookService"
 import type { Book } from "@/types/Book"
 import BookCard from "@/components/cards/BookCard.vue"
@@ -43,7 +43,7 @@ const handleSubmitReview = async () => {
 
   try {
     loading.value = true
-    await submitReview({
+    await postReview({
       type: "BOOK",
       resource: { type: "ISBN", value: isbn.value },
       rating: rating.value,

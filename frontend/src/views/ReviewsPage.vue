@@ -7,7 +7,7 @@ import { getReviews } from "@/api/reviewService"
 const reviews = ref<Review[]>([])
 
 const fetchReviews = async () => {
-    reviews.value = await getReviews()
+  reviews.value = await getReviews()
 }
 
 onMounted(() => {

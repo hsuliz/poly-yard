@@ -1,6 +1,7 @@
 import { apiClient } from "./axiosConfig"
 import type { ReviewRequest } from "@/api/request/ReviewRequest"
 import type { Review } from "@/types/Review"
+import axios from "axios"
 
 const getReviews = async (): Promise<Review[]> => {
   try {
@@ -10,6 +11,24 @@ const getReviews = async (): Promise<Review[]> => {
   } catch (error: any) {
     if (error.response && error.response.status === 404) {
       console.log("Book not found")
+    }
+    console.error("Error checking Reviews:", error)
+    throw error
+  }
+}
+
+const getReviewsByUser = async (username: string): Promise<Review[]> => {
+  try {
+    const response = await axios.get(`api/reviews`, {
+      params: {
+        username: username
+      }
+    })
+    console.info(response)
+    return response.data.content
+  } catch (error: any) {
+    if (error.response && error.response.status === 404) {
+      console.log("Reviews not found")
     }
     console.error("Error checking Reviews:", error)
     throw error
@@ -35,8 +54,8 @@ const getReviewsByBook = async (isbn: string): Promise<Review[]> => {
   }
 }
 
-const submitReview = async (review: ReviewRequest): Promise<void> => {
+const postReview = async (review: ReviewRequest): Promise<void> => {
   await apiClient.post("/api/me/reviews", review)
 }
 
-export { getReviews, getReviewsByBook, submitReview }
+export { getReviews, getReviewsByBook, getReviewsByUser, postReview }

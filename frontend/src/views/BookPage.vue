@@ -5,6 +5,7 @@ import BookCard from "@/components/cards/BookCard.vue"
 import { getReviewsByBook } from "@/api/reviewService"
 import type { Review } from "@/types/Review"
 import ReviewsList from "@/components/ReviewsList.vue"
+
 const { isbn } = defineProps<{
   isbn?: string
 }>()

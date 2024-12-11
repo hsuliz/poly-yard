@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
 import { useKeycloak } from "@josempgon/vue-keycloak"
-import axios from "axios"
 import type { Review } from "@/types/Review"
 import ReviewList from "@/components/ReviewList.vue"
+import { getReviewsByUser } from "@/api/reviewService"
 
 const { username, isAuthenticated } = useKeycloak()
 
@@ -12,18 +12,8 @@ const reviews = ref<Review[]>([])
 const currentUsername = computed(() => username.value)
 
 const fetchReviews = async () => {
-  try {
-    if (!currentUsername.value) return
-    const response = await axios.get(`api/reviews`, {
-      params: {
-        username: currentUsername.value
-      }
-    })
-    reviews.value = response.data.content
-    console.info(response)
-  } catch (error) {
-    console.error("Error fetching reviews:", error)
-  }
+  if (!currentUsername.value) return
+  reviews.value = await getReviewsByUser(currentUsername.value)
 }
 
 watch(
