@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 interface BookRepository :
     CoroutineCrudRepository<Book, Long>, CoroutineSortingRepository<Book, Long> {
 
-  suspend fun existsBy(isbn: String): Boolean
+  suspend fun existsByIsbn(isbn: String): Boolean
 
   fun findAllByIsbnIn(isbns: List<String>): Flow<Book>
 

@@ -2,7 +2,6 @@ package dev.hsuliz.polyyard.service.review
 
 import dev.hsuliz.polyyard.service.review.dto.ReviewRequest
 import dev.hsuliz.polyyard.service.review.dto.ReviewResponse
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -28,7 +27,7 @@ class ReviewController(private val reviewService: ReviewService) {
     val reviews =
         reviewService.findReviews(username, resourceType, resourceValue, pageable).toList()
     val response = reviews.map { ReviewResponse(it) }
-    return PageImpl(response, pageable, reviewService.countReviews())
+    return PageImpl(response, pageable, reviews.count().toLong())
   }
 
   @PostMapping("/me/reviews")
@@ -39,9 +38,8 @@ class ReviewController(private val reviewService: ReviewService) {
         }
   }
 
-
-    @DeleteMapping("/me/reviews")
-    fun deleteReview() {
-
-    }
+  @DeleteMapping("/me/reviews/{review-id}")
+  suspend fun deleteReview(@RequestParam("review-id") reviewId: Long) {
+    reviewService.deleteReview(reviewId)
+  }
 }

@@ -16,7 +16,7 @@ class RabbitMqConsumer(
   suspend fun receiveMessage(message: ReviewCreatedMessage) {
     println("Got message: $message")
     if (message.type != ReviewCreatedMessage.Type.ISBN) return
-    if (bookRepository.existsBy(message.value)) return
+    if (bookRepository.existsByIsbn(message.value)) return
 
     // The infinite loop happens because the message keeps getting reprocessed after the exception
     // is thrown, possibly due to the message being redelivered by RabbitMQ since no acknowledgment

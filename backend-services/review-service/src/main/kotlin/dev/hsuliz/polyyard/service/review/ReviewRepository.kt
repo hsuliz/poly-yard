@@ -2,6 +2,7 @@ package dev.hsuliz.polyyard.service.review
 
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.data.domain.Pageable
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate
 import org.springframework.data.relational.core.query.Criteria
@@ -18,28 +19,29 @@ class ReviewRepository(private val template: R2dbcEntityTemplate) {
       pageable: Pageable
   ): Flow<Review> {
     var resourceCriteria = Criteria.empty()
-    var resources: Flow<Review.Resource> = flowOf()
+    var resource: Review.Resource? = null
     if (resourceType != null && resourceValue != null) {
-      resourceType.let { resourceCriteria = resourceCriteria.and("type").`is`(it) }
-      resourceValue.let { resourceCriteria = resourceCriteria.and("value").`is`(it) }
-      resources =
-          template.select(Query.query(resourceCriteria), Review.Resource::class.java).asFlow()
+      resourceCriteria =
+          resourceCriteria.and("type").`is`(resourceType).and("value").`in`(resourceValue)
+      resource =
+          template.select(Query.query(resourceCriteria), Review.Resource::class.java).awaitFirst()
     }
 
     var reviewCriteria = Criteria.empty()
+    resource?.let { reviewCriteria = reviewCriteria.and("resourceId").`is`(resource.id!!) }
     username?.let { reviewCriteria = reviewCriteria.and("username").`is`(it) }
+
     val reviewQuery = Query.query(reviewCriteria).with(pageable)
-    var reviews = template.select(reviewQuery, Review::class.java).asFlow()
-    if (reviews.count() == 0) {
-      return reviews
-    }
+    val reviews = template.select(reviewQuery, Review::class.java).asFlow()
 
-    if (resources.count() == 0) {
-      resourceCriteria = Criteria.where("id").`in`(reviews.map { it.resourceId }.toSet())
-      resources =
+    if (resource != null) {
+      return reviews.map { it.apply { this.resource = resource } }
+    } else {
+      val resources: Flow<Review.Resource> =
           template.select(Query.query(resourceCriteria), Review.Resource::class.java).asFlow()
+      return reviews.zip(resources) { review, itResource ->
+        review.apply { this.resource = itResource }
+      }
     }
-
-    return reviews.zip(resources) { review, resource -> review.apply { this.resource = resource } }
   }
 }
