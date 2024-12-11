@@ -39,7 +39,7 @@ class ReviewController(private val reviewService: ReviewService) {
   }
 
   @DeleteMapping("/me/reviews/{review-id}")
-  suspend fun deleteReview(@RequestParam("review-id") reviewId: Long) {
+  suspend fun deleteReview(@PathVariable("review-id") reviewId: Long) {
     reviewService.deleteReview(reviewId)
   }
 }

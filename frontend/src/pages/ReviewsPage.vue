@@ -27,7 +27,6 @@ watch(
 
 <template>
   <h1 class="text-2xl font-bold">Welcome to the Reviews Page</h1>
-
   <div v-if="isAuthenticated">
     <router-link to="/add-review" v-slot="{ navigate }">
       <button
@@ -42,7 +41,7 @@ watch(
     <div>
       <h2 class="text-xl font-semibold">Your reviews</h2>
       <div>
-        <ReviewList :reviews="reviews" />
+        <ReviewList :reviews="reviews" :isUser="isAuthenticated" />
       </div>
     </div>
   </div>

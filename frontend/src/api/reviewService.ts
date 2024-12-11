@@ -58,4 +58,8 @@ const postReview = async (review: ReviewRequest): Promise<void> => {
   await apiClient.post("/api/me/reviews", review)
 }
 
-export { getReviews, getReviewsByBook, getReviewsByUser, postReview }
+const deleteReviewById = async (reviewId: number): Promise<any> => {
+  await apiClient.delete(`/api/me/reviews/${reviewId}`)
+}
+
+export { getReviews, getReviewsByBook, getReviewsByUser, postReview, deleteReviewById }
