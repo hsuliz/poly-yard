@@ -1,6 +1,6 @@
 package dev.hsuliz.polyyard.service.review
 
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -22,10 +22,6 @@ class ReviewService(
     return reviews
   }
 
-  suspend fun countReviews(): Long {
-    return reviewCrudRepository.count()
-  }
-
   @Transactional
   suspend fun createReview(
       reviewCategory: Review.Type,
@@ -40,4 +36,7 @@ class ReviewService(
     return savedReview
   }
 
+  suspend fun deleteReview(reviewId: Long) {
+    reviewCrudRepository.deleteById(reviewId)
+  }
 }

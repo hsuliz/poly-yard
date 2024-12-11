@@ -28,20 +28,18 @@ class ReviewRepository(private val template: R2dbcEntityTemplate) {
     }
 
     var reviewCriteria = Criteria.empty()
-    resource?.let { reviewCriteria = reviewCriteria.and("resourceId").`is`(resource.id!!) }
+    resource?.let { reviewCriteria = reviewCriteria.and("resource_id").`is`(resource.id!!) }
     username?.let { reviewCriteria = reviewCriteria.and("username").`is`(it) }
 
     val reviewQuery = Query.query(reviewCriteria).with(pageable)
     val reviews = template.select(reviewQuery, Review::class.java).asFlow()
 
-    if (resource != null) {
-      return reviews.map { it.apply { this.resource = resource } }
+    return if (resource != null) {
+      reviews.map { it.apply { this.resource = resource } }
     } else {
       val resources: Flow<Review.Resource> =
           template.select(Query.query(resourceCriteria), Review.Resource::class.java).asFlow()
-      return reviews.zip(resources) { review, itResource ->
-        review.apply { this.resource = itResource }
-      }
+      reviews.zip(resources) { review, itResource -> review.apply { this.resource = itResource } }
     }
   }
 }
