@@ -1,9 +1,7 @@
-server.port: 8004
+server.port: 8002
 spring:
   application:
-    name: book-service
-  amqp:
-    deserialization.trust.all: true
+    name: review-service
   rabbitmq:
     host: localhost
     port: 5672
@@ -11,9 +9,9 @@ spring:
     password: guest
     virtual-host: /
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/book
+    ##url: r2dbc:postgresql://localhost:5433/review
     username: postgres
-    password: book
+    password: review
   security.oauth2.resourceserver.jwt.jwk-set-uri: http://localhost:8080/realms/polyyard/protocol/openid-connect/certs
 
 server:

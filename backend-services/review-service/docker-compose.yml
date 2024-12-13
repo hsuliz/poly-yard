@@ -1,13 +1,13 @@
 version: "3.8"
 
 services:
-  book-db:
-    container_name: book-db
+  review-db:
+    container_name: review-db
     image: postgres:16-alpine
     restart: always
     shm_size: 128mb
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: book
+      POSTGRES_PASSWORD: review
