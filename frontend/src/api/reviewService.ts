@@ -1,7 +1,7 @@
 import { apiClient } from "./axiosConfig"
 import type { ReviewRequest } from "@/api/request/ReviewRequest"
 import type { Review } from "@/types/Review"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 
 const getReviews = async (): Promise<Review[]> => {
   try {
@@ -55,7 +55,19 @@ const getReviewsByBook = async (isbn: string): Promise<Review[]> => {
 }
 
 const postReview = async (review: ReviewRequest): Promise<void> => {
-  await apiClient.post("/api/me/reviews", review)
+  try {
+    await apiClient.post("/api/me/reviews", review)
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      // Log Axios-specific error details
+      console.error("HTTP Status:", error.response?.status)
+      console.error("Response Data:", error.response?.data.message)
+      console.error("Headers:", error.response?.headers)
+    } else {
+      // Handle generic error
+      console.error("Unexpected error:", error)
+    }
+  }
 }
 
 const deleteReviewById = async (reviewId: number): Promise<any> => {

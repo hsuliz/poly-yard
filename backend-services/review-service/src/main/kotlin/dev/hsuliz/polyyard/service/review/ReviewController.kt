@@ -2,13 +2,17 @@ package dev.hsuliz.polyyard.service.review
 
 import dev.hsuliz.polyyard.service.review.dto.ReviewRequest
 import dev.hsuliz.polyyard.service.review.dto.ReviewResponse
+import dev.hsuliz.polyyard.service.review.exception.ReviewAlreadyExists
+import dev.hsuliz.polyyard.service.review.model.Review
 import kotlinx.coroutines.flow.toList
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 
 const val PREFERRED_USERNAME = "preferred_username"
 
@@ -32,10 +36,11 @@ class ReviewController(private val reviewService: ReviewService) {
 
   @PostMapping("/me/reviews")
   suspend fun addReview(@RequestBody reviewRequest: ReviewRequest) {
-    val review =
-        with(reviewRequest) {
-          reviewService.createReview(type, resource.toModel(), rating, comment)
-        }
+    try {
+      with(reviewRequest) { reviewService.createReview(type, resource.toModel(), rating, comment) }
+    } catch (e: ReviewAlreadyExists) {
+      throw ResponseStatusException(HttpStatus.NOT_FOUND, e.message)
+    }
   }
 
   @DeleteMapping("/me/reviews/{review-id}")

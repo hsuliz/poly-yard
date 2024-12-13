@@ -1,9 +1,9 @@
-package dev.hsuliz.polyyard.service.review
+package dev.hsuliz.polyyard.service.review.model
 
-import java.time.LocalDateTime
 import org.springframework.data.annotation.*
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
+import java.time.LocalDateTime
 
 @Table("reviews")
 data class Review(

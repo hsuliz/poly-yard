@@ -1,6 +1,6 @@
 package dev.hsuliz.polyyard.service.review.config
 
-import dev.hsuliz.polyyard.service.review.Review
+import dev.hsuliz.polyyard.service.review.model.Review
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration
 import io.r2dbc.postgresql.PostgresqlConnectionFactory
 import io.r2dbc.postgresql.codec.EnumCodec
@@ -17,7 +17,7 @@ import org.springframework.security.oauth2.jwt.Jwt
 
 @Configuration
 @EnableR2dbcAuditing
-class PostgresqlConfig : AbstractR2dbcConfiguration() {
+class R2dbcConfiguration : AbstractR2dbcConfiguration() {
 
   @Bean
   @Primary

@@ -1,8 +1,8 @@
 package dev.hsuliz.polyyard.service.review.dto
 
-import dev.hsuliz.polyyard.service.review.Review
-import dev.hsuliz.polyyard.service.review.Review.Resource
-import dev.hsuliz.polyyard.service.review.Review.Type
+import dev.hsuliz.polyyard.service.review.model.Review
+import dev.hsuliz.polyyard.service.review.model.Review.Resource
+import dev.hsuliz.polyyard.service.review.model.Review.Type
 import java.time.LocalDateTime
 
 data class ReviewResponse(

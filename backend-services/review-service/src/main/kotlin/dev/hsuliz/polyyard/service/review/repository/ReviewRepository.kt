@@ -1,5 +1,6 @@
-package dev.hsuliz.polyyard.service.review
+package dev.hsuliz.polyyard.service.review.repository
 
+import dev.hsuliz.polyyard.service.review.model.Review
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirst
@@ -13,10 +14,10 @@ import org.springframework.stereotype.Component
 class ReviewRepository(private val template: R2dbcEntityTemplate) {
 
   suspend fun findReviewsBy(
-      username: String?,
-      resourceType: Review.Resource.Type?,
-      resourceValue: String?,
-      pageable: Pageable
+      username: String? = null,
+      resourceType: Review.Resource.Type? = null,
+      resourceValue: String? = null,
+      pageable: Pageable? = null
   ): Flow<Review> {
     var resourceCriteria = Criteria.empty()
     var resource: Review.Resource? = null
@@ -31,7 +32,7 @@ class ReviewRepository(private val template: R2dbcEntityTemplate) {
     resource?.let { reviewCriteria = reviewCriteria.and("resource_id").`is`(resource.id!!) }
     username?.let { reviewCriteria = reviewCriteria.and("username").`is`(it) }
 
-    val reviewQuery = Query.query(reviewCriteria).with(pageable)
+    val reviewQuery = Query.query(reviewCriteria).with(pageable ?: Pageable.unpaged())
     val reviews = template.select(reviewQuery, Review::class.java).asFlow()
 
     return if (resource != null) {
