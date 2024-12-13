@@ -8,6 +8,7 @@ import org.springframework.cloud.gateway.route.builder.filters
 import org.springframework.cloud.gateway.route.builder.routes
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 
 @Configuration
 class FilterConfig {
@@ -28,8 +29,14 @@ class FilterConfig {
         }
         route("check-resource-before-post") {
           path("/api/me/reviews")
+          method(HttpMethod.POST)
           uri("http://localhost:8002")
           filters { filter(reviewRequestChecker) }
+        }
+        route("review-service") {
+          path("/api/me/reviews")
+          method(HttpMethod.DELETE)
+          uri("http://localhost:8002")
         }
       }
 }
