@@ -1,17 +1,14 @@
 package dev.hsuliz.polyyard.service.review
 
-import dev.hsuliz.polyyard.service.review.exception.ReviewAlreadyExists
+import dev.hsuliz.polyyard.service.review.exception.ReviewAlreadyExistsException
 import dev.hsuliz.polyyard.service.review.model.Review
 import dev.hsuliz.polyyard.service.review.repository.ResourceRepository
 import dev.hsuliz.polyyard.service.review.repository.ReviewCrudRepository
 import dev.hsuliz.polyyard.service.review.repository.ReviewRepository
+import dev.hsuliz.polyyard.service.review.util.getCurrentUsername
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.reactor.awaitSingle
-import kotlinx.coroutines.reactor.mono
 import org.springframework.data.domain.Pageable
-import org.springframework.security.core.context.ReactiveSecurityContextHolder
-import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -39,10 +36,9 @@ class ReviewService(
       rating: Int,
       comment: String? = null,
   ): Review {
-    val currentUsername = getCurrentUsername()
     reviewRepository
-        .findReviewsBy(currentUsername, reviewResource.type, reviewResource.value)
-        .firstOrNull() ?: throw ReviewAlreadyExists("Review already exists")
+        .findReviewsBy(getCurrentUsername(), reviewResource.type, reviewResource.value)
+        .firstOrNull() ?: throw ReviewAlreadyExistsException()
 
     val savedResource = resourceRepository.save(reviewResource)
     val review = Review(reviewType, savedResource.id!!, rating, comment, savedResource)
@@ -53,15 +49,4 @@ class ReviewService(
   suspend fun deleteReview(reviewId: Long) {
     reviewCrudRepository.deleteById(reviewId)
   }
-
-  private suspend fun getCurrentUsername(): String =
-      ReactiveSecurityContextHolder.getContext()
-          .map { it.authentication }
-          .filter { it.isAuthenticated }
-          .map {
-            val jwt = it.principal as Jwt
-            return@map jwt.getClaimAsString("preferred_username")
-          }
-          .switchIfEmpty(mono { "anonymous" })
-          .awaitSingle()
 }

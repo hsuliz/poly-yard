@@ -2,7 +2,7 @@ package dev.hsuliz.polyyard.service.review
 
 import dev.hsuliz.polyyard.service.review.dto.ReviewRequest
 import dev.hsuliz.polyyard.service.review.dto.ReviewResponse
-import dev.hsuliz.polyyard.service.review.exception.ReviewAlreadyExists
+import dev.hsuliz.polyyard.service.review.exception.ReviewAlreadyExistsException
 import dev.hsuliz.polyyard.service.review.model.Review
 import kotlinx.coroutines.flow.toList
 import org.springframework.data.domain.Page
@@ -38,8 +38,8 @@ class ReviewController(private val reviewService: ReviewService) {
   suspend fun addReview(@RequestBody reviewRequest: ReviewRequest) {
     try {
       with(reviewRequest) { reviewService.createReview(type, resource.toModel(), rating, comment) }
-    } catch (e: ReviewAlreadyExists) {
-      throw ResponseStatusException(HttpStatus.NOT_FOUND, e.message)
+    } catch (exception: ReviewAlreadyExistsException) {
+      throw ResponseStatusException(HttpStatus.CONFLICT, exception.message)
     }
   }
 
