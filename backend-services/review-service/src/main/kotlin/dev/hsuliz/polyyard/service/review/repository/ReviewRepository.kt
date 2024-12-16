@@ -1,9 +1,12 @@
 package dev.hsuliz.polyyard.service.review.repository
 
+import dev.hsuliz.polyyard.service.review.exception.ReviewResourceNotFoundException
 import dev.hsuliz.polyyard.service.review.model.Review
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.singleOrNull
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.reactive.asFlow
-import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.data.domain.Pageable
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate
 import org.springframework.data.relational.core.query.Criteria
@@ -21,11 +24,15 @@ class ReviewRepository(private val template: R2dbcEntityTemplate) {
   ): Flow<Review> {
     var resourceCriteria = Criteria.empty()
     var resource: Review.Resource? = null
+
     if (resourceType != null && resourceValue != null) {
       resourceCriteria =
           resourceCriteria.and("type").`is`(resourceType).and("value").`in`(resourceValue)
       resource =
-          template.select(Query.query(resourceCriteria), Review.Resource::class.java).awaitFirst()
+          template
+              .select(Query.query(resourceCriteria), Review.Resource::class.java)
+              .asFlow()
+              .singleOrNull() ?: throw ReviewResourceNotFoundException()
     }
 
     var reviewCriteria = Criteria.empty()

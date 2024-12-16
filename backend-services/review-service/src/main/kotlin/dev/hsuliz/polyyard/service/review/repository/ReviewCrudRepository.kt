@@ -14,11 +14,10 @@ interface ReviewCrudRepository :
   fun findAllBy(pageable: Pageable): Flow<Review>
 
   fun findAllByUsername(username: String, pageable: Pageable): Flow<Review>
-
-  fun findAllByResourceId(resourceId: Flow<Long>): Flow<Review>
-
 }
 
 interface ResourceRepository : CoroutineCrudRepository<Review.Resource, Long> {
-  fun findByTypeAndValue(type: Review.Resource.Type, value: String): Flow<Review.Resource>
+  suspend fun findByTypeAndValue(type: Review.Resource.Type, value: String): Review.Resource?
+
+  suspend fun existsByTypeAndValue(type: Review.Resource.Type, value: String): Boolean
 }

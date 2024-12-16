@@ -9,4 +9,3 @@ group = "dev.hsuliz"
 
 version = "0.0.1-SNAPSHOT"
 
-dependencies { testImplementation("org.testcontainers:postgresql") }

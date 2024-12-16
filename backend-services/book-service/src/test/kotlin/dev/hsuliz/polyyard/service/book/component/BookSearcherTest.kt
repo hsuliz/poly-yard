@@ -41,6 +41,6 @@ class BookSearcherTest :
             shouldThrow<IllegalStateException> { bookSearcher.findBookBy(givenISBN) }
 
         // then
-        exception.message shouldBe "Failed to map the response to BookMapper"
+        exception.message shouldBe "Failed to map the response to BookMapper for isbn: $givenISBN"
       }
     })
