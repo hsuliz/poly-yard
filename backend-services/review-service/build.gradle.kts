@@ -17,6 +17,8 @@ dependencies {
   testRuntimeOnly("org.postgresql:postgresql")
   //testRuntimeOnly("org.postgresql:r2dbc-postgresql")
   testRuntimeOnly("org.testcontainers:r2dbc")
+  //testImplementation("org.springframework.amqp:spring-rabbit-test")
+  testImplementation("org.testcontainers:rabbitmq:1.20.0")
 
   testImplementation("com.github.dasniko:testcontainers-keycloak:3.5.1")
 }
