@@ -1,4 +1,4 @@
-package dev.hsuliz.polyyard.service.review.integration
+package dev.hsuliz.polyyard.service.review.service
 
 import com.ninjasquad.springmockk.MockkBean
 import dev.hsuliz.polyyard.service.review.PostgresTestcontainer
@@ -6,7 +6,7 @@ import dev.hsuliz.polyyard.service.review.RabbitMQTestcontainer
 import dev.hsuliz.polyyard.service.review.ReviewService
 import dev.hsuliz.polyyard.service.review.component.ReviewCreatedMessage
 import dev.hsuliz.polyyard.service.review.model.Review
-import dev.hsuliz.polyyard.service.review.util.getCurrentUsername
+import dev.hsuliz.polyyard.service.review.util.currentUsername
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
@@ -25,7 +25,7 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import reactor.core.publisher.Mono
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ReviewServiceTest(
+class ReviewServiceIntegrationTest(
     private val reviewService: ReviewService,
     private val r2dbcEntityTemplate: R2dbcEntityTemplate,
     private val amqpAdmin: AmqpAdmin,
@@ -37,12 +37,38 @@ class ReviewServiceTest(
     RabbitMQTestcontainer,
     FunSpec({
       beforeEach {
-        mockkStatic("dev.hsuliz.polyyard.service.review.util.SecurityUtilKt")
+        mockkStatic("dev.hsuliz.polyyard.service.review.util.SecurityUtilsKt")
         every { reactiveAuditorAware.currentAuditor } returns Mono.just("Sasha")
-        coEvery { getCurrentUsername() } returns "Sasha"
+        coEvery { currentUsername() } returns "Sasha"
       }
 
       test("Should save review for new resource and send it to MQ") {
+        // setup
+        Queue("book").also { amqpAdmin.declareQueue(it) }
+
+        // given
+        val givenReviewType = Review.Type.BOOK
+        val givenReviewResource = Review.Resource(Review.Resource.Type.ISBN, "9780415217866")
+        val givenRating = 5
+
+        // when
+        val review = reviewService.createReview(givenReviewType, givenReviewResource, givenRating)
+
+        // then
+        val savedReview =
+            r2dbcEntityTemplate
+                .select(Query.query(Criteria.where("id").`is`(review.id!!)), Review::class.java)
+                .awaitSingle()
+
+        review shouldBe savedReview
+
+        // then
+        val receivedMessageFromMq = rabbitTemplate.receiveAndConvert("book", 5000)
+        receivedMessageFromMq shouldBe
+            ReviewCreatedMessage(Review.Resource.Type.ISBN, "9780415217866")
+      }
+
+      test("Should save review for old resource and send it to MQ") {
         // setup
         Queue("book").also { amqpAdmin.declareQueue(it) }
 
@@ -52,18 +78,15 @@ class ReviewServiceTest(
         val givenRating = 5
 
         // when
-        val reviewEntity =
-            reviewService.createReview(givenReviewType, givenReviewResource, givenRating)
+        val review = reviewService.createReview(givenReviewType, givenReviewResource, givenRating)
 
         // then
         val savedReview =
             r2dbcEntityTemplate
-                .select(
-                    Query.query(Criteria.where("id").`is`(reviewEntity.id!!)), Review::class.java)
+                .select(Query.query(Criteria.where("id").`is`(review.id!!)), Review::class.java)
                 .awaitSingle()
 
-        // then
-        // reviewEntity shouldBe savedReview // currently won't pass
+        review shouldBe savedReview
 
         // then
         val receivedMessageFromMq = rabbitTemplate.receiveAndConvert("book", 5000)

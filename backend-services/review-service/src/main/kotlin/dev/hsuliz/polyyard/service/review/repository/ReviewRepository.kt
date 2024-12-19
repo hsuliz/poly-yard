@@ -14,7 +14,7 @@ import org.springframework.data.relational.core.query.Query
 import org.springframework.stereotype.Component
 
 @Component
-class ReviewRepository(private val template: R2dbcEntityTemplate) {
+class ReviewRepository(private val r2dbcEntityTemplate: R2dbcEntityTemplate) {
 
   suspend fun findReviewsBy(
       username: String? = null,
@@ -29,10 +29,10 @@ class ReviewRepository(private val template: R2dbcEntityTemplate) {
       resourceCriteria =
           resourceCriteria.and("type").`is`(resourceType).and("value").`in`(resourceValue)
       resource =
-          template
+          r2dbcEntityTemplate
               .select(Query.query(resourceCriteria), Review.Resource::class.java)
               .asFlow()
-              .singleOrNull() ?: throw ReviewResourceNotFoundException()
+              .singleOrNull()
     }
 
     var reviewCriteria = Criteria.empty()
@@ -40,13 +40,17 @@ class ReviewRepository(private val template: R2dbcEntityTemplate) {
     username?.let { reviewCriteria = reviewCriteria.and("username").`is`(it) }
 
     val reviewQuery = Query.query(reviewCriteria).with(pageable ?: Pageable.unpaged())
-    val reviews = template.select(reviewQuery, Review::class.java).asFlow()
+    return r2dbcEntityTemplate.select(reviewQuery, Review::class.java).asFlow()
+
+    val reviews = r2dbcEntityTemplate.select(reviewQuery, Review::class.java).asFlow()
 
     return if (resource != null) {
       reviews.map { it.apply { this.resource = resource } }
     } else {
       val resources: Flow<Review.Resource> =
-          template.select(Query.query(resourceCriteria), Review.Resource::class.java).asFlow()
+          r2dbcEntityTemplate
+              .select(Query.query(resourceCriteria), Review.Resource::class.java)
+              .asFlow()
       reviews.zip(resources) { review, itResource -> review.apply { this.resource = itResource } }
     }
   }

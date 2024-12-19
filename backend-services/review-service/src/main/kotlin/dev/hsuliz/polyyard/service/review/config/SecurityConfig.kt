@@ -15,7 +15,6 @@ import org.springframework.web.reactive.config.WebFluxConfigurer
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 class SecurityConfig : WebFluxConfigurer {
-
   companion object {
     const val SCOPE_USER = "SCOPE_USER"
   }

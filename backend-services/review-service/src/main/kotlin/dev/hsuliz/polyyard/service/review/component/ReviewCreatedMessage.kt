@@ -1,6 +1,5 @@
 package dev.hsuliz.polyyard.service.review.component
 
-
 import dev.hsuliz.polyyard.service.review.model.Review
 import java.io.Serializable
 

@@ -6,9 +6,9 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.security.oauth2.jwt.Jwt
 import reactor.core.publisher.Mono
 
-suspend fun getCurrentUsername(): String = getCurrentUsernameMono().awaitSingle()
+suspend fun currentUsername(): String = currentUsernameMono().awaitSingle()
 
-fun getCurrentUsernameMono(): Mono<String> =
+fun currentUsernameMono(): Mono<String> =
     ReactiveSecurityContextHolder.getContext()
         .map { it.authentication }
         .filter { it.isAuthenticated }

@@ -1,12 +1,11 @@
 package dev.hsuliz.polyyard.service.review
 
 import dev.hsuliz.polyyard.service.review.exception.ReviewAlreadyExistsException
-import dev.hsuliz.polyyard.service.review.exception.ReviewResourceNotFoundException
 import dev.hsuliz.polyyard.service.review.model.Review
 import dev.hsuliz.polyyard.service.review.repository.ResourceRepository
 import dev.hsuliz.polyyard.service.review.repository.ReviewCrudRepository
 import dev.hsuliz.polyyard.service.review.repository.ReviewRepository
-import dev.hsuliz.polyyard.service.review.util.getCurrentUsername
+import dev.hsuliz.polyyard.service.review.util.currentUsername
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.count
 import org.springframework.data.domain.Pageable
@@ -37,26 +36,20 @@ class ReviewService(
       rating: Int,
       comment: String? = null,
   ): Review {
-
-    try {
-      val reviews =
-          reviewRepository.findReviewsBy(
-              getCurrentUsername(), reviewResource.type, reviewResource.value)
-      println("========")
-      if (reviews.count() == 1) {
-        throw ReviewAlreadyExistsException()
-      }
-      val savedResource =
-          resourceRepository.findByTypeAndValue(reviewResource.type, reviewResource.value)!!
-      val review = Review(reviewType, savedResource.id!!, rating, comment, savedResource)
-      val savedReview = reviewCrudRepository.save(review)
-      return savedReview
-    } catch (reviewResourceNotFoundException: ReviewResourceNotFoundException) {
-      val savedResource = resourceRepository.save(reviewResource)
-      val review = Review(reviewType, savedResource.id!!, rating, comment, savedResource)
-      val savedReview = reviewCrudRepository.save(review)
-      return savedReview
+    val review: Review
+    val reviews =
+        reviewRepository.findReviewsBy(currentUsername(), reviewResource.type, reviewResource.value)
+    if (reviews.count() != 0) throw ReviewAlreadyExistsException()
+    if (resourceRepository.existsByTypeAndValue(reviewResource.type, reviewResource.value)) {
+      val existingResource =
+          resourceRepository.getByTypeAndValue(reviewResource.type, reviewResource.value)!!
+      review = Review(reviewType, existingResource.id!!, rating, comment, existingResource)
+      return reviewCrudRepository.save(review)
     }
+    val newResource =
+        resourceRepository.save(Review.Resource(reviewResource.type, reviewResource.value))
+    review = Review(reviewType, newResource.id!!, rating, comment, newResource)
+    return reviewCrudRepository.save(review)
   }
 
   suspend fun deleteReview(reviewId: Long) {

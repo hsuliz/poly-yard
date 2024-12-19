@@ -1,7 +1,7 @@
 package dev.hsuliz.polyyard.service.review.config
 
 import dev.hsuliz.polyyard.service.review.model.Review
-import dev.hsuliz.polyyard.service.review.util.getCurrentUsernameMono
+import dev.hsuliz.polyyard.service.review.util.currentUsernameMono
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration
 import io.r2dbc.postgresql.PostgresqlConnectionFactory
 import io.r2dbc.postgresql.codec.EnumCodec
@@ -9,6 +9,7 @@ import io.r2dbc.spi.ConnectionFactory
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.data.domain.ReactiveAuditorAware
 import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing
@@ -20,6 +21,7 @@ import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories
 class R2dbcConfiguration(private val properties: R2dbcProperties) : AbstractR2dbcConfiguration() {
 
   @Bean
+  @Lazy
   override fun connectionFactory(): ConnectionFactory {
     // Parse the URL: r2dbc:postgresql://host:port/database
     val (host, port, database) = parseR2dbcUrl(properties.url)
@@ -40,12 +42,16 @@ class R2dbcConfiguration(private val properties: R2dbcProperties) : AbstractR2db
   }
 
   override fun getCustomConverters(): List<Any> {
-    return listOf(CategoryWritingConverter(), ResourceWritingConverter())
+    return listOf(
+        ReviewTypeWritingConverter(),
+        ReviewResourceTypeWritingConverter(),
+        ReviewTypeReadingConverter(),
+        ReviewResourceTypeReadingConverter())
   }
 
   @Bean
   fun reactiveAuditorAware(): ReactiveAuditorAware<String> {
-    return ReactiveAuditorAware<String> { getCurrentUsernameMono() }
+    return ReactiveAuditorAware<String> { currentUsernameMono() }
   }
 
   private fun parseR2dbcUrl(url: String): Triple<String, Int, String> {
