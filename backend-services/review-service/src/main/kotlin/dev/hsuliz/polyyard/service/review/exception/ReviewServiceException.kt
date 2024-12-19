@@ -1,10 +1,8 @@
 package dev.hsuliz.polyyard.service.review.exception
 
 open class ReviewServiceException(override val message: String?, override val cause: Throwable?) :
-    Exception()
+    Exception(message)
 
-class ReviewAlreadyExistsException(override val message: String = "Review already exists!") :
-    ReviewServiceException(message, null)
+class ReviewAlreadyExistsException : ReviewServiceException("Review already exists!", null)
 
-class ReviewResourceNotFoundException(override val message: String = "Review Resource not found!") :
-    ReviewServiceException(message, null)
+class ReviewResourceNotFoundException : ReviewServiceException("Review already exists!", null)
