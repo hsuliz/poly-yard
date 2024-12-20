@@ -37,6 +37,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-summary
-          path: "review-service/build/reports/tests/test/index.html"
+          path: "backend-services/review-service/build/reports/tests/test/index.html"
         
 
