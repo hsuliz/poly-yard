@@ -14,6 +14,6 @@ CREATE TABLE reviews (
     resource_id BIGINT NOT NULL,
     rating INT NOT NULL,
     comment TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (resource_id) REFERENCES resources (id) ON DELETE CASCADE
 );
