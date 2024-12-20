@@ -32,11 +32,19 @@ jobs:
       - name: Test
         run: ./gradlew test
 
+      - name: Test Summary
+        if: always()
+        uses: test-summary/action@v2
+        with:
+          paths: "./backend-services/review-service/build/test-results/test/TEST-*.xml"
+          output: test-summary.md
+        
       - name: Upload test summary
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-summary
-          path: "backend-services/review-service/build/reports/tests/test/index.html"
+          path: test-summary.md
+        
         
 
