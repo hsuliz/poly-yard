@@ -13,7 +13,7 @@ data class Review(
     val comment: String? = null,
     @Transient var resource: Resource?,
     @CreatedBy val username: String? = null,
-    @CreatedDate val createdAt: LocalDateTime? = null,
+    @CreatedDate val createdAt: LocalDateTime? = LocalDateTime.now(),
     @Id val id: Long? = null
 ) {
 
