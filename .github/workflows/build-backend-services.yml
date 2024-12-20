@@ -32,34 +32,11 @@ jobs:
       - name: Test
         run: ./gradlew test
 
-      - name: Test2
-        if: always()
-        run: ls
-
-      - name: Test3
-        if: always()
-        run: ls review-service/build
-
-      - name: Test4
-        if: always()
-        run: ls review-service/build/test-results
-
-      - name: Test5
-        if: always()
-        run: ls review-service/build/test-results/test
-
-      - name: Test Report
-        if: always()
-        uses: test-summary/action@v2
-        with:
-          paths: "review-service/build/test-results/test/*.xml"
-          output: test-summary.md
-
       - name: Upload test summary
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-summary
-          path: test-summary.md
+          path: "review-service/build/reports/tests/test/index.html"
         
 
