@@ -52,5 +52,5 @@ jobs:
         if: always()
         uses: test-summary/action@v2
         with:
-          paths: "review-service/build/test-results/test/TEST-dev.hsuliz.polyyard.service.review.service.ReviewServiceIntegrationTest.xml"
+          paths: "review-service/build/test-results/test/*.xml"
 
