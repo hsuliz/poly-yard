@@ -32,11 +32,12 @@ jobs:
       - name: Test
         run: ./gradlew test
 
-
       - name: Test2
+        if: always()
         run: ls
 
       - name: Test3
+        if: always()
         run: ls review-service/build
 
       - name: Test Report
