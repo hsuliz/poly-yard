@@ -31,4 +31,4 @@ jobs:
         with:
           name: Test reports          
           path: review-service/build/test-results/test/TEST-dev.hsuliz.polyyard.service.review.ApplicationTest.xml
-          reporter: jest-junit      
+          reporter: java-junit      
