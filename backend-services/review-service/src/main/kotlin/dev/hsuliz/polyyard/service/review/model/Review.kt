@@ -11,9 +11,9 @@ data class Review(
     val resourceId: Long,
     val rating: Int,
     val comment: String? = null,
-    @Transient var resource: Resource?,
+    @Transient var resource: Resource? = null,
     @CreatedBy val username: String? = null,
-    @CreatedDate val createdAt: LocalDateTime? = LocalDateTime.now(),
+    @CreatedDate val createdAt: LocalDateTime? = null,
     @Id val id: Long? = null
 ) {
 
