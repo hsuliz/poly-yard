@@ -5,13 +5,16 @@ import dev.hsuliz.polyyard.service.review.PostgresTestcontainer
 import dev.hsuliz.polyyard.service.review.RabbitMQTestcontainer
 import dev.hsuliz.polyyard.service.review.ReviewService
 import dev.hsuliz.polyyard.service.review.component.ReviewCreatedMessage
+import dev.hsuliz.polyyard.service.review.exception.ReviewAlreadyExistsException
 import dev.hsuliz.polyyard.service.review.model.Review
 import dev.hsuliz.polyyard.service.review.util.currentUsername
+import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockkStatic
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.amqp.core.AmqpAdmin
 import org.springframework.amqp.core.Queue
@@ -22,9 +25,11 @@ import org.springframework.data.r2dbc.core.R2dbcEntityTemplate
 import org.springframework.data.relational.core.query.Criteria
 import org.springframework.data.relational.core.query.Query
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
+import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Mono
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
 class ReviewServiceIntegrationTest(
     private val reviewService: ReviewService,
     private val r2dbcEntityTemplate: R2dbcEntityTemplate,
@@ -36,15 +41,12 @@ class ReviewServiceIntegrationTest(
     PostgresTestcontainer,
     RabbitMQTestcontainer,
     FunSpec({
-      beforeEach {
-        mockkStatic("dev.hsuliz.polyyard.service.review.util.SecurityUtilsKt")
-        every { reactiveAuditorAware.currentAuditor } returns Mono.just("Sasha")
-        coEvery { currentUsername() } returns "Sasha"
-      }
-
       test("Should save review for new resource and send it to MQ") {
         // setup
         Queue("book").also { amqpAdmin.declareQueue(it) }
+        mockkStatic("dev.hsuliz.polyyard.service.review.util.SecurityUtilsKt")
+        every { reactiveAuditorAware.currentAuditor } returns Mono.just("Sasha")
+        coEvery { currentUsername() } returns "Sasha"
 
         // given
         val givenReviewType = Review.Type.BOOK
@@ -68,9 +70,12 @@ class ReviewServiceIntegrationTest(
             ReviewCreatedMessage(Review.Resource.Type.ISBN, "9780415217866")
       }
 
-      test("Should save review for old resource and send it to MQ") {
+      test("Should save review for already existing resource") {
         // setup
         Queue("book").also { amqpAdmin.declareQueue(it) }
+        mockkStatic("dev.hsuliz.polyyard.service.review.util.SecurityUtilsKt")
+        every { reactiveAuditorAware.currentAuditor } returns Mono.just("Sasha")
+        coEvery { currentUsername() } returns "Sasha"
 
         // given
         val givenReviewType = Review.Type.BOOK
@@ -94,8 +99,30 @@ class ReviewServiceIntegrationTest(
             ReviewCreatedMessage(Review.Resource.Type.ISBN, "9781451673319")
       }
 
+      test("Should throw for review which already exists for current user") {
+        // setup
+        Queue("book").also { amqpAdmin.declareQueue(it) }
+        mockkStatic("dev.hsuliz.polyyard.service.review.util.SecurityUtilsKt")
+        every { reactiveAuditorAware.currentAuditor } returns Mono.just("user1")
+        coEvery { currentUsername() } returns "user1"
+
+        // given
+        val givenReviewType = Review.Type.BOOK
+        val givenReviewResource = Review.Resource(Review.Resource.Type.ISBN, "9783161484100")
+        val givenRating = 5
+
+        // when
+        val exception =
+            shouldThrowExactly<ReviewAlreadyExistsException> {
+              reviewService.createReview(givenReviewType, givenReviewResource, givenRating)
+            }
+
+        // then
+        exception shouldBe ReviewAlreadyExistsException()
+      }
+
       test("Just test") {
         val x = reviewService.findReviews()
-        x.collect { println(it) }
+        x.toList().forEach { println(it) }
       }
     })

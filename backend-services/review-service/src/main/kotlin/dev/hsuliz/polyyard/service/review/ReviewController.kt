@@ -28,8 +28,11 @@ class ReviewController(private val reviewService: ReviewService) {
       @PageableDefault(page = 0, size = 10, sort = ["createdAt"], direction = Sort.Direction.DESC)
       pageable: Pageable
   ): Page<ReviewResponse> {
+    require(resourceType != null && resourceValue != null)
     val reviews =
-        reviewService.findReviews(username, resourceType, resourceValue, pageable).toList()
+        reviewService
+            .findReviews(username, Review.Resource(resourceType, resourceValue), pageable)
+            .toList()
     val response = reviews.map { ReviewResponse(it) }
     return PageImpl(response, pageable, reviews.count().toLong())
   }

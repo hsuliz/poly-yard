@@ -21,11 +21,10 @@ class ReviewService(
 
   suspend fun findReviews(
       username: String? = null,
-      resourceType: Review.Resource.Type? = null,
-      resourceValue: String? = null,
+      reviewResource: Review.Resource? = null,
       pageable: Pageable? = null
   ): Flow<Review> {
-    val reviews = reviewRepository.findReviewsBy(username, resourceType, resourceValue, pageable)
+    val reviews = reviewRepository.findReviewsBy(username, reviewResource, pageable)
     return reviews
   }
 
@@ -36,22 +35,19 @@ class ReviewService(
       rating: Int,
       comment: String? = null,
   ): Review {
-    reviewRepository
-        .findReviewsBy(currentUsername(), reviewResource.type, reviewResource.value)
-        .toList()
-        .ifEmpty {
-          val review: Review
-          if (resourceRepository.existsByTypeAndValue(reviewResource.type, reviewResource.value)) {
-            val existingResource =
-                resourceRepository.getByTypeAndValue(reviewResource.type, reviewResource.value)!!
-            review = Review(reviewType, existingResource.id!!, rating, comment, existingResource)
-            return reviewCrudRepository.save(review)
-          }
-          val newResource =
-              resourceRepository.save(Review.Resource(reviewResource.type, reviewResource.value))
-          review = Review(reviewType, newResource.id!!, rating, comment, newResource)
-          return reviewCrudRepository.save(review)
-        }
+    reviewRepository.findReviewsBy(currentUsername(), reviewResource).toList().ifEmpty {
+      val review: Review
+      if (resourceRepository.existsByTypeAndValue(reviewResource.type, reviewResource.value)) {
+        val existingResource =
+            resourceRepository.getByTypeAndValue(reviewResource.type, reviewResource.value)!!
+        review = Review(reviewType, existingResource.id!!, rating, comment, existingResource)
+        return reviewCrudRepository.save(review)
+      }
+      val newResource =
+          resourceRepository.save(Review.Resource(reviewResource.type, reviewResource.value))
+      review = Review(reviewType, newResource.id!!, rating, comment, newResource)
+      return reviewCrudRepository.save(review)
+    }
     throw ReviewAlreadyExistsException()
   }
 
