@@ -40,6 +40,14 @@ jobs:
         if: always()
         run: ls review-service/build
 
+      - name: Test4
+        if: always()
+        run: ls review-service/build/test-results
+
+      - name: Test5
+        if: always()
+        run: ls review-service/build/test-results/test
+
       - name: Test Report
         if: always()
         uses: test-summary/action@v2
