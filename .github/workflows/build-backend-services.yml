@@ -41,6 +41,7 @@ jobs:
         
       - name: Add test summary to Build
         if: always()
+        working-directory: ./backend-services/review-service/build/test-results/test
         run: |
           echo "#### Test Summary" >> $GITHUB_STEP_SUMMARY
           cat test-summary.md >> $GITHUB_STEP_SUMMARY
