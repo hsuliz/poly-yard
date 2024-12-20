@@ -39,12 +39,11 @@ jobs:
           paths: "./backend-services/review-service/build/test-results/test/TEST-*.xml"
           output: test-summary.md
         
-      - name: Upload test summary
+      - name: Add test summary to Build
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-summary
-          path: test-summary.md
+        run: |
+          echo "#### Test Summary" >> $GITHUB_STEP_SUMMARY
+          cat test-summary.md >> $GITHUB_STEP_SUMMARY
         
         
 
