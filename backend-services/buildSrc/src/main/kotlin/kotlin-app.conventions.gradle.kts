@@ -22,6 +22,7 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.withType<Test>().configureEach {
+    reports.html.required = false
     useJUnitPlatform()
     testLogging { events("passed") }
 }
