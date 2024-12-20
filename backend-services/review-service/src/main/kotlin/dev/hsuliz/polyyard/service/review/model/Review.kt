@@ -1,6 +1,7 @@
 package dev.hsuliz.polyyard.service.review.model
 
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import org.springframework.data.annotation.*
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
@@ -11,9 +12,9 @@ data class Review(
     val resourceId: Long,
     val rating: Int,
     val comment: String? = null,
-    @Transient var resource: Resource? = null,
+    @Transient val resource: Resource? = null,
     @CreatedBy val username: String? = null,
-    @CreatedDate val createdAt: LocalDateTime? = null,
+    val createdAt: LocalDateTime? = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
     @Id val id: Long? = null
 ) {
 
@@ -24,7 +25,7 @@ data class Review(
       rating: Int,
       comment: String? = null,
       username: String? = null,
-      createdAt: LocalDateTime? = null,
+      createdAt: LocalDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
       id: Long? = null
   ) : this(type, resourceId, rating, comment, null, username, createdAt, id)
 
