@@ -5,7 +5,6 @@ import org.testcontainers.containers.RabbitMQContainer
 import org.testcontainers.junit.jupiter.Container
 
 interface RabbitMQTestcontainer {
-
   companion object {
     @Container
     @ServiceConnection
