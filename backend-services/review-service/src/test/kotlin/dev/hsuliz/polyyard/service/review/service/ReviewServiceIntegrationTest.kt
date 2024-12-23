@@ -41,50 +41,7 @@ class ReviewServiceIntegrationTest(
     PostgresTestcontainer,
     RabbitMQTestcontainer,
     FunSpec({
-      beforeEach {
-        r2dbcEntityTemplate.databaseClient
-            .sql(
-                """
-                DELETE FROM reviews CASCADE
-            """)
-            .await()
-        r2dbcEntityTemplate.databaseClient
-            .sql(
-                """
-                DELETE FROM resources CASCADE
-            """)
-            .await()
-
-        r2dbcEntityTemplate.databaseClient
-            .sql("ALTER SEQUENCE reviews_id_seq RESTART WITH 1")
-            .await()
-
-        r2dbcEntityTemplate.databaseClient
-            .sql("ALTER SEQUENCE resources_id_seq RESTART WITH 1")
-            .await()
-
-        r2dbcEntityTemplate.databaseClient
-            .sql(
-                """
-            INSERT INTO resources (type, value) VALUES
-            ('ISBN', '9783161484100'),
-            ('ISBN', '9780306406157'),
-            ('ISBN', '9781451673319'),
-            ('ISBN', '9780140449136')
-         """)
-            .await()
-
-        r2dbcEntityTemplate.databaseClient
-            .sql(
-                """
-            INSERT INTO reviews (username, type, resource_id, rating, comment) VALUES
-            ('user1', 'BOOK', 1, 5, 'Fantastic book! A must-read.'),
-            ('user2', 'BOOK', 2, 4, 'Great concepts but a bit verbose.'),
-            ('user3', 'BOOK', 3, 5, 'Incredible storytelling.'),
-            ('user4', 'BOOK', 4, 3, 'Good, but not my style.')
-         """)
-            .await()
-      }
+      beforeEach { cleanAndPopulateDatabase(r2dbcEntityTemplate) }
 
       test("Should save review for new resource and send it to MQ") {
         // setup
@@ -172,4 +129,45 @@ class ReviewServiceIntegrationTest(
       }
     }) {
   override fun extensions() = listOf(SpringExtension)
+}
+
+private suspend fun cleanAndPopulateDatabase(r2dbcEntityTemplate: R2dbcEntityTemplate) {
+  r2dbcEntityTemplate.databaseClient
+      .sql(
+          """
+                DELETE FROM reviews CASCADE
+            """)
+      .await()
+  r2dbcEntityTemplate.databaseClient
+      .sql(
+          """
+                DELETE FROM resources CASCADE
+            """)
+      .await()
+
+  r2dbcEntityTemplate.databaseClient.sql("ALTER SEQUENCE reviews_id_seq RESTART WITH 1").await()
+
+  r2dbcEntityTemplate.databaseClient.sql("ALTER SEQUENCE resources_id_seq RESTART WITH 1").await()
+
+  r2dbcEntityTemplate.databaseClient
+      .sql(
+          """
+            INSERT INTO resources (type, value) VALUES
+            ('ISBN', '9783161484100'),
+            ('ISBN', '9780306406157'),
+            ('ISBN', '9781451673319'),
+            ('ISBN', '9780140449136')
+         """)
+      .await()
+
+  r2dbcEntityTemplate.databaseClient
+      .sql(
+          """
+            INSERT INTO reviews (username, type, resource_id, rating, comment) VALUES
+            ('user1', 'BOOK', 1, 5, 'Fantastic book! A must-read.'),
+            ('user2', 'BOOK', 2, 4, 'Great concepts but a bit verbose.'),
+            ('user3', 'BOOK', 3, 5, 'Incredible storytelling.'),
+            ('user4', 'BOOK', 4, 3, 'Good, but not my style.')
+         """)
+      .await()
 }
