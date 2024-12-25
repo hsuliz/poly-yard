@@ -10,6 +10,7 @@ import dev.hsuliz.polyyard.service.review.exception.ReviewAlreadyExistsException
 import dev.hsuliz.polyyard.service.review.model.Review
 import io.kotest.assertions.asClue
 import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
@@ -50,54 +51,54 @@ class ReviewServiceIntegrationTest(
       beforeSpec { populateKeycloakUsers() }
       beforeEach { cleanAndPopulateDatabase(r2dbcEntityTemplate) }
 
-      test("Should save review for new resource and send it to MQ") {
-            // setup
-            Queue("book").also { amqpAdmin.declareQueue(it) }
-            val token = token(oAuth2ResourceServerProperties.jwt.issuerUri, "user1")
+      test("Should save review for new resource") {
+        // setup
+        Queue("book").also { amqpAdmin.declareQueue(it) }
+        val token = token(oAuth2ResourceServerProperties.jwt.issuerUri, "user1")
 
-            // given
-            val givenReview =
-                ReviewRequest(
-                    Review.Type.BOOK,
-                    ReviewRequest.ResourceRequest(
-                        Review.Resource.Type.ISBN, NON_EXISTING_ISBN_VALUE),
-                    5,
-                    "Good")
+        // given
+        val givenReview =
+            ReviewRequest(
+                Review.Type.BOOK,
+                ReviewRequest.ResourceRequest(Review.Resource.Type.ISBN, NON_EXISTING_ISBN_VALUE),
+                5,
+                "Good")
 
-            // when
-            val response =
-                webTestClient
-                    .post()
-                    .uri("/api/me/reviews")
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                    .bodyValue(givenReview)
-                    .exchange()
-                    .returnResult<ReviewResponse>()
+        // when
+        val response =
+            webTestClient
+                .post()
+                .uri("/api/me/reviews")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
+                .bodyValue(givenReview)
+                .exchange()
+                .returnResult<ReviewResponse>()
 
-            // then
-            response.status shouldBe HttpStatusCode.valueOf(201)
+        // then
+        response.status shouldBe HttpStatusCode.valueOf(201)
 
-            val responseBody = response.responseBody.blockFirst()!!
-            val savedReview =
-                r2dbcEntityTemplate
-                    .select(
-                        Query.query(Criteria.where("id").`is`(responseBody.id)), Review::class.java)
-                    .blockFirst()!!
+        val responseBody = response.responseBody.blockFirst()!!
+        val savedReview =
+            r2dbcEntityTemplate
+                .select(Query.query(Criteria.where("id").`is`(responseBody.id)), Review::class.java)
+                .blockFirst()!!
 
-            responseBody.asClue {
-              it.type shouldBe savedReview.type
-              it.id shouldBe savedReview.id
-              it.rating shouldBe savedReview.rating
-              it.comment shouldBe savedReview.comment
-              it.username shouldBe savedReview.username
-              it.resource shouldBe savedReview.resource
-              it.createdAt shouldBe savedReview.createdAt
-            }
+        responseBody.asClue {
+          it.type shouldBe savedReview.type
+          it.id shouldBe savedReview.id
+          it.rating shouldBe savedReview.rating
+          it.comment shouldBe savedReview.comment
+          it.username shouldBe savedReview.username
+          it.resource shouldBe savedReview.resource
+          it.createdAt shouldBe savedReview.createdAt
+        }
 
-            val receivedMessageFromMq = rabbitTemplate.receiveAndConvert("book", 5000)
-            receivedMessageFromMq shouldBe
-                ReviewCreatedMessage(givenReview.resource.type, givenReview.resource.value)
-          }
+        val receivedMessageFromMq = rabbitTemplate.receiveAndConvert("book", 5000)
+        withClue("Should send message to MQ") {
+          receivedMessageFromMq shouldBe
+              ReviewCreatedMessage(givenReview.resource.type, givenReview.resource.value)
+        }
+      }
 
       test("Should save review for new resource and send it to") {
         // setup
