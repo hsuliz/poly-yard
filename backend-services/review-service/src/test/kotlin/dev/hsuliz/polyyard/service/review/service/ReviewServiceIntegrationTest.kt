@@ -6,16 +6,12 @@ import dev.hsuliz.polyyard.service.review.KeycloakTestcontainer.Companion.keyclo
 import dev.hsuliz.polyyard.service.review.component.ReviewCreatedMessage
 import dev.hsuliz.polyyard.service.review.dto.ReviewRequest
 import dev.hsuliz.polyyard.service.review.dto.ReviewResponse
-import dev.hsuliz.polyyard.service.review.exception.ReviewAlreadyExistsException
 import dev.hsuliz.polyyard.service.review.model.Review
 import io.kotest.assertions.asClue
-import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingle
 import org.keycloak.representations.idm.CredentialRepresentation
 import org.keycloak.representations.idm.UserRepresentation
@@ -28,6 +24,7 @@ import org.springframework.data.r2dbc.core.R2dbcEntityTemplate
 import org.springframework.data.relational.core.query.Criteria
 import org.springframework.data.relational.core.query.Query
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.r2dbc.core.await
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -38,7 +35,6 @@ import org.springframework.web.reactive.function.client.WebClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReviewServiceIntegrationTest(
     private val webTestClient: WebTestClient,
-    private val reviewService: ReviewService,
     private val r2dbcEntityTemplate: R2dbcEntityTemplate,
     private val amqpAdmin: AmqpAdmin,
     private val rabbitTemplate: RabbitTemplate,
@@ -100,79 +96,79 @@ class ReviewServiceIntegrationTest(
         }
       }
 
-      test("Should save review for new resource and send it to") {
-        // setup
-        Queue("book").also { amqpAdmin.declareQueue(it) }
-
-        // given
-        val givenReviewType = Review.Type.BOOK
-        val givenReviewResource = Review.Resource(Review.Resource.Type.ISBN, "9780415217866")
-        val givenRating = 5
-
-        // when
-        val review = reviewService.createReview(givenReviewType, givenReviewResource, givenRating)
-
-        // then
-        val savedReview =
-            r2dbcEntityTemplate
-                .select(Query.query(Criteria.where("id").`is`(review.id!!)), Review::class.java)
-                .awaitSingle()
-
-        review shouldBe savedReview
-
-        // then
-        val receivedMessageFromMq = rabbitTemplate.receiveAndConvert("book", 5000)
-        receivedMessageFromMq shouldBe
-            ReviewCreatedMessage(Review.Resource.Type.ISBN, "9780415217866")
-      }
-
       test("Should save review for already existing resource") {
         // setup
         Queue("book").also { amqpAdmin.declareQueue(it) }
+        val token = token(oAuth2ResourceServerProperties.jwt.issuerUri, "user1")
+
         // given
-        val givenReviewType = Review.Type.BOOK
-        val givenReviewResource = Review.Resource(Review.Resource.Type.ISBN, "9781451673319")
-        val givenRating = 5
+        val givenReview =
+            ReviewRequest(
+                Review.Type.BOOK,
+                ReviewRequest.ResourceRequest(
+                    Review.Resource.Type.ISBN, EXISTING_ISBN_VALUE_USER_2),
+                5,
+                "Good")
 
         // when
-        val review = reviewService.createReview(givenReviewType, givenReviewResource, givenRating)
+        val response =
+            webTestClient
+                .post()
+                .uri("/api/me/reviews")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
+                .bodyValue(givenReview)
+                .exchange()
+                .returnResult<ReviewResponse>()
 
         // then
+        response.status shouldBe HttpStatusCode.valueOf(201)
+
+        val responseBody = response.responseBody.blockFirst()!!
         val savedReview =
             r2dbcEntityTemplate
-                .select(Query.query(Criteria.where("id").`is`(review.id!!)), Review::class.java)
-                .awaitSingle()
+                .select(Query.query(Criteria.where("id").`is`(responseBody.id)), Review::class.java)
+                .blockFirst()!!
 
-        review shouldBe savedReview
+        responseBody.asClue {
+          it.type shouldBe savedReview.type
+          it.id shouldBe savedReview.id
+          it.rating shouldBe savedReview.rating
+          it.comment shouldBe savedReview.comment
+          it.username shouldBe savedReview.username
+          it.resource shouldBe savedReview.resource
+          it.createdAt shouldBe savedReview.createdAt
+        }
 
-        // then
         val receivedMessageFromMq = rabbitTemplate.receiveAndConvert("book", 5000)
-        receivedMessageFromMq shouldBe
-            ReviewCreatedMessage(Review.Resource.Type.ISBN, "9781451673319")
+        withClue("Should send message to MQ") {
+          receivedMessageFromMq shouldBe
+              ReviewCreatedMessage(givenReview.resource.type, givenReview.resource.value)
+        }
       }
 
       test("Should throw for review which already exists for current user") {
         // setup
         Queue("book").also { amqpAdmin.declareQueue(it) }
+        val token = token(oAuth2ResourceServerProperties.jwt.issuerUri, "user1")
 
         // given
-        val givenReviewType = Review.Type.BOOK
-        val givenReviewResource = Review.Resource(Review.Resource.Type.ISBN, "9783161484100")
-        val givenRating = 5
+        val givenReview =
+            ReviewRequest(
+                Review.Type.BOOK,
+                ReviewRequest.ResourceRequest(
+                    Review.Resource.Type.ISBN, EXISTING_ISBN_VALUE_USER_1),
+                5,
+                "Good")
 
-        // when
-        val exception =
-            shouldThrowExactly<ReviewAlreadyExistsException> {
-              reviewService.createReview(givenReviewType, givenReviewResource, givenRating)
-            }
-
-        // then
-        exception shouldBe ReviewAlreadyExistsException()
-      }
-
-      test("Just test") {
-        val x = reviewService.findReviews()
-        x.toList().forEach { println(it) }
+        // when & then
+        webTestClient
+            .post()
+            .uri("/api/me/reviews")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
+            .bodyValue(givenReview)
+            .exchange()
+            .expectStatus()
+            .isEqualTo(HttpStatus.CONFLICT)
       }
     }) {
   override fun extensions() = listOf(SpringExtension)
