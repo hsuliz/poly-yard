@@ -38,9 +38,12 @@ class ReviewController(private val reviewService: ReviewService) {
   }
 
   @PostMapping("/me/reviews")
-  suspend fun addReview(@RequestBody reviewRequest: ReviewRequest) {
+  @ResponseStatus(HttpStatus.CREATED)
+  suspend fun addReview(@RequestBody reviewRequest: ReviewRequest): ReviewResponse {
     try {
-      with(reviewRequest) { reviewService.createReview(type, resource.toModel(), rating, comment) }
+      return with(reviewRequest) {
+        ReviewResponse(reviewService.createReview(type, resource.toModel(), rating, comment))
+      }
     } catch (exception: ReviewAlreadyExistsException) {
       throw ResponseStatusException(HttpStatus.CONFLICT, exception.message)
     }
