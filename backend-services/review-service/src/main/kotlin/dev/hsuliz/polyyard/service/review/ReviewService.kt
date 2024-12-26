@@ -19,13 +19,20 @@ class ReviewService(
     private val resourceRepository: ResourceRepository
 ) {
 
-  suspend fun findReviews(
+  suspend fun findReviewsBy(
       username: String? = null,
       reviewResource: Review.Resource? = null,
       pageable: Pageable? = null
   ): Flow<Review> {
     val reviews = reviewRepository.findReviewsBy(username, reviewResource, pageable)
     return reviews
+  }
+
+  suspend fun countReviewsBy(
+      username: String? = null,
+      reviewResource: Review.Resource? = null
+  ): Long {
+    return reviewRepository.countReviewsBy(username, reviewResource)
   }
 
   @Transactional

@@ -39,10 +39,11 @@ class ReviewController(private val reviewService: ReviewService) {
           null
         }
 
-    val reviews = reviewService.findReviews(username, resource, pageable).toList()
+    val reviews = reviewService.findReviewsBy(username, resource, pageable).toList()
+    val reviewsCount = reviewService.countReviewsBy(username, resource)
 
     val response = reviews.map { ReviewResponse(it) }
-    return PageImpl(response, pageable, reviews.count().toLong())
+    return PageImpl(response, pageable, reviewsCount)
   }
 
   @PostMapping("/me/reviews")
