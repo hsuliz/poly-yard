@@ -1,6 +1,7 @@
 package dev.hsuliz.polyyard.service.review
 
 import dev.hsuliz.polyyard.service.review.exception.ReviewAlreadyExistsException
+import dev.hsuliz.polyyard.service.review.exception.ReviewNotFoundException
 import dev.hsuliz.polyyard.service.review.model.Review
 import dev.hsuliz.polyyard.service.review.repository.ResourceRepository
 import dev.hsuliz.polyyard.service.review.repository.ReviewCrudRepository
@@ -46,7 +47,7 @@ class ReviewService(
       val review: Review
       if (resourceRepository.existsByTypeAndValue(reviewResource.type, reviewResource.value)) {
         val existingResource =
-            resourceRepository.getByTypeAndValue(reviewResource.type, reviewResource.value)!!
+            resourceRepository.getByTypeAndValue(reviewResource.type, reviewResource.value)
         review = Review(reviewType, existingResource.id!!, rating, comment, existingResource)
         return reviewCrudRepository.save(review)
       }
@@ -59,6 +60,8 @@ class ReviewService(
   }
 
   suspend fun deleteReview(reviewId: Long) {
-    reviewCrudRepository.deleteById(reviewId)
+    if (reviewCrudRepository.existsByIdAndUsername(reviewId, currentUsername()))
+        reviewCrudRepository.deleteById(reviewId)
+    else throw ReviewNotFoundException()
   }
 }

@@ -3,6 +3,7 @@ package dev.hsuliz.polyyard.service.review
 import dev.hsuliz.polyyard.service.review.dto.ReviewRequest
 import dev.hsuliz.polyyard.service.review.dto.ReviewResponse
 import dev.hsuliz.polyyard.service.review.exception.ReviewAlreadyExistsException
+import dev.hsuliz.polyyard.service.review.exception.ReviewNotFoundException
 import dev.hsuliz.polyyard.service.review.model.Review
 import kotlinx.coroutines.flow.toList
 import org.springframework.data.domain.Page
@@ -60,6 +61,10 @@ class ReviewController(private val reviewService: ReviewService) {
 
   @DeleteMapping("/me/reviews/{review-id}")
   suspend fun deleteReview(@PathVariable("review-id") reviewId: Long) {
-    reviewService.deleteReview(reviewId)
+    try {
+      reviewService.deleteReview(reviewId)
+    } catch (exception: ReviewNotFoundException) {
+      throw ResponseStatusException(HttpStatus.NOT_FOUND, exception.message)
+    }
   }
 }

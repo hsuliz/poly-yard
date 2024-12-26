@@ -5,4 +5,6 @@ open class ReviewServiceException(override val message: String?, override val ca
 
 class ReviewAlreadyExistsException : ReviewServiceException("Review already exists!", null)
 
+class ReviewNotFoundException : ReviewServiceException("Review not found!", null)
+
 class ReviewResourceNotFoundException : ReviewServiceException("Review already exists!", null)
