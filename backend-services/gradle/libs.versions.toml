@@ -6,7 +6,7 @@ kotest = "5.8.0"
 spring = "3.2.3"
 spring-dependency-management = "1.1.4"
 mockk = "1.13.10"
-springmockk = "3.0.1"
+springmockk = "4.0.1"
 kotest-spring = "1.1.3"
 
 [libraries]

@@ -1,6 +1,6 @@
 package dev.hsuliz.polyyard.service.review.converter
 
-import dev.hsuliz.polyyard.service.review.Review
+import dev.hsuliz.polyyard.service.review.model.Review
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
 

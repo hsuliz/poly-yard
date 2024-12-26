@@ -4,7 +4,8 @@ import MainLayout from "@/components/MainLayout.vue"
 import ReviewsPage from "@/pages/ReviewsPage.vue"
 import ProfilePage from "@/pages/ProfilePage.vue"
 import AddReview from "@/pages/AddReviewPage.vue"
-import BookDetails from "@/pages/BookPage.vue"
+import BookPage from "@/pages/BookPage.vue"
+import UserPage from "@/pages/UserPage.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,8 +20,14 @@ const router = createRouter({
         { path: "/add-review", name: "add-review", component: AddReview },
         {
           path: "/books/:isbn",
-          name: "BookDetails",
-          component: BookDetails,
+          name: "BookPage",
+          component: BookPage,
+          props: true
+        },
+        {
+          path: "/users/:username",
+          name: "UserPage",
+          component: UserPage,
           props: true
         }
       ]

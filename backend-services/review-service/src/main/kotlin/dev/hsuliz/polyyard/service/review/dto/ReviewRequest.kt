@@ -1,7 +1,7 @@
 package dev.hsuliz.polyyard.service.review.dto
 
-import dev.hsuliz.polyyard.service.review.Review
-import dev.hsuliz.polyyard.service.review.Review.Resource
+import dev.hsuliz.polyyard.service.review.model.Review
+import dev.hsuliz.polyyard.service.review.model.Review.Resource
 
 data class ReviewRequest(
     val type: Review.Type,

@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { onMounted } from "vue"
 import ReviewList from "@/components/ReviewList.vue"
-import { getReviews } from "@/api/reviewService"
+import { getReviewsByUserPage } from "@/api/reviewService"
 import { pagination } from "@/api/pagination"
+
+const { username } = defineProps<{
+  username: string
+}>()
 
 const {
   items: reviews,
@@ -10,7 +14,7 @@ const {
   fetchItems,
   nextPage,
   previousPage
-} = pagination(getReviews, 10)
+} = pagination((page, size) => getReviewsByUserPage(username, page, size), 10)
 
 onMounted(() => {
   fetchItems(currentPage.value)
@@ -19,10 +23,15 @@ onMounted(() => {
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold mb-4">Welcome to the Home Page</h1>
-    <ReviewList v-if="reviews?.content" :reviews="reviews.content" />
+    <h1 class="text-2xl font-bold mb-4">{{ username }} reviews</h1>
 
-    <div v-if="reviews" class="flex items-center justify-between mt-4">
+    <ReviewList v-if="reviews?.content?.length" :reviews="reviews.content" />
+    <div v-else class="text-gray-500">No reviews found</div>
+
+    <div
+      v-if="reviews?.content?.length && reviews.totalPages > 1"
+      class="flex items-center justify-between mt-4"
+    >
       <button
         @click="previousPage"
         :disabled="currentPage === 0"
