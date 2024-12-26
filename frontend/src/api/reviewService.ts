@@ -2,12 +2,15 @@ import { apiClient } from "./axiosConfig"
 import type { ReviewRequest } from "@/api/request/ReviewRequest"
 import type { Review } from "@/types/Review"
 import axios, { AxiosError } from "axios"
+import type { Page } from "@/types/Paginated"
 
-const getReviews = async (): Promise<Review[]> => {
+const getReviews = async (page = 0, size = 10): Promise<Page> => {
   try {
-    const response = await apiClient.get("/api/reviews")
-    console.log("Reviews found:", response.data.content)
-    return response.data.content
+    const response = await apiClient.get("/api/reviews", {
+      params: { page, size }
+    })
+    console.log("Reviews found:", response)
+    return response.data
   } catch (error: any) {
     if (error.response && error.response.status === 404) {
       console.log("Book not found")

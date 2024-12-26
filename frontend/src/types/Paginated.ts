@@ -1,17 +1,17 @@
 import type { Review } from "@/types/Review"
 
-export interface PaginatedResponse {
+export interface Page {
   content: Review[]
-  pageable: Pageable
-  totalPages: number
-  totalElements: number
-  size: number
-  number: number
-  sort: Sort
+  empty: boolean
   first: boolean
   last: boolean
+  number: number
   numberOfElements: number
-  empty: boolean
+  pageable: Pageable
+  size: number
+  sort: Sort
+  totalElements: number
+  totalPages: number
 }
 
 interface Pageable {
