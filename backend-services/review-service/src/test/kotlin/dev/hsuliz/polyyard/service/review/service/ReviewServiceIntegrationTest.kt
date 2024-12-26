@@ -97,7 +97,7 @@ class ReviewServiceIntegrationTest(
             }
       }
 
-      test("Should throw for review which already exists for current user") {
+      test("should throw for review which already exists for current user") {
         // setup
         Queue("book").also { amqpAdmin.declareQueue(it) }
         val token = fetchToken("user1")
