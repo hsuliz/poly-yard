@@ -39,7 +39,15 @@ const handleDeleteReview = async () => {
               by {{ book.author }}
             </h3>
             <template v-if="review">
-              <p class="text-sm mt-1">Reviewed by: {{ review.username }}</p>
+              <p class="text-sm mt-1">
+                Reviewed by:
+                <router-link
+                  :to="`/users/${review.username}`"
+                  class="text-blue-500 hover:underline"
+                >
+                  {{ review.username }}
+                </router-link>
+              </p>
               <p class="text-sm mt-1">
                 Rating:
                 <span class="text-yellow-500 font-bold">{{ review.rating }}</span>
