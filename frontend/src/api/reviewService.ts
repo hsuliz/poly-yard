@@ -20,6 +20,26 @@ const getReviews = async (page = 0, size = 10): Promise<Page> => {
   }
 }
 
+const getReviewsByUserPage = async (username: string, page = 0, size = 10): Promise<Page> => {
+  try {
+    const response = await axios.get(`/api/reviews`, {
+      params: {
+        username: username,
+        page,
+        size
+      }
+    })
+    console.info(response)
+    return response.data
+  } catch (error: any) {
+    if (error.response && error.response.status === 404) {
+      console.log("Reviews not found")
+    }
+    console.error("Error checking Reviews:", error)
+    throw error
+  }
+}
+
 const getReviewsByUser = async (username: string): Promise<Review[]> => {
   try {
     const response = await axios.get(`api/reviews`, {
@@ -77,4 +97,11 @@ const deleteReviewById = async (reviewId: number): Promise<any> => {
   await apiClient.delete(`/api/me/reviews/${reviewId}`)
 }
 
-export { getReviews, getReviewsByBook, getReviewsByUser, postReview, deleteReviewById }
+export {
+  getReviews,
+  getReviewsByBook,
+  getReviewsByUser,
+  getReviewsByUserPage,
+  postReview,
+  deleteReviewById
+}
