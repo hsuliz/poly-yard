@@ -19,32 +19,32 @@ class ReviewRepository(private val r2dbcEntityTemplate: R2dbcEntityTemplate) {
       reviewResource: Review.Resource? = null,
       pageable: Pageable? = null
   ): Flow<Review> {
-    val resource: Review.Resource
-
     val resourceIdCriteria =
-        if (reviewResource != null) {
+        reviewResource?.let {
           val resourceQuery =
-              query(
-                  Criteria.where("type")
-                      .`is`(reviewResource.type)
-                      .and("value")
-                      .`in`(reviewResource.value))
-          resource =
+              query(Criteria.where("type").`is`(it.type).and("value").`is`(it.value))
+          val resource =
               r2dbcEntityTemplate
                   .selectOne(resourceQuery, Review.Resource::class.java)
                   .awaitSingleOrNull() ?: return emptyFlow()
+
           Criteria.where("resource_id").`is`(resource.id!!)
-        } else {
-          Criteria.empty()
         }
 
     val usernameCriteria = username?.let { Criteria.where("username").`is`(it) }
 
-    val reviewQuery =
-        query(Criteria.from(resourceIdCriteria, usernameCriteria))
-            .with(pageable ?: Pageable.unpaged())
+    val allCriteria = mutableListOf<Criteria>()
+    resourceIdCriteria?.let { allCriteria.add(it) }
+    usernameCriteria?.let { allCriteria.add(it) }
 
-    val selectedReviews = r2dbcEntityTemplate.select(reviewQuery, Review::class.java).asFlow()
-    return selectedReviews
+    val combinedCriteria =
+        if (allCriteria.isNotEmpty()) {
+          Criteria.from(allCriteria)
+        } else {
+          Criteria.empty()
+        }
+
+    val reviewQuery = query(combinedCriteria).with(pageable ?: Pageable.unpaged())
+    return r2dbcEntityTemplate.select(reviewQuery, Review::class.java).asFlow()
   }
 }
