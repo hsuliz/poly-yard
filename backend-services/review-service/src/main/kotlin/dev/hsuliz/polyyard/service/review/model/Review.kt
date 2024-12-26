@@ -1,10 +1,13 @@
 package dev.hsuliz.polyyard.service.review.model
 
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
-import org.springframework.data.annotation.*
+import org.springframework.data.annotation.CreatedBy
+import org.springframework.data.annotation.Id
+import org.springframework.data.annotation.PersistenceCreator
+import org.springframework.data.annotation.Transient
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 @Table("reviews")
 data class Review(
