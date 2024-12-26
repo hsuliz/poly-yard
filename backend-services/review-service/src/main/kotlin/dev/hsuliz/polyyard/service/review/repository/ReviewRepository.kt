@@ -43,7 +43,6 @@ class ReviewRepository(private val r2dbcEntityTemplate: R2dbcEntityTemplate) {
         reviewResource?.let {
           val resourceQuery =
               query(Criteria.where("type").`is`(it.type).and("value").`is`(it.value))
-          runBlocking {}
           val resource =
               r2dbcEntityTemplate
                   .selectOne(resourceQuery, Review.Resource::class.java)
