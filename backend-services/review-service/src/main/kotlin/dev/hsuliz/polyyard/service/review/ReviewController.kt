@@ -34,7 +34,7 @@ class ReviewController(private val reviewService: ReviewService) {
         } else if (resourceType != null || resourceValue != null) {
           throw ResponseStatusException(
               HttpStatus.BAD_REQUEST,
-              "'resource-type' and 'resource-value' must both be provided together or omitted.")
+              "Both 'resource-type' and 'resource-value' must be provided together or omitted.")
         } else {
           null
         }
