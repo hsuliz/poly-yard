@@ -1,4 +1,40 @@
 services:
+
+
+
+  review-service:
+    build: LocalFolder/.
+    image: review-service:0.0.1-SNAPSHOT
+    platform: linux/amd64
+    ports:
+      - "8082:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+
+      R2DBC_HOST: review-database
+      R2DBC_PORT: 5432
+      R2DBC_USERNAME: postgres
+      R2DBC_PASSWORD: review
+      R2DBC_DB_NAME: review
+
+      KEYCLOAK_HOST: keycloak
+      KEYCLOAK_PORT: 8080
+
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+
+  review-database:
+    image: postgres:16-alpine
+    restart: always
+    shm_size: 128mb
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: review
+
   rabbitmq:
     image: rabbitmq:4.0-management-alpine
     container_name: "rabbitmq"
