@@ -1,6 +1,7 @@
 package dev.hsuliz.polyyard.gateway.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import dev.hsuliz.polyyard.gateway.dto.Resource
 import java.nio.charset.StandardCharsets
 import org.springframework.cloud.gateway.filter.GatewayFilter
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
@@ -45,16 +46,15 @@ class ReviewRequestChecker(
 
       println("Valid type: ${reviewRequest.type}, Checking book...")
 
-      checkBookExists(reviewRequest.resource.value).flatMap { bookExists ->
+      checkBookExists(reviewRequest.resource.value).flatMap checkBook@{ bookExists ->
         if (!bookExists) {
           println("Book not found for ISBN: ${reviewRequest.resource.value}")
           exchange.response.statusCode = HttpStatus.NOT_FOUND
-          return@flatMap exchange.response.setComplete()
+          return@checkBook exchange.response.setComplete()
         }
 
         println("Book found for ISBN: ${reviewRequest.resource.value}")
 
-        // Rebuild the request for downstream processing
         val mutatedRequest = exchange.request.mutate().build()
         val cachedBody = Flux.just(toDataBuffer(bodyString))
         val decoratedRequest =
