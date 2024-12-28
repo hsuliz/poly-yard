@@ -1,0 +1,28 @@
+server.port: 8000
+
+review-service-host: ${REVIEW_SERVICE_HOST}
+book-service-host: ${BOOK_SERVICE_HOST}
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      default-filters:
+        - TokenRelay=
+
+  security.oauth2:
+    resourceserver:
+      jwt:
+        jwk-set-uri: ${KEYCLOAK_HOST}/realms/polyyard/protocol/openid-connect/certs
+    client:
+      provider:
+        keycloak:
+          issuer-uri: ${KEYCLOAK_HOST}/realms/polyyard
+      registration:
+        auth-client:
+          provider: keycloak
+          client-id: back-end-client
+          client-secret: ${KEYCLOAK_CLIENT_SECRET:PLoFGw7SYqMprSYozrY0f1OcMJyUNmMs} # PLoFGw7SYqMprSYozrY0f1OcMJyUNmMs
+          authorization-grant-type: authorization_code
+          scope: openid

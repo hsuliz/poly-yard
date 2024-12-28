@@ -1,6 +1,9 @@
 services:
 
-
+  #gateway:
+  #  build: LocalFolder/.
+  #  image: review-service:0.0.1-SNAPSHOT
+  #  platform: linux/amd64
 
   review-service:
     build: LocalFolder/.
@@ -12,7 +15,7 @@ services:
       SPRING_PROFILES_ACTIVE: dev
 
       R2DBC_HOST: review-database
-      R2DBC_PORT: 5432
+      R2DBC_PORT: 8083
       R2DBC_USERNAME: postgres
       R2DBC_PASSWORD: review
       R2DBC_DB_NAME: review
@@ -30,10 +33,20 @@ services:
     restart: always
     shm_size: 128mb
     ports:
-      - "5432:5432"
+      - "8083:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: review
+
+  book-database:
+    image: postgres:16-alpine
+    restart: always
+    shm_size: 128mb
+    ports:
+      - "8085:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: book
 
   rabbitmq:
     image: rabbitmq:4.0-management-alpine

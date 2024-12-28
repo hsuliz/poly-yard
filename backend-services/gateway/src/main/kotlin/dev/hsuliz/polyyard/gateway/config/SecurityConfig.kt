@@ -14,7 +14,6 @@ const val SCOPE_USER = "SCOPE_USER"
 @Configuration
 @EnableWebFluxSecurity
 class SecurityConfig {
-
   @Bean
   fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
     return http {

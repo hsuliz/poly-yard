@@ -2,7 +2,6 @@ package dev.hsuliz.polyyard.gateway.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import dev.hsuliz.polyyard.gateway.dto.Resource
-import java.nio.charset.StandardCharsets
 import org.springframework.cloud.gateway.filter.GatewayFilter
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
 import org.springframework.core.io.buffer.DataBuffer
@@ -14,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.nio.charset.StandardCharsets
 
 data class ReviewRequest(
     val type: String,
@@ -24,7 +24,7 @@ data class ReviewRequest(
 
 @Component
 class ReviewRequestChecker(
-    private val webClient: WebClient,
+    private val bookWebClient: WebClient,
     private val objectMapper: ObjectMapper
 ) : GatewayFilter {
 
@@ -69,9 +69,7 @@ class ReviewRequestChecker(
   }
 
   private fun checkBookExists(isbn: String): Mono<Boolean> {
-    val bookServiceUrl = "http://localhost:8004/api/books/$isbn"
-
-    return webClient.get().uri(bookServiceUrl).exchangeToMono { response ->
+    return bookWebClient.get().uri("/api/books/$isbn").exchangeToMono { response ->
       if (response.statusCode() == HttpStatus.OK) {
         Mono.just(true)
       } else if (response.statusCode() == HttpStatus.NOT_FOUND) {
