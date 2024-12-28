@@ -1,7 +1,6 @@
 package dev.hsuliz.polyyard.gateway.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import dev.hsuliz.polyyard.gateway.dto.Resource
 import org.springframework.cloud.gateway.filter.GatewayFilter
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
 import org.springframework.core.io.buffer.DataBuffer
@@ -14,13 +13,6 @@ import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.nio.charset.StandardCharsets
-
-data class ReviewRequest(
-    val type: String,
-    val resource: Resource,
-    val rating: Int,
-    val comment: String
-)
 
 @Component
 class ReviewRequestChecker(
