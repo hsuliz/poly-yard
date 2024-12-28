@@ -6,6 +6,8 @@ services:
   #  platform: linux/amd64
 
   review-service:
+    depends_on:
+      - review-database
     build: LocalFolder/.
     image: review-service:0.0.1-SNAPSHOT
     platform: linux/amd64
@@ -15,7 +17,7 @@ services:
       SPRING_PROFILES_ACTIVE: dev
 
       R2DBC_HOST: review-database
-      R2DBC_PORT: 8083
+      R2DBC_PORT: 5432
       R2DBC_USERNAME: postgres
       R2DBC_PASSWORD: review
       R2DBC_DB_NAME: review
@@ -38,6 +40,32 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: review
 
+
+  book-service:
+    depends_on:
+      - book-database
+    build: LocalFolder/.
+    image: book-service:0.0.1-SNAPSHOT
+    platform: linux/amd64
+    ports:
+      - "8084:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+
+      R2DBC_HOST: book-database
+      R2DBC_PORT: 5432
+      R2DBC_USERNAME: postgres
+      R2DBC_PASSWORD: book
+      R2DBC_DB_NAME: book
+
+      KEYCLOAK_HOST: keycloak
+      KEYCLOAK_PORT: 8080
+
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+
   book-database:
     image: postgres:16-alpine
     restart: always
@@ -54,9 +82,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    volumes:
-      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.0

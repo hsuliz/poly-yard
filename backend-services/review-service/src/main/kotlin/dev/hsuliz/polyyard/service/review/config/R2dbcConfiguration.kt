@@ -19,7 +19,6 @@ import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories
 @EnableR2dbcAuditing
 @EnableR2dbcRepositories
 class R2dbcConfiguration(private val properties: R2dbcProperties) : AbstractR2dbcConfiguration() {
-
   @Bean
   @Lazy
   override fun connectionFactory(): ConnectionFactory {
