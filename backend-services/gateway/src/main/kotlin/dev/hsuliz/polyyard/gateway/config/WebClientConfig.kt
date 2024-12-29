@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
-class WebClientConfig(@Value("\${book-service-host}") private val bookServiceHost: String) {
+class WebClientConfig(@Value("\${book-service-uri}") private val bookServiceUri: String) {
   @Bean
   fun bookWebClient(): WebClient {
-    return WebClient.builder().baseUrl(bookServiceHost).build()
+    return WebClient.builder().baseUrl(bookServiceUri).build()
   }
 }

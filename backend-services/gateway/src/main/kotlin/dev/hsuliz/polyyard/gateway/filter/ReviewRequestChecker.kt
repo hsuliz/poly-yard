@@ -1,6 +1,7 @@
 package dev.hsuliz.polyyard.gateway.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import dev.hsuliz.polyyard.gateway.dto.ReviewRequest
 import org.springframework.cloud.gateway.filter.GatewayFilter
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
 import org.springframework.core.io.buffer.DataBuffer

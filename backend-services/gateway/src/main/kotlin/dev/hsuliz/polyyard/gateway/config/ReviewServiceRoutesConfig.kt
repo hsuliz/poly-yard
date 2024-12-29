@@ -13,17 +13,22 @@ import org.springframework.http.HttpMethod
 
 @Configuration
 class ReviewServiceRoutesConfig(
-    @Value("\${review-service-host}") private val reviewServiceHost: String
+    @Value("\${review-service-uri}") private val reviewServiceUri: String
 ) {
   @Bean
-  fun routes(
+  fun reviewRoutes(
       routeLocatorBuilder: RouteLocatorBuilder,
       rewriteFunction: ReviewResponseRewriteFunction,
       reviewRequestChecker: ReviewRequestChecker
   ): RouteLocator =
       routeLocatorBuilder.routes {
+        route("review-service") {
+          uri(reviewServiceUri)
+          path("/api/me/reviews")
+          method(HttpMethod.DELETE)
+        }
         route("reviews-aggregation") {
-          uri(reviewServiceHost)
+          uri(reviewServiceUri)
           path("/api/reviews/**")
           method(HttpMethod.GET)
           filters {
@@ -31,15 +36,10 @@ class ReviewServiceRoutesConfig(
           }
         }
         route("check-resource-before-post") {
-          uri(reviewServiceHost)
+          uri(reviewServiceUri)
           path("/api/me/reviews")
           method(HttpMethod.POST)
           filters { filter(reviewRequestChecker) }
-        }
-        route("review-service") {
-          uri(reviewServiceHost)
-          path("/api/me/reviews")
-          method(HttpMethod.DELETE)
         }
       }
 }

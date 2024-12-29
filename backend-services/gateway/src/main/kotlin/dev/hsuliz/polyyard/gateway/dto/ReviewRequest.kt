@@ -1,6 +1,4 @@
-package dev.hsuliz.polyyard.gateway.filter
-
-import dev.hsuliz.polyyard.gateway.dto.Resource
+package dev.hsuliz.polyyard.gateway.dto
 
 data class ReviewRequest(
     val type: String,

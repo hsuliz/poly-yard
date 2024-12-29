@@ -8,13 +8,13 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class BookServiceRoutesConfig(@Value("\${book-service-host}") private val bookServiceHost: String) {
+class BookServiceRoutesConfig(@Value("\${book-service-uri}") private val bookServiceUri: String) {
   @Bean
   fun bookRoutes(routeLocatorBuilder: RouteLocatorBuilder): RouteLocator =
       routeLocatorBuilder.routes {
         route("book-service") {
+          uri(bookServiceUri)
           path("/api/books/**")
-          uri(bookServiceHost)
         }
       }
 }
