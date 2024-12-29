@@ -1,5 +1,4 @@
 services:
-
   gateway:
     build: LocalFolder/.
     image: gateway:0.0.1-SNAPSHOT
