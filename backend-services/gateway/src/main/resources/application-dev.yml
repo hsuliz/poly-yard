@@ -1,5 +1,5 @@
-review-service-host: ${REVIEW_SERVICE_HOST}
-book-service-host: ${BOOK_SERVICE_HOST}
+review-service-uri: http://${REVIEW_SERVICE_HOST}:${REVIEW_SERVICE_PORT}
+book-service-uri: http://${BOOK_SERVICE_HOST}:${BOOK_SERVICE_PORT}
 
 spring:
   application:
@@ -8,12 +8,5 @@ spring:
     gateway:
       default-filters:
         - TokenRelay=
-
-  security.oauth2:
-    resourceserver:
-      jwt:
-        jwk-set-uri: ${KEYCLOAK_HOST}/realms/polyyard/protocol/openid-connect/certs
-    client:
-      provider:
-        keycloak:
-          issuer-uri: ${KEYCLOAK_HOST}/realms/polyyard
+  security.oauth2.resourceserver.jwt:
+    jwk-set-uri: http://${KEYCLOAK_HOST}:${KEYCLOAK_PORT}/realms/polyyard/protocol/openid-connect/certs
