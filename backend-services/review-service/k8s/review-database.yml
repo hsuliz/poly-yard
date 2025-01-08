@@ -1,9 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review-database
+  labels:
+    app: poly-yard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: review-database
+  template:
+    metadata:
+      labels:
+        app: review-database
+    spec:
+      containers:
+        - name: review-database
+          image: "postgres:16-alpine"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: review-database-config
+          volumeMounts:
+            - name: storage
+              mountPath: /storage
+            - name: init-scripts
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: review-database-pvc
+        - name: init-scripts
+          configMap:
+            name: postgres-init-sql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: review-database
+spec:
+  selector:
+    app: review-database
+  ports:
+    - port: 5432
+  type: ClusterIP
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: postgres-init-sql
   labels:
-    app: review-service
+    app: poly-yard
+    type: review-service
 data:
   init.sql: |
     CREATE TYPE review_type AS ENUM ('BOOK', 'ALBUM');
@@ -31,7 +81,7 @@ kind: ConfigMap
 metadata:
   name: review-database-config
   labels:
-    app: review-service
+    app: poly-yard
 data:
   POSTGRES_PASSWORD: review
   POSTGRES_DB: review_database
@@ -41,7 +91,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: review-database-pvc
   labels:
-    app: review-service
+    app: poly-yard
 spec:
   accessModes:
     - ReadWriteMany
@@ -53,6 +103,8 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: review-database-pv
+  labels:
+    app: poly-yard
 spec:
   capacity:
     storage: 256Mi
@@ -61,52 +113,3 @@ spec:
   storageClassName: manual
   hostPath:
     path: /data/review-database
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: review-database-deployment
-  labels:
-    app: review-service
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: review-service
-  template:
-    metadata:
-      labels:
-        app: review-service
-    spec:
-      containers:
-        - name: review-database
-          image: "postgres:16-alpine"
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 5432
-          envFrom:
-            - configMapRef:
-                name: review-database-config
-          volumeMounts:
-            - name: storage
-              mountPath: /storage
-            - name: init-scripts
-              mountPath: /docker-entrypoint-initdb.d
-      volumes:
-        - name: storage
-          persistentVolumeClaim:
-            claimName: review-database-pvc
-        - name: init-scripts
-          configMap:
-            name: postgres-init-sql
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: review-database-service
-spec:
-  ports:
-    - port: 5432
-  selector:
-    app: review-database
-  type: ClusterIP

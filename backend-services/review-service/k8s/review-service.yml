@@ -1,9 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review-service
+  labels:
+    app: poly-yard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: review-web-service
+  template:
+    metadata:
+      labels:
+        app: review-web-service
+    spec:
+      containers:
+        - name: review-web-service
+          image: "review-service:0.0.1-SNAPSHOT"
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: review-service-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: review-service
+  labels:
+    app: poly-yard
+spec:
+  selector:
+    app: review-web-service
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: review-service-config
   labels:
-    app: review-service
+    app: poly-yard
 data:
   SPRING_PROFILES_ACTIVE: dev
 
@@ -20,39 +59,3 @@ data:
 
   KEYCLOAK_HOST: keycloak
   KEYCLOAK_PORT: "8080"
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: review-service
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: review-service
-  template:
-    metadata:
-      labels:
-        app: review-service
-    spec:
-      containers:
-        - name: review-service
-          image: "review-service:0.0.1-SNAPSHOT"
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8080
-          envFrom:
-            - configMapRef:
-                name: review-service-config
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: review-service
-spec:
-  selector:
-    app: review-service
-  ports:
-    - port: 80
-      targetPort: 8080
-  type: LoadBalancer
