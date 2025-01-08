@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: review-web-service-deploy
+  name: review-web-service
   labels:
     app: poly-yard
 spec:
@@ -21,7 +21,7 @@ spec:
             - containerPort: 8080
           envFrom:
             - configMapRef:
-                name: review-service-config
+                name: review-web-service-envs
 ---
 apiVersion: v1
 kind: Service
@@ -33,14 +33,14 @@ spec:
   selector:
     app: review-web-service
   ports:
-    - port: 80
+    - port: 8080
       targetPort: 8080
-  type: LoadBalancer
+  type: ClusterIP
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: review-service-config
+  name: review-web-service-envs
   labels:
     app: poly-yard
 data:
