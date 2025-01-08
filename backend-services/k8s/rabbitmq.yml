@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rabbitmq
+  labels:
+    app: poly-yard
 spec:
   replicas: 1
   selector:
@@ -20,14 +22,16 @@ spec:
             - containerPort: 15672
           env:
             - name: RABBITMQ_DEFAULT_USER
-              value: "guest"
+              value: guest
             - name: RABBITMQ_DEFAULT_PASS
-              value: "guest"
+              value: guest
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: rabbitmq
+  labels:
+    app: poly-yard
 spec:
   selector:
     app: rabbitmq
