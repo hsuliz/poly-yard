@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: review-database
+  name: review-database-deploy
   labels:
     app: poly-yard
 spec:
@@ -34,12 +34,14 @@ spec:
             claimName: review-database-pvc
         - name: init-scripts
           configMap:
-            name: postgres-init-sql
+            name: postgres-init-review-sql
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: review-database
+  labels:
+    app: poly-yard
 spec:
   selector:
     app: review-database
@@ -50,10 +52,9 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: postgres-init-sql
+  name: postgres-init-review-sql
   labels:
     app: poly-yard
-    type: review-service
 data:
   init.sql: |
     CREATE TYPE review_type AS ENUM ('BOOK', 'ALBUM');
