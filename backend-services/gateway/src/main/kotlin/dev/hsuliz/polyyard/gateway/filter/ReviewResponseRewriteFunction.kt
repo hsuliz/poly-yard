@@ -2,6 +2,10 @@ package dev.hsuliz.polyyard.gateway.filter
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import dev.hsuliz.polyyard.gateway.dto.Book
+import dev.hsuliz.polyyard.gateway.dto.PaginatedResponse
+import dev.hsuliz.polyyard.gateway.dto.Resource
+import dev.hsuliz.polyyard.gateway.dto.Review
 import org.springframework.cloud.gateway.filter.factory.rewrite.RewriteFunction
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.stereotype.Component
@@ -69,49 +73,3 @@ class ReviewResponseRewriteFunction(private val bookWebClient: WebClient) :
   }
 }
 
-data class Book(
-    val id: Long,
-    val isbn: String,
-    val title: String,
-    val author: String,
-    val image: String,
-    val pages: Int,
-    val publishedDate: Int
-)
-
-data class PaginatedResponse<T>(
-    val content: List<T>,
-    val pageable: Pageable,
-    val totalPages: Int,
-    val totalElements: Int,
-    val size: Int,
-    val number: Int,
-    val sort: Sort,
-    val first: Boolean,
-    val last: Boolean,
-    val numberOfElements: Int,
-    val empty: Boolean
-)
-
-data class Pageable(
-    val offset: Int,
-    val pageNumber: Int,
-    val pageSize: Int,
-    val paged: Boolean,
-    val unpaged: Boolean,
-    val sort: Sort
-)
-
-data class Sort(val empty: Boolean, val sorted: Boolean, val unsorted: Boolean)
-
-data class Review<T>(
-    val id: Long,
-    val username: String,
-    val type: String,
-    val resource: T,
-    val rating: Int,
-    val comment: String?,
-    val createdAt: String
-)
-
-data class Resource(val type: String, val value: String, val id: Long)

@@ -1,7 +1,7 @@
 package dev.hsuliz.polyyard.gateway.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import java.nio.charset.StandardCharsets
+import dev.hsuliz.polyyard.gateway.dto.ReviewRequest
 import org.springframework.cloud.gateway.filter.GatewayFilter
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
 import org.springframework.core.io.buffer.DataBuffer
@@ -13,17 +13,11 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-
-data class ReviewRequest(
-    val type: String,
-    val resource: Resource,
-    val rating: Int,
-    val comment: String
-)
+import java.nio.charset.StandardCharsets
 
 @Component
 class ReviewRequestChecker(
-    private val webClient: WebClient,
+    private val bookWebClient: WebClient,
     private val objectMapper: ObjectMapper
 ) : GatewayFilter {
 
@@ -45,16 +39,15 @@ class ReviewRequestChecker(
 
       println("Valid type: ${reviewRequest.type}, Checking book...")
 
-      checkBookExists(reviewRequest.resource.value).flatMap { bookExists ->
+      checkBookExists(reviewRequest.resource.value).flatMap checkBook@{ bookExists ->
         if (!bookExists) {
           println("Book not found for ISBN: ${reviewRequest.resource.value}")
           exchange.response.statusCode = HttpStatus.NOT_FOUND
-          return@flatMap exchange.response.setComplete()
+          return@checkBook exchange.response.setComplete()
         }
 
         println("Book found for ISBN: ${reviewRequest.resource.value}")
 
-        // Rebuild the request for downstream processing
         val mutatedRequest = exchange.request.mutate().build()
         val cachedBody = Flux.just(toDataBuffer(bodyString))
         val decoratedRequest =
@@ -69,9 +62,7 @@ class ReviewRequestChecker(
   }
 
   private fun checkBookExists(isbn: String): Mono<Boolean> {
-    val bookServiceUrl = "http://localhost:8004/api/books/$isbn"
-
-    return webClient.get().uri(bookServiceUrl).exchangeToMono { response ->
+    return bookWebClient.get().uri("/api/books/$isbn").exchangeToMono { response ->
       if (response.statusCode() == HttpStatus.OK) {
         Mono.just(true)
       } else if (response.statusCode() == HttpStatus.NOT_FOUND) {

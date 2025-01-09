@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review-database
+  labels:
+    app: poly-yard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: review-database
+  template:
+    metadata:
+      labels:
+        app: review-database
+    spec:
+      containers:
+        - name: review-database
+          image: "postgres:16-alpine"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: review-database-config
+          volumeMounts:
+            - name: storage
+              mountPath: /storage
+            - name: init-scripts
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: review-database-pvc
+        - name: init-scripts
+          configMap:
+            name: postgres-init-review-sql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: review-database
+  labels:
+    app: poly-yard
+spec:
+  selector:
+    app: review-database
+  ports:
+    - port: 5432
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-review-sql
+  labels:
+    app: poly-yard
+data:
+  init.sql: |
+    CREATE TYPE review_type AS ENUM ('BOOK', 'ALBUM');
+    CREATE TYPE resource_type AS ENUM ('ISBN', 'ISRC', 'UPC');
+    
+    CREATE TABLE resources (
+    id SERIAL PRIMARY KEY,
+    type resource_type NOT NULL,
+    value VARCHAR(255) NOT NULL
+    );
+    
+    CREATE TABLE reviews (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    type review_type NOT NULL,
+    resource_id BIGINT NOT NULL,
+    rating INT NOT NULL,
+    comment TEXT,
+    created_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (resource_id) REFERENCES resources (id) ON DELETE CASCADE
+    );
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: review-database-config
+  labels:
+    app: poly-yard
+data:
+  POSTGRES_PASSWORD: review
+  POSTGRES_DB: review_database
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: review-database-pvc
+  labels:
+    app: poly-yard
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Mi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: review-database-pv
+  labels:
+    app: poly-yard
+spec:
+  capacity:
+    storage: 256Mi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: manual
+  hostPath:
+    path: /data/review-database

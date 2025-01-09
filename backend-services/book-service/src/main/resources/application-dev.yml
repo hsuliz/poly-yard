@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: book-service
+  amqp:
+    deserialization.trust.all: true
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    virtual-host: /
+  r2dbc:
+    url: r2dbc:postgresql://${R2DBC_HOST}:${R2DBC_PORT}/${R2DBC_DB_NAME}
+    username: ${R2DBC_USERNAME}
+    password: ${R2DBC_PASSWORD}
+  security.oauth2.resourceserver.jwt.jwk-set-uri: http://${KEYCLOAK_HOST}:${KEYCLOAK_PORT}/realms/polyyard/protocol/openid-connect/certs
+
+server:
+  error:
+    include-message: always
+
+logging.level:
+  org.springframework.cloud.gateway: DEBUG
+  org.springframework.security: DEBUG
+  org.springframework.web.reactive.function.client: TRACE

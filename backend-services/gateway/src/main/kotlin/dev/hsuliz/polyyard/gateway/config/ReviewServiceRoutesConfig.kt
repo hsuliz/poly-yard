@@ -2,6 +2,7 @@ package dev.hsuliz.polyyard.gateway.config
 
 import dev.hsuliz.polyyard.gateway.filter.ReviewRequestChecker
 import dev.hsuliz.polyyard.gateway.filter.ReviewResponseRewriteFunction
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.cloud.gateway.route.RouteLocator
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
 import org.springframework.cloud.gateway.route.builder.filters
@@ -11,32 +12,34 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 
 @Configuration
-class FilterConfig {
-
+class ReviewServiceRoutesConfig(
+    @Value("\${review-service-uri}") private val reviewServiceUri: String
+) {
   @Bean
-  fun routes(
+  fun reviewRoutes(
       routeLocatorBuilder: RouteLocatorBuilder,
       rewriteFunction: ReviewResponseRewriteFunction,
       reviewRequestChecker: ReviewRequestChecker
   ): RouteLocator =
       routeLocatorBuilder.routes {
+        route("review-service") {
+          uri(reviewServiceUri)
+          path("/api/me/reviews")
+          method(HttpMethod.DELETE)
+        }
         route("reviews-aggregation") {
+          uri(reviewServiceUri)
           path("/api/reviews/**")
-          uri("http://localhost:8002")
+          method(HttpMethod.GET)
           filters {
             modifyResponseBody(ByteArray::class.java, ByteArray::class.java, rewriteFunction)
           }
         }
         route("check-resource-before-post") {
+          uri(reviewServiceUri)
           path("/api/me/reviews")
           method(HttpMethod.POST)
-          uri("http://localhost:8002")
           filters { filter(reviewRequestChecker) }
-        }
-        route("review-service") {
-          path("/api/me/reviews")
-          method(HttpMethod.DELETE)
-          uri("http://localhost:8002")
         }
       }
 }

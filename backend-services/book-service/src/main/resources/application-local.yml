@@ -11,7 +11,7 @@ spring:
     password: guest
     virtual-host: /
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/book
+    url: r2dbc:postgresql://localhost:8085/book
     username: postgres
     password: book
   security.oauth2.resourceserver.jwt.jwk-set-uri: http://localhost:8080/realms/polyyard/protocol/openid-connect/certs

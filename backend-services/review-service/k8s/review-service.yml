@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review-web-service
+  labels:
+    app: poly-yard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: review-web-service
+  template:
+    metadata:
+      labels:
+        app: review-web-service
+    spec:
+      containers:
+        - name: review-web-service
+          image: "review-service:0.0.1-SNAPSHOT"
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: review-web-service-envs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: review-service
+  labels:
+    app: poly-yard
+spec:
+  selector:
+    app: review-web-service
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: review-web-service-envs
+  labels:
+    app: poly-yard
+data:
+  SPRING_PROFILES_ACTIVE: dev
+
+  RABBITMQ_HOST: rabbitmq
+  RABBITMQ_PORT: "5672"
+  RABBITMQ_USERNAME: review
+  RABBITMQ_PASSWORD: review
+
+  R2DBC_HOST: review-database
+  R2DBC_PORT: "5432"
+  R2DBC_DB_NAME: review_database
+  R2DBC_USERNAME: postgres
+  R2DBC_PASSWORD: review
+
+  KEYCLOAK_HOST: keycloak
+  KEYCLOAK_PORT: "8080"

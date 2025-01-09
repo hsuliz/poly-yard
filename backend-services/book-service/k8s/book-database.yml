@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-database
+  labels:
+    app: poly-yard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-database
+  template:
+    metadata:
+      labels:
+        app: book-database
+    spec:
+      containers:
+        - name: book-database
+          image: "postgres:16-alpine"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: book-database-config
+          volumeMounts:
+            - name: storage
+              mountPath: /storage
+            - name: init-scripts
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: book-database-pvc
+        - name: init-scripts
+          configMap:
+            name: postgres-init-book-sql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-database
+  labels:
+    app: poly-yard
+spec:
+  selector:
+    app: book-database
+  ports:
+    - port: 5432
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-book-sql
+  labels:
+    app: poly-yard
+data:
+  init.sql: |
+    CREATE TABLE books(
+        id             SERIAL PRIMARY KEY,
+        isbn           CHAR(13)     NOT NULL,
+        title          VARCHAR(255) NOT NULL,
+        author         VARCHAR(255) NOT NULL,
+        published_date bigint       NOT NULL,
+        pages          INT          NOT NULL,
+        image          VARCHAR(255) NOT NULL
+    );
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: book-database-config
+  labels:
+    app: poly-yard
+data:
+  POSTGRES_PASSWORD: book
+  POSTGRES_DB: book_database
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: book-database-pvc
+  labels:
+    app: poly-yard
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Mi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: book-database-pv
+  labels:
+    app: poly-yard
+spec:
+  capacity:
+    storage: 256Mi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: manual
+  hostPath:
+    path: /data/book-database
