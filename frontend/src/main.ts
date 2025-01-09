@@ -11,7 +11,7 @@ app.use(router)
 
 app.use(vueKeycloak, {
   config: {
-    url: "http://localhost:8080",
+    url: import.meta.env.VITE_KEYCLOAK_URL,
     realm: "polyyard",
     clientId: "front-end-client"
   },
