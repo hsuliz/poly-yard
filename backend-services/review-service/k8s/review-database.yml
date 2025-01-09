@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: review-database-deploy
+  name: review-database
   labels:
     app: poly-yard
 spec:
